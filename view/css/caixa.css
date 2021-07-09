@@ -1,0 +1,25 @@
+.root .pane .description,
+.root .pane VBox,
+.root .pane HBox{
+    -fx-background-color: #F6911F;
+}
+
+.root .pane .description Text,
+.root .pane VBox Text,
+.root .pane VBox Label {
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+
+.root .pane .description Text {
+    -fx-font-size: 50px;
+}
+
+.root .pane VBox Text {
+    -fx-font-size: 25px;
+}
+
+.root .pane VBox Label {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 15px;
+}
