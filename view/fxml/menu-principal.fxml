@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuPrincipalController">
+   <children>
+      <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane layoutX="316.0" layoutY="159.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <top>
+                  <MenuBar BorderPane.alignment="CENTER">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Caixa">
+                           <items>
+                              <MenuItem fx:id="item_seller" mnemonicParsing="false" text="Vender" />
+                              <MenuItem fx:id="item_remove" mnemonicParsing="false" text="Retirar" />
+                           </items>
+                        </Menu>
+                      <Menu mnemonicParsing="false" text="Consultar">
+                        <items>
+                              <MenuItem fx:id="item_consult_sales" mnemonicParsing="false" text="Vendas" />
+                          <MenuItem fx:id="item_consult_product" mnemonicParsing="false" text="Produtos" />
+                              <MenuItem fx:id="item_consult_client" mnemonicParsing="false" text="Clientes" />
+                              <MenuItem fx:id="item_consult_stock" mnemonicParsing="false" text="Estoque" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Cadastrar">
+                        <items>
+                          <MenuItem fx:id="item_register_product" mnemonicParsing="false" text="Produto" />
+                              <MenuItem fx:id="item_register_client" mnemonicParsing="false" text="Cliente" />
+                              <MenuItem fx:id="item_register_stock" mnemonicParsing="false" text="Estoque" />
+                        </items>
+                      </Menu>
+                        <Menu mnemonicParsing="false" text="Relatório">
+                           <items>
+                              <MenuItem fx:id="item_daily_report" mnemonicParsing="false" text="Diário" />
+                              <MenuItem fx:id="item_monthly_report" mnemonicParsing="false" text="Mensal" />
+                              <MenuItem fx:id="item_annual_report" mnemonicParsing="false" text="Anual" />
+                           </items>
+                        </Menu>
+                      <Menu mnemonicParsing="false" text="Sistema">
+                        <items>
+                              <MenuItem fx:id="item_users" mnemonicParsing="false" text="Usuários" />
+                          <MenuItem fx:id="item_close" mnemonicParsing="false" text="Sair" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+               </top>
+               <center>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <ImageView fitHeight="353.0" fitWidth="582.0" layoutX="117.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true" styleClass="background-image">
+                           <image>
+                              <Image url="@../images/imagem-de-fundo-pdv.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</AnchorPane>
