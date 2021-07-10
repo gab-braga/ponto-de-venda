@@ -1,12 +1,26 @@
 package model;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class Saida {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SAIDA_CODIGO")
     private int codigo;
+
+    @Column(name = "SAIDA_VALOR")
     private double valor;
+
+    @Column(name = "SAIDA_DATA_HORA")
     private Date dataHora;
+
+    @Column(name = "SAIDA_MOTIVO")
     private String motivo;
+
+    @Column(name = "SAIDA_OPERADOR")
     private String operador;
 
     public Saida() {

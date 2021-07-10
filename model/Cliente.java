@@ -1,14 +1,37 @@
 package model;
 
+import javax.persistence.*;
+
+@Entity
 public class Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CLIENTE_CODIGO")
     private int codigo;
+
+    @Column(name = "CLIENTE_NOME")
     private String nome;
+
+    @Column(name = "CLIENTE_CPF")
     private String cpf;
+
+    @Column(name = "CLIENTE_TELEFONE")
     private String telefone;
+
+    @Column(name = "CLIENTE_EMAIL")
     private String email;
+
+    @Column(name = "CLIENTE_ENDERECO")
     private String endereco;
+
+    @Column(name = "CLIENTE_NUMERO")
     private String numero;
+
+    @Column(name = "CLIENTE_CIDADE")
     private String cidade;
+
+    @Column(name = "CLIENTE_UF")
     private String uf;
 
     public Cliente() {

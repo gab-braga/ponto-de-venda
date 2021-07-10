@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Main-Class: view.Login
+Class-Path: antlr-2.7.6.jar c3p0-0.9.1.2.jar cglib-nodep-2.1_3.jar commo
+ ns-collections-2.1.1.jar commons-logging-1.0.4.jar dom4j-1.6.1.jar ejb3
+ -persistence.jar hibernate-annotations.jar hibernate-commons-annotation
+ s.jar hibernate-entitymanager.jar hibernate-validator.jar hibernate3.ja
+ r jboss-archive-browsing.jar jta.jar log4j-1.2.11.jar javassist.jar jfo
+ enix-8.0.10.jar mysql-connector-java-8.0.25.jar
+
