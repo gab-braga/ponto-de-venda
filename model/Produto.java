@@ -1,20 +1,11 @@
 package model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Produto {
 
-    @Id
-    @Column(name = "PRODUTO_CODIGO")
     private int codigo;
 
-    @Column(name = "PRODUTO_DESCRICAO")
     private String descricao;
 
-    @Column(name = "PRODUTO_VALOR_DE_VENDA")
     private double valorVenda;
 
     public Produto() {

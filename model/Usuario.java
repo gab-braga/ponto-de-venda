@@ -1,20 +1,11 @@
 package model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Usuario {
 
-    @Id
-    @Column(name = "USUARIO_NOME")
     private String nome;
 
-    @Column(name = "USUARIO_SENHA")
     private String senha;
 
-    @Column(name = "USUARIO_PERMISSAO")
     private String permissao;
 
     public Usuario() {

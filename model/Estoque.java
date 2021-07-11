@@ -1,28 +1,15 @@
 package model;
 
-import javax.persistence.*;
-
-@Entity
 public class Estoque {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ESTOQUE_CODIGO")
     private int codigo;
 
-    @Column(name = "ESTOQUE_TIPO_DE_EMBALADO")
     private String tipoEmbalado;
 
-    @Column(name = "ESTOQUE_QNT_POR_EMBALADO")
     private int qntPorEmbalado;
 
-    @Column(name = "ESTOQUE_QNT_TOTAL_EM_UNIDADE")
     private int qntTotalEmUnidade;
 
-    @Column(name = "ESTOQUE_CODIGO")
-    private int codigoProduto;
-
-    @Transient
     private Produto produto;
 
     public Estoque() {

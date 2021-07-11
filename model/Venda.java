@@ -1,28 +1,17 @@
 package model;
 
-import javax.persistence.*;
 import java.util.Date;
 
 public class Venda {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "VENDA_CODIGO")
     private int codigo;
 
-    @Column(name = "VENDA_VALOR")
     private double valor;
 
-    @Column(name = "VENDA_DATA_HORA")
     private Date dataHora;
 
-    @Column(name = "VENDA_VENDEDOR")
     private String vedendor;
 
-    @Column(name = "VENDA_CLIENTE")
-    private String nomeCliente;
-
-    @Transient
     private Cliente cliente;
 
     public Venda() {
