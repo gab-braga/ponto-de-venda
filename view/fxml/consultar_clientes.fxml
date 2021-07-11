@@ -39,19 +39,19 @@
                         <Label text="NOME:" />
                         <Label layoutX="440.0" layoutY="18.0" text="CPF:" GridPane.columnIndex="2" />
                         <Label text="CIDADE:" GridPane.columnIndex="4" />
-                        <TextField GridPane.columnIndex="1" />
-                        <TextField GridPane.columnIndex="3" />
-                        <TextField GridPane.columnIndex="5" />
+                        <TextField fx:id="field_search_name" GridPane.columnIndex="1" />
+                        <TextField fx:id="field_search_cpf" GridPane.columnIndex="3" />
+                        <TextField fx:id="field_search_city" GridPane.columnIndex="5" />
                      </children>
                   </GridPane>
-                  <TableView accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                  <TableView fx:id="table_clients" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="NOME" />
-                        <TableColumn prefWidth="75.0" text="CPF" />
-                        <TableColumn prefWidth="75.0" text="TELEFONE" />
-                        <TableColumn prefWidth="75.0" text="E-MAIL" />
-                        <TableColumn prefWidth="75.0" text="ENDEREÇO" />
-                        <TableColumn prefWidth="75.0" text="CIDADE" />
+                      <TableColumn fx:id="column_name" prefWidth="75.0" text="NOME" />
+                        <TableColumn fx:id="column_cpf" prefWidth="75.0" text="CPF" />
+                        <TableColumn fx:id="column_phone" prefWidth="75.0" text="TELEFONE" />
+                        <TableColumn fx:id="column_email" prefWidth="75.0" text="E-MAIL" />
+                        <TableColumn fx:id="column_address" prefWidth="75.0" text="ENDEREÇO" />
+                        <TableColumn fx:id="column_city" prefWidth="75.0" text="CIDADE" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

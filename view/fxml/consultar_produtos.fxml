@@ -36,15 +36,15 @@
                      <children>
                         <Label text="CÓDIGO:" />
                         <Label layoutX="440.0" layoutY="18.0" text="DESCRIÇÃO:" GridPane.columnIndex="2" />
-                        <TextField GridPane.columnIndex="1" />
-                        <TextField GridPane.columnIndex="3" />
+                        <TextField fx:id="field_search_code" GridPane.columnIndex="1" />
+                        <TextField fx:id="field_search_description" GridPane.columnIndex="3" />
                      </children>
                   </GridPane>
-                  <TableView accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                  <TableView fx:id="table_product" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="CÓDIGO" />
-                      <TableColumn prefWidth="75.0" text="DESCRIÇÃO" />
-                        <TableColumn prefWidth="75.0" text="VALOR DE VENDA" />
+                      <TableColumn fx:id="column_code" prefWidth="75.0" text="CÓDIGO" />
+                      <TableColumn fx:id="column_description" prefWidth="75.0" text="DESCRIÇÃO" />
+                        <TableColumn fx:id="column_sale_value" prefWidth="75.0" text="VALOR DE VENDA" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

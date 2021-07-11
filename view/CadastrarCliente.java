@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -31,6 +32,8 @@ public class CadastrarCliente extends Application {
             setWindow(stage);
             stage.setScene(scene);
             stage.initStyle(StageStyle.DECORATED);
+            stage.initModality(Modality.NONE);
+            stage.initOwner(MenuPrincipal.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);
             stage.show();

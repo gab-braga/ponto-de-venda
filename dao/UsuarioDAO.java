@@ -4,8 +4,11 @@ import model.Cliente;
 import model.Usuario;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsuarioDAO {
 
@@ -34,8 +37,19 @@ public class UsuarioDAO {
         return flag;
     }
 
+    private List<Usuario> getUserList(ResultSet results) throws Exception {
+        List<Usuario> usuarios = new ArrayList<Usuario>();
+        while (results.next()) {
+            String nome = results.getString("USUARIO_NOME");
+            String senha = results.getString("USUARIO_SENHA");
+            String permissao = results.getString("USUARIO_PERMISSAO");
+            usuarios.add(new Usuario(nome, senha, permissao));
+        }
+        return usuarios;
+    }
+
     // INSERIR
-    public static boolean register(Usuario usuario) {
+    public boolean register(Usuario usuario) {
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -51,5 +65,23 @@ public class UsuarioDAO {
         }
         ConnectionFactory.closeConnection();
         return flag;
+    }
+
+    public List<Usuario> consultUserPassword(String usuario, String senha) {
+        List<Usuario> results = null;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "SELECT * FROM usuario WHERE USUARIO_NOME = ? AND USUARIO_SENHA = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setString(1, usuario);
+            statement.setString(2, senha);
+            results = getUserList(statement.executeQuery());
+        } catch (SQLException e) {
+            System.err.println("ERRO (QUERY USER AND PASSWORD): " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionFactory.closeConnection();
+        return results;
     }
 }

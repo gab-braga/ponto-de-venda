@@ -6,24 +6,20 @@ public class Estoque {
 
     private String tipoEmbalado;
 
-    private int qntPorEmbalado;
-
-    private int qntTotalEmUnidade;
+    private int quantidade;
 
     private Produto produto;
 
     public Estoque() {
     }
 
-    public Estoque(String tipoEmbalado, int qntPorEmbalado, int qntTotalEmUnidade, Produto produto) {
+    public Estoque(String tipoEmbalado, int quantidade, Produto produto) {
         this.tipoEmbalado = tipoEmbalado;
-        this.qntPorEmbalado = qntPorEmbalado;
-        this.qntTotalEmUnidade = qntTotalEmUnidade;
         this.produto = produto;
     }
 
-    public Estoque(int codigo, String tipoEmbalado, int qntPorEmbalado, int qntTotalEmUnidade, Produto produto) {
-        this(tipoEmbalado, qntPorEmbalado, qntTotalEmUnidade, produto);
+    public Estoque(int codigo, String tipoEmbalado, int quantidade, Produto produto) {
+        this(tipoEmbalado, quantidade, produto);
         this.codigo = codigo;
     }
 
@@ -43,20 +39,12 @@ public class Estoque {
         this.tipoEmbalado = tipoEmbalado;
     }
 
-    public int getQntPorEmbalado() {
-        return qntPorEmbalado;
+    public int getQuantidade() {
+        return quantidade;
     }
 
-    public void setQntPorEmbalado(int qntPorEmbalado) {
-        this.qntPorEmbalado = qntPorEmbalado;
-    }
-
-    public int getQntTotalEmUnidade() {
-        return qntTotalEmUnidade;
-    }
-
-    public void setQntTotalEmUnidade(int qntTotalEmUnidade) {
-        this.qntTotalEmUnidade = qntTotalEmUnidade;
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
     }
 
     public Produto getProduto() {

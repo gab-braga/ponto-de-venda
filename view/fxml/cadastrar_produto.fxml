@@ -34,13 +34,13 @@
                         <Label text="CÓDIGO DO PRODUTO:" />
                         <Label text="DESCRIÇÃO:" GridPane.rowIndex="2" />
                         <Label text="VALOR DE VENDA (R$):" GridPane.rowIndex="4" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="3" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
+                        <TextField fx:id="field_code" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
+                        <TextField fx:id="field_description" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="3" />
+                        <TextField fx:id="field_sale_value" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
-                  <Button mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button mnemonicParsing="false" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btn_register" mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="btn_cancel" mnemonicParsing="false" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>

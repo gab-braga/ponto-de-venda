@@ -42,18 +42,18 @@
                         <Label text="NÚMERO:" GridPane.rowIndex="5" />
                         <Label text="CIDADE:" GridPane.rowIndex="6" />
                         <Label layoutX="44.0" layoutY="17.0" text="UF:" GridPane.rowIndex="7" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <TextField layoutX="120.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <TextField fx:id="field_name" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="field_cpf" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="field_phone" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="field_email" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="field_address" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="field_number" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="field_city" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <TextField fx:id="field_uf" layoutX="120.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                      </children>
                   </GridPane>
-                  <Button mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button mnemonicParsing="false" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btn_register" mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="btn_cancel" mnemonicParsing="false" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>
