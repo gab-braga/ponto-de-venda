@@ -34,4 +34,44 @@ public class AlertBox {
         alert.setContentText("Usuário e/ou Senha incorreto!");
         alert.showAndWait();
     }
+
+    public static void onlyNumbers(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Digite apenas números nos campos numéricos!");
+        alert.showAndWait();
+    }
+
+    public static void invalidQuantityValue(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Valor de quantidade inválido!");
+        alert.showAndWait();
+    }
+
+    public static void unregisteredProduct(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Produto não cadastrado!");
+        alert.showAndWait();
+    }
+
+    public static void productAlreadyStocked(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Este produto já existe no estoque!");
+        alert.showAndWait();
+    }
+
+    public static void productAlreadyRegistered(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Este produto já está cadastrado!");
+        alert.showAndWait();
+    }
 }

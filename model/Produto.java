@@ -40,4 +40,9 @@ public class Produto {
     public void setValorVenda(double valorVenda) {
         this.valorVenda = valorVenda;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s - %d", descricao, codigo);
+    }
 }

@@ -31,16 +31,16 @@ public class ConsultarVendasController implements Initializable {
     private TableView<Venda> table_sales;
 
     @FXML
-    private TableColumn<String, Venda> column_client;
+    private TableColumn<Venda, String> column_client;
 
     @FXML
-    private TableColumn<Double, Venda> column_value;
+    private TableColumn<Venda, Double> column_value;
 
     @FXML
-    private TableColumn<Date, Venda> column_date_hour;
+    private TableColumn<Venda, Date> column_date_hour;
 
     @FXML
-    private TableColumn<String, Venda> column_seller;
+    private TableColumn<Venda, String> column_seller;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

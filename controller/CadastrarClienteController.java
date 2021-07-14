@@ -1,15 +1,14 @@
 package controller;
 
 import dao.ClienteDAO;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import model.Cliente;
+import view.CadastrarCliente;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -74,13 +73,14 @@ public class CadastrarClienteController implements Initializable {
         String cidade = field_city.getText();
         String uf = field_uf.getText();
 
-        Cliente cliente = null;
+
         if(validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
-            cliente = new Cliente(nome, cpf, telefone, email, endereco, numero, cidade, uf);
+            Cliente cliente =  cliente = new Cliente(nome, cpf, telefone, email, endereco, numero, cidade, uf);
             ClienteDAO clienteDAO =  new ClienteDAO();
-            if (clienteDAO.register(cliente)) {
+            if(clienteDAO.register(cliente)) {
                 AlertBox.registrationCompleted();
                 clearFields();
+                field_name.requestFocus();
             }
             else {
                 AlertBox.registrationError();
@@ -92,24 +92,99 @@ public class CadastrarClienteController implements Initializable {
     }
 
     private void close() {
-        ((Stage) this.root.getScene().getWindow()).close();
+        CadastrarCliente.getWindow().close();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        btn_register.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                register();
-            }
+        btn_register.setOnMouseClicked(click -> {
+            register();
         });
 
-        btn_cancel.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                close();
-            }
+        btn_cancel.setOnMouseClicked(click -> {
+            close();
+        });
+
+        field_name.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                field_cpf.requestFocus();
+        } );
+
+        field_cpf.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                field_phone.requestFocus();
+        } );
+
+        field_phone.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                field_email.requestFocus();
+        } );
+
+        field_email.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                field_address.requestFocus();
+        } );
+
+        field_address.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                field_number.requestFocus();
+        } );
+
+        field_number.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                field_city.requestFocus();
+        } );
+
+        field_city.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                field_uf.requestFocus();
+        } );
+
+        field_uf.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                register();
+        } );
+
+        field_name.setOnKeyTyped(event -> {
+            int maxCharacters = 40;
+            if(field_name.getText().length() >= maxCharacters) event.consume();
+        });
+
+        field_cpf.setOnKeyTyped(event -> {
+            int maxCharacters = 14;
+            if(field_cpf.getText().length() >= maxCharacters)
+                event.consume();
+        });
+
+        field_phone.setOnKeyTyped(event -> {
+            int maxCharacters = 40;
+            if(field_phone.getText().length() >= maxCharacters) event.consume();
+        });
+
+        field_email.setOnKeyTyped(event -> {
+            int maxCharacters = 40;
+            if(field_email.getText().length() >= maxCharacters) event.consume();
+        });
+
+        field_address.setOnKeyTyped(event -> {
+            int maxCharacters = 40;
+            if(field_address.getText().length() >= maxCharacters) event.consume();
+        });
+
+        field_number.setOnKeyTyped(event -> {
+            int maxCharacters = 40;
+            if(field_number.getText().length() >= maxCharacters) event.consume();
+        });
+
+        field_city.setOnKeyTyped(event -> {
+            int maxCharacters = 40;
+            if(field_city.getText().length() >= maxCharacters) event.consume();
+        });
+
+        field_uf.setOnKeyTyped(event -> {
+            int maxCharacters = 40;
+            if(field_uf.getText().length() >= maxCharacters) event.consume();
         });
     }
 }

@@ -4,22 +4,23 @@ public class Estoque {
 
     private int codigo;
 
+    private Produto produto;
+
     private String tipoEmbalado;
 
     private int quantidade;
 
-    private Produto produto;
-
     public Estoque() {
     }
 
-    public Estoque(String tipoEmbalado, int quantidade, Produto produto) {
-        this.tipoEmbalado = tipoEmbalado;
+    public Estoque(Produto produto, String tipoEmbalado, int quantidade) {
         this.produto = produto;
+        this.tipoEmbalado = tipoEmbalado;
+        this.quantidade = quantidade;
     }
 
-    public Estoque(int codigo, String tipoEmbalado, int quantidade, Produto produto) {
-        this(tipoEmbalado, quantidade, produto);
+    public Estoque(Produto produto, int codigo, String tipoEmbalado, int quantidade) {
+        this(produto, tipoEmbalado, quantidade);
         this.codigo = codigo;
     }
 

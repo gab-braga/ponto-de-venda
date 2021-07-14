@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Usuario;
+import view.Login;
 import view.MenuPrincipal;
 
 import java.net.URL;
@@ -60,7 +61,7 @@ public class LoginController implements Initializable {
     }
 
     private void close() {
-        ((Stage) this.root.getScene().getWindow()).close();
+        Login.getWindow().close();
     }
 
     @Override

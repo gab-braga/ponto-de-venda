@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -8,6 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarProdutosController">
@@ -25,19 +27,35 @@
                <children>
                   <GridPane hgap="10.0" styleClass="form" vgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="90.0" minWidth="90.0" prefWidth="43.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="405.0" minWidth="10.0" prefWidth="200.0" />
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="90.0" minWidth="90.0" prefWidth="35.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="200.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="CÓDIGO:" />
-                        <Label layoutX="440.0" layoutY="18.0" text="DESCRIÇÃO:" GridPane.columnIndex="2" />
-                        <TextField fx:id="field_search_code" GridPane.columnIndex="1" />
-                        <TextField fx:id="field_search_description" GridPane.columnIndex="3" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="CÓDIGO:">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="field_search_code" maxWidth="190.0" minWidth="190.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                           <children>
+                              <Label text="DESCRIÇÃO:">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="field_search_description" maxWidth="190.0" minWidth="190.0" />
+                           </children>
+                        </HBox>
+                        <Button fx:id="btn_close" mnemonicParsing="false" text="FECHAR" GridPane.columnIndex="2" />
                      </children>
                   </GridPane>
                   <TableView fx:id="table_product" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
