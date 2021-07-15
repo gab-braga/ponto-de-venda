@@ -39,8 +39,8 @@
                         <TextField fx:id="field_sale_value" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
-                  <Button fx:id="btn_register" mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="btn_cancel" mnemonicParsing="false" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btn_cancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="btn_register" mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>

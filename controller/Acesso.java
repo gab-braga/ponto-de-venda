@@ -2,8 +2,8 @@ package controller;
 
 public class Acesso {
 
-    private final static String accessAdmin = "Administrador";
-    private final static String accessUser = "Usuário";
+    protected final static String accessAdmin = "Administrador";
+    protected final static String accessUser = "Usuário";
 
     private static boolean fullAccess = false;
 

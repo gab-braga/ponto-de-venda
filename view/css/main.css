@@ -54,6 +54,10 @@
     -fx-scale-y: 1.05;
 }
 
+.root .pane .form .btn_cancel {
+    -fx-background-color: #FF2F2F;
+}
+
 /*LOGIN*/
 .root .pane .legend {
     -fx-fill: #F6911F;

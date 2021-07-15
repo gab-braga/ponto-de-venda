@@ -74,4 +74,20 @@ public class AlertBox {
         alert.setContentText("Este produto já está cadastrado!");
         alert.showAndWait();
     }
+
+    public static void userAlreadyRegistered(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Este usuário já está cadastrado!");
+        alert.showAndWait();
+    }
+
+    public static void stockUp(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("AVISO");
+        alert.setHeaderText(null);
+        alert.setContentText("Estoque alimentado.");
+        alert.showAndWait();
+    }
 }

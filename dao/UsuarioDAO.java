@@ -67,7 +67,7 @@ public class UsuarioDAO {
         return flag;
     }
 
-    public List<Usuario> consultUserPassword(String usuario, String senha) {
+    public List<Usuario> queryUserPassword(String usuario, String senha) {
         List<Usuario> results = null;
         ConnectionFactory.openConnection();
         try {
@@ -78,6 +78,72 @@ public class UsuarioDAO {
             results = getUserList(statement.executeQuery());
         } catch (SQLException e) {
             System.err.println("ERRO (QUERY USER AND PASSWORD): " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionFactory.closeConnection();
+        return results;
+    }
+
+    public List<Usuario> queryAllUser() {
+        List<Usuario> results = null;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "SELECT * FROM usuario ORDER BY USUARIO_NOME;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            results = getUserList(statement.executeQuery());
+        } catch (SQLException e) {
+            System.err.println("ERRO (QUERY ALL USER): " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionFactory.closeConnection();
+        return results;
+    }
+
+    public List<Usuario> queryUserByName(String name) {
+        List<Usuario> results = null;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%"+ name +"%' ORDER BY USUARIO_NOME;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            results = getUserList(statement.executeQuery());
+        } catch (SQLException e) {
+            System.err.println("ERRO (QUERY USER BY NAME): " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionFactory.closeConnection();
+        return results;
+    }
+
+    public List<Usuario> queryUserByPermission(String permission) {
+        List<Usuario> results = null;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "SELECT * FROM usuario WHERE USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setString(1, permission);
+            results = getUserList(statement.executeQuery());
+        } catch (SQLException e) {
+            System.err.println("ERRO (QUERY USER BY PERMISSION): " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ConnectionFactory.closeConnection();
+        return results;
+    }
+
+    public List<Usuario> queryUserByNameOrPermission(String name, String permission) {
+        List<Usuario> results = null;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%"+ name +"%' OR USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setString(1, permission);
+            results = getUserList(statement.executeQuery());
+        } catch (SQLException e) {
+            System.err.println("ERRO (QUERY USER BY NAME OR PERMISSION): " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }

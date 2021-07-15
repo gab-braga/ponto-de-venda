@@ -68,6 +68,23 @@ public class EstoqueDAO {
         return flag;
     }
 
+    public boolean add(Estoque estoque) {
+        boolean flag = false;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "UPDATE estoque SET ESTOQUE_QUANTIDADE = ESTOQUE_QUANTIDADE + ? WHERE PRODUTO_CODIGO = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setInt(1, estoque.getQuantidade());
+            statement.setInt(2, estoque.getProduto().getCodigo());
+            statement.executeUpdate();
+            flag = true;
+        } catch (SQLException e) {
+            System.err.println("ERRO (ADD STOCK): " + e.getMessage());
+        }
+        ConnectionFactory.closeConnection();
+        return flag;
+    }
+
     public List<Estoque> queryAllStock() {
         List<Estoque> results = new ArrayList<Estoque>();
         ConnectionFactory.openConnection();
