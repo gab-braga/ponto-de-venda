@@ -1,5 +1,6 @@
 package view;
 
+import controller.AdicionarEstoqueController;
 import controller.EditarClienteController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,18 +10,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Cliente;
+import model.Estoque;
 
 import java.io.IOException;
 
-public class EditarCliente extends Application {
+public class AdicionarEstoque extends Application {
 
-    private Cliente clientEdit;
+    private Estoque stockEdit;
 
-    public EditarCliente(Cliente clientEdit) {
-        this.clientEdit = clientEdit;
+    public AdicionarEstoque(Estoque stockEdit) {
+        this.stockEdit = stockEdit;
     }
 
-    private final String title = "Editar Cliente";
+    private final String title = "Adicionar Estoque";
 
     private static Stage window;
 
@@ -35,19 +37,19 @@ public class EditarCliente extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader file = new FXMLLoader(getClass().getResource("fxml/editar_cliente.fxml"));
+            FXMLLoader file = new FXMLLoader(getClass().getResource("fxml/adicionar_estoque.fxml"));
             Parent root = file.load();
 
-            EditarClienteController editarClienteController = (EditarClienteController) file.getController();
-            editarClienteController.fillFields(clientEdit);
+            AdicionarEstoqueController adicionarEstoqueController = (AdicionarEstoqueController) file.getController();
+            adicionarEstoqueController.fillFields(stockEdit);
 
             Scene scene = new Scene(root);
 
             setWindow(stage);
             stage.setScene(scene);
             stage.initStyle(StageStyle.DECORATED);
-            stage.initModality(Modality.NONE);
-            stage.initOwner(ConsultarClientes.getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(ConsultarEstoque.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);
             stage.show();

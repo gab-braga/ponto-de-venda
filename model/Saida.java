@@ -14,9 +14,6 @@ public class Saida {
 
     private String operador;
 
-    public Saida() {
-    }
-
     public Saida(double valor, Date dataHora, String motivo, String operador) {
         this.valor = valor;
         this.dataHora = dataHora;

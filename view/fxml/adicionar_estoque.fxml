@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditarProdutoController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdicionarEstoqueController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -18,7 +18,7 @@
          <children>
             <AnchorPane layoutX="30.0" layoutY="-34.0" prefHeight="200.0" prefWidth="200.0" styleClass="form" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <GridPane hgap="10.0" layoutX="14.0" layoutY="-7.0" maxHeight="160.0" minHeight="240.0" prefHeight="240.0" prefWidth="376.0" vgap="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                  <GridPane hgap="10.0" layoutX="14.0" layoutY="-7.0" maxHeight="240.0" minHeight="240.0" prefHeight="240.0" prefWidth="376.0" vgap="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
                     <columnConstraints>
                       <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="90.0" prefWidth="90.0" />
                     </columnConstraints>
@@ -33,14 +33,14 @@
                      <children>
                         <Label text="CÓDIGO DO PRODUTO:" />
                         <Label text="DESCRIÇÃO:" GridPane.rowIndex="2" />
-                        <Label text="VALOR DE VENDA (R$):" GridPane.rowIndex="4" />
-                        <TextField fx:id="field_code" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
+                        <Label text="QUANTIDADE:" GridPane.rowIndex="4" />
+                        <TextField fx:id="field_code_product" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
+                        <TextField fx:id="field_quantity" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
                         <TextField fx:id="field_description" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="3" />
-                        <TextField fx:id="field_sale_value" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
                   <Button fx:id="btn_cancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="btn_edit" mnemonicParsing="false" text="EDITAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btn_add" mnemonicParsing="false" text="ADICIONAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>

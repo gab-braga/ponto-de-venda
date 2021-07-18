@@ -9,13 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EstoqueDAO {
+public abstract class EstoqueDAO {
 
-    public EstoqueDAO() {
-        createTable();
-    }
-
-    private boolean createTable() {
+    private static boolean createTable() {
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -37,20 +33,20 @@ public class EstoqueDAO {
         return flag;
     }
 
-    private List<Estoque> getStockList(ResultSet results) throws Exception {
+    private static List<Estoque> getStockList(ResultSet results) throws Exception {
         List<Estoque> estoque = new ArrayList<Estoque>();
         while (results.next()) {
             int codigo = results.getInt("ESTOQUE_CODIGO");
             String tipoEmbalado = results.getString("ESTOQUE_TIPO_EMBALADO");
             int quantidade = results.getInt("ESTOQUE_QUANTIDADE");
             int produto_codigo = results.getInt("PRODUTO_CODIGO");
-            estoque.add(new Estoque(new ProdutoDAO().queryByCodeProducts(produto_codigo).get(0), codigo, tipoEmbalado, quantidade));
+            estoque.add(new Estoque(ProdutoDAO.queryByCodeProducts(produto_codigo).get(0), codigo, tipoEmbalado, quantidade));
         }
         return estoque;
     }
 
-    // INSERIR
-    public boolean register(Estoque estoque) {
+    public static boolean register(Estoque estoque) {
+        createTable();
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -68,7 +64,8 @@ public class EstoqueDAO {
         return flag;
     }
 
-    public boolean add(Estoque estoque) {
+    public static boolean add(Estoque estoque) {
+        createTable();
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -85,7 +82,8 @@ public class EstoqueDAO {
         return flag;
     }
 
-    public List<Estoque> queryAllStock() {
+    public static List<Estoque> queryAllStock() {
+        createTable();
         List<Estoque> results = new ArrayList<Estoque>();
         ConnectionFactory.openConnection();
         try {
@@ -101,7 +99,8 @@ public class EstoqueDAO {
         return results;
     }
 
-    public List<Estoque> queryByCode(int code) {
+    public static List<Estoque> queryByCode(int code) {
+        createTable();
         List<Estoque> results = new ArrayList<Estoque>();
         ConnectionFactory.openConnection();
         try {
@@ -118,7 +117,8 @@ public class EstoqueDAO {
         return results;
     }
 
-    public List<Estoque> queryByDescription(String description) {
+    public static List<Estoque> queryByDescription(String description) {
+        createTable();
         List<Estoque> results = new ArrayList<Estoque>();
         ConnectionFactory.openConnection();
         try {
@@ -134,7 +134,8 @@ public class EstoqueDAO {
         return results;
     }
 
-    public List<Estoque> queryByCodeOrDescription(int code, String description) {
+    public static List<Estoque> queryByCodeOrDescription(int code, String description) {
+        createTable();
         List<Estoque> results = new ArrayList<Estoque>();
         ConnectionFactory.openConnection();
         try {

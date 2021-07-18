@@ -6,18 +6,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Cliente;
 import view.ConsultarClientes;
+import view.EditarCliente;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ConsultarClientesController implements Initializable {
@@ -55,6 +55,15 @@ public class ConsultarClientesController implements Initializable {
     @FXML
     private TableColumn<Cliente, String> column_city;
 
+    @FXML
+    private MenuItem table_item_refresh;
+
+    @FXML
+    private MenuItem table_item_edit;
+
+    @FXML
+    private MenuItem table_item_delete;
+
     private void fillTable(List<Cliente> clientes) {
         column_name.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nome"));
         column_cpf.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cpf"));
@@ -73,18 +82,44 @@ public class ConsultarClientesController implements Initializable {
         String cpf = field_search_cpf.getText();
         boolean filterByName = !name.isEmpty();
         boolean filterByCpf = !cpf.isEmpty();
-        ClienteDAO clienteDAO = new ClienteDAO();
         if(filterByName && filterByCpf) {
-           fillTable(clienteDAO.queryByNameOrCpfClients(name, cpf));
+           fillTable(ClienteDAO.queryByNameOrCpfClients(name, cpf));
         }
         else if(filterByName && !filterByCpf) {
-            fillTable(clienteDAO.queryByNameClients(name));
+            fillTable(ClienteDAO.queryByNameClients(name));
         }
         else if(!filterByName && filterByCpf) {
-            fillTable(clienteDAO.queryByCpfClients(cpf));
+            fillTable(ClienteDAO.queryByCpfClients(cpf));
         }
         else {
-            fillTable(clienteDAO.queryAllClients());
+            fillTable(ClienteDAO.queryAllClients());
+        }
+    }
+
+    private void edit() {
+        Cliente cliente = table_clients.getSelectionModel().getSelectedItem();
+        if(cliente == null) {
+            AlertBox.selectARecord();
+        }
+        else {
+            EditarCliente editarCliente = new EditarCliente(cliente);
+            editarCliente.start(new Stage());
+        }
+    }
+
+    private void delete() {
+        if(AlertBox.confirmationDelete()) {
+            Cliente cliente = table_clients.getSelectionModel().getSelectedItem();
+            if (cliente == null) {
+                AlertBox.selectARecord();
+            } else {
+                if (ClienteDAO.deleteByCode(cliente.getCodigo())) {
+                    AlertBox.deleteCompleted();
+                    filter();
+                } else {
+                    AlertBox.deleteError();
+                }
+            }
         }
     }
 
@@ -109,6 +144,18 @@ public class ConsultarClientesController implements Initializable {
         field_search_cpf.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
+        });
+
+        table_item_refresh.setOnAction(action -> {
+            filter();
+        });
+
+        table_item_edit.setOnAction(action -> {
+            edit();
+        });
+
+        table_item_delete.setOnAction(action -> {
+            delete();
         });
 
         field_search_name.setOnKeyTyped(event -> {

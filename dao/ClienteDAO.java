@@ -6,13 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteDAO {
+public abstract class ClienteDAO {
 
-    public ClienteDAO() {
-        createTable();
-    }
-
-    private boolean createTable() {
+    private static boolean createTable() {
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -39,7 +35,7 @@ public class ClienteDAO {
         return flag;
     }
 
-    private List<Cliente> getClientsList(ResultSet results) throws SQLException {
+    private static List<Cliente> getClientsList(ResultSet results) throws SQLException {
         List<Cliente> clientes = new ArrayList<Cliente>();
         while (results.next()) {
             int codigo = results.getInt("CLIENTE_CODIGO");
@@ -56,8 +52,8 @@ public class ClienteDAO {
         return clientes;
     }
 
-    // INSERIR
-    public boolean register(Cliente cliente) {
+    public static boolean register(Cliente cliente) {
+        createTable();
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -80,7 +76,51 @@ public class ClienteDAO {
         return flag;
     }
 
-    public List<Cliente> queryAllClients() {
+    public static boolean update(Cliente cliente) {
+        createTable();
+        boolean flag = false;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "UPDATE cliente SET CLIENTE_NOME = ?, CLIENTE_CPF = ?, CLIENTE_TELEFONE = ?, CLIENTE_EMAIL = ?, CLIENTE_ENDERECO = ?, CLIENTE_NUMERO = ?, CLIENTE_CIDADE = ?, CLIENTE_UF = ? WHERE CLIENTE_CODIGO = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setString(1, cliente.getNome());
+            statement.setString(2, cliente.getCpf());
+            statement.setString(3, cliente.getTelefone());
+            statement.setString(4, cliente.getEmail());
+            statement.setString(5, cliente.getEndereco());
+            statement.setString(6, cliente.getNumero());
+            statement.setString(7, cliente.getCidade());
+            statement.setString(8, cliente.getUf());
+            statement.setInt(9, cliente.getCodigo());
+            statement.executeUpdate();
+            flag = true;
+        } catch (SQLException e) {
+            System.err.println("ERRO (UPDATE CLIENT): " + e.getMessage());
+        }
+        ConnectionFactory.closeConnection();
+        return flag;
+    }
+
+    public static boolean deleteByCode(int codigo) {
+        createTable();
+        boolean flag = false;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "DELETE FROM cliente WHERE CLIENTE_CODIGO = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setInt(1, codigo);
+            statement.executeUpdate();
+            flag = true;
+        }
+        catch(SQLException e) {
+            System.err.println("ERRO (DELETE CLIENT BY CODE): " + e.getMessage());
+        }
+        ConnectionFactory.closeConnection();
+        return flag;
+    }
+
+    public static List<Cliente> queryAllClients() {
+        createTable();
         List<Cliente> clientes = null;
         ConnectionFactory.openConnection();
         try {
@@ -95,7 +135,8 @@ public class ClienteDAO {
         return clientes;
     }
 
-    public List<Cliente> queryByNameClients(String name) {
+    public static List<Cliente> queryByNameClients(String name) {
+        createTable();
         List<Cliente> clientes = new ArrayList<Cliente>();
         ConnectionFactory.openConnection();
         try {
@@ -110,7 +151,8 @@ public class ClienteDAO {
         return clientes;
     }
 
-    public List<Cliente> queryByCpfClients(String cpf) {
+    public static List<Cliente> queryByCpfClients(String cpf) {
+        createTable();
         List<Cliente> clientes = new ArrayList<Cliente>();
         ConnectionFactory.openConnection();
         try {
@@ -125,7 +167,8 @@ public class ClienteDAO {
         return clientes;
     }
 
-    public List<Cliente> queryByNameOrCpfClients(String name, String cpf) {
+    public static List<Cliente> queryByNameOrCpfClients(String name, String cpf) {
+        createTable();
         List<Cliente> clientes = new ArrayList<Cliente>();
         ConnectionFactory.openConnection();
         try {

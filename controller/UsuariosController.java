@@ -65,18 +65,17 @@ public class UsuariosController implements Initializable {
         String permission = field_search_permission.getValue();
         boolean filterByName = !name.isEmpty();
         boolean filterByPermission = !permission.isEmpty();
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
         if(filterByName && !filterByPermission) {
-            fillTable(usuarioDAO.queryUserByName(name));
+            fillTable(UsuarioDAO.queryUserByName(name));
         }
         else if(!filterByName && filterByPermission) {
-            fillTable(usuarioDAO.queryUserByPermission(permission));
+            fillTable(UsuarioDAO.queryUserByPermission(permission));
         }
         else if(filterByName && filterByPermission) {
-            fillTable(usuarioDAO.queryUserByNameOrPermission(name, permission));
+            fillTable(UsuarioDAO.queryUserByNameOrPermission(name, permission));
         }
         else {
-            fillTable(usuarioDAO.queryAllUser());
+            fillTable(UsuarioDAO.queryAllUser());
         }
     }
 
@@ -88,6 +87,23 @@ public class UsuariosController implements Initializable {
         ObservableList<String> items = FXCollections.observableArrayList(permissions);
         field_search_permission.setItems(items);
         field_search_permission.setValue("");
+    }
+
+    private void delete() {
+        if(AlertBox.confirmationDelete()) {
+            Usuario usuario = tableUser.getSelectionModel().getSelectedItem();
+            if (usuario == null) {
+                AlertBox.selectARecord();
+            } else {
+                if(UsuarioDAO.deleteByName(usuario.getNome())) {
+                    AlertBox.deleteCompleted();
+                    filter();
+                }
+                else {
+                    AlertBox.deleteError();
+                }
+            }
+        }
     }
 
     private void close() {
@@ -118,6 +134,14 @@ public class UsuariosController implements Initializable {
         field_search_permission.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
                 filter();
+        });
+
+        table_item_refresh.setOnAction(action -> {
+            filter();
+        });
+
+        table_item_delete.setOnAction(action -> {
+            delete();
         });
 
         field_search_name.setOnKeyTyped(event -> {

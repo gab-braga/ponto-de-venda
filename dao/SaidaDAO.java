@@ -7,13 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SaidaDAO {
+public abstract class SaidaDAO {
 
-    public SaidaDAO() {
-        createTable();
-    }
-
-    private boolean createTable() {
+    private static boolean createTable() {
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -36,8 +32,8 @@ public class SaidaDAO {
         return flag;
     }
 
-    // INSERIR
     public static boolean register(Saida saida) {
+        createTable();
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {

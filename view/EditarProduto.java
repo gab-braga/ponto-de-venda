@@ -1,5 +1,6 @@
 package view;
 
+import controller.EditarProdutoController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,10 +8,18 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Produto;
 
 import java.io.IOException;
 
 public class EditarProduto extends Application {
+
+    private Produto produtoEdit;
+
+    public EditarProduto(Produto produtoEdit) {
+        this.produtoEdit = produtoEdit;
+    }
+
     private final String title = "Editar Produto";
 
     private static Stage window;
@@ -26,7 +35,12 @@ public class EditarProduto extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("fxml/editar_produto.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/editar_produto.fxml"));
+            Parent root = fxmlLoader.load();
+
+            EditarProdutoController editarProdutoController = (EditarProdutoController) fxmlLoader.getController();
+            editarProdutoController.fillFields(produtoEdit);
+
             Scene scene = new Scene(root);
 
             setWindow(stage);

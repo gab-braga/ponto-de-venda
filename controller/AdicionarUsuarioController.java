@@ -53,10 +53,9 @@ public class AdicionarUsuarioController implements Initializable {
         String password = field_password.getText();
         String permission = field_permission.getValue();
         if(validateFields(name, password, permission)) {
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            if(usuarioDAO.queryUserByName(name).size() == 0) {
+            if(UsuarioDAO.queryUserByName(name).size() == 0) {
                 Usuario usuario = new Usuario(name, password, permission);
-                if(usuarioDAO.register(usuario)) {
+                if(UsuarioDAO.register(usuario)) {
                     AlertBox.registrationCompleted();
                     clearFields();
                     field_name.requestFocus();

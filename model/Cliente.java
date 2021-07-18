@@ -20,9 +20,6 @@ public class Cliente {
 
     private String uf;
 
-    public Cliente() {
-    }
-
     public Cliente(String nome, String cpf, String telefone, String email, String endereco, String numero, String cidade, String uf) {
         this.nome = nome;
         this.cpf = cpf;

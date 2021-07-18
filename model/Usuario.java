@@ -8,9 +8,6 @@ public class Usuario {
 
     private String permissao;
 
-    public Usuario() {
-    }
-
     public Usuario(String nome, String senha, String permissao) {
         this.nome = nome;
         this.senha = senha;

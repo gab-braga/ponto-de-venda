@@ -1,20 +1,22 @@
 package controller;
 
 import com.sun.xml.internal.bind.v2.runtime.property.ValueProperty;
+import dao.ClienteDAO;
 import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import model.Cliente;
 import model.Produto;
 import view.ConsultarProdutos;
+import view.EditarCliente;
+import view.EditarProduto;
 
 import java.net.URL;
 import java.util.List;
@@ -46,6 +48,15 @@ public class ConsultarProdutosController implements Initializable {
     @FXML
     private TableColumn<Produto, Double> column_sale_value;
 
+    @FXML
+    private MenuItem table_item_refresh;
+
+    @FXML
+    private MenuItem table_item_edit;
+
+    @FXML
+    private MenuItem table_item_delete;
+
     private void fillTable(List<Produto> produtos) {
         column_code.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("codigo"));
         column_description.setCellValueFactory(new PropertyValueFactory<Produto, String>("descricao"));
@@ -62,18 +73,44 @@ public class ConsultarProdutosController implements Initializable {
         boolean filterByCode = !code.isEmpty();
         boolean filterByDescription = !description.isEmpty();
         if(Helper.validateInteger(code) || !filterByCode) {
-            ProdutoDAO produtoDAO = new ProdutoDAO();
             if(!filterByCode && filterByDescription) {
-                fillTable(produtoDAO.queryByDescriptionProducts(description));
+                fillTable(ProdutoDAO.queryByDescriptionProducts(description));
             }
             else if(filterByCode && !filterByDescription) {
-                fillTable(produtoDAO.queryByCodeProducts(Integer.parseInt(code)));
+                fillTable(ProdutoDAO.queryByCodeProducts(Integer.parseInt(code)));
             }
             else if(filterByCode && filterByDescription) {
-                fillTable(produtoDAO.queryByCodeOrDescriptionProducts(Integer.parseInt(code), description));
+                fillTable(ProdutoDAO.queryByCodeOrDescriptionProducts(Integer.parseInt(code), description));
             }
             else {
-                fillTable(produtoDAO.queryAllProducts());
+                fillTable(ProdutoDAO.queryAllProducts());
+            }
+        }
+    }
+
+    private void edit() {
+        Produto produto = table_product.getSelectionModel().getSelectedItem();
+        if(produto == null) {
+            AlertBox.selectARecord();
+        }
+        else {
+            EditarProduto editarProduto = new EditarProduto(produto);
+            editarProduto.start(new Stage());
+        }
+    }
+
+    private void delete() {
+        if(AlertBox.confirmationDelete()) {
+            Produto produto = table_product.getSelectionModel().getSelectedItem();
+            if (produto == null) {
+                AlertBox.selectARecord();
+            } else {
+                if (ProdutoDAO.deleteByCode(produto.getCodigo())) {
+                    AlertBox.deleteCompleted();
+                    filter();
+                } else {
+                    AlertBox.deleteError();
+                }
             }
         }
     }
@@ -99,6 +136,18 @@ public class ConsultarProdutosController implements Initializable {
 
         btn_close.setOnMouseClicked(click -> {
             close();
+        });
+
+        table_item_refresh.setOnAction(action -> {
+            filter();
+        });
+
+        table_item_edit.setOnAction(action -> {
+            edit();
+        });
+
+        table_item_delete.setOnAction(action -> {
+            delete();
         });
 
         field_search_code.setOnKeyTyped(event -> {

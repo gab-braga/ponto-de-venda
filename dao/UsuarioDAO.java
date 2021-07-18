@@ -10,13 +10,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuarioDAO {
+public abstract class UsuarioDAO {
 
-    public UsuarioDAO() {
-        createTable();
-    }
-
-    private boolean createTable() {
+    private static boolean createTable() {
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -37,7 +33,7 @@ public class UsuarioDAO {
         return flag;
     }
 
-    private List<Usuario> getUserList(ResultSet results) throws Exception {
+    private static List<Usuario> getUserList(ResultSet results) throws Exception {
         List<Usuario> usuarios = new ArrayList<Usuario>();
         while (results.next()) {
             String nome = results.getString("USUARIO_NOME");
@@ -48,8 +44,8 @@ public class UsuarioDAO {
         return usuarios;
     }
 
-    // INSERIR
-    public boolean register(Usuario usuario) {
+    public static boolean register(Usuario usuario) {
+        createTable();
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -67,7 +63,25 @@ public class UsuarioDAO {
         return flag;
     }
 
-    public List<Usuario> queryUserPassword(String usuario, String senha) {
+    public static boolean deleteByName(String nome) {
+        createTable();
+        boolean flag = false;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "DELETE FROM usuario WHERE USUARIO_NOME = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setString(1, nome);
+            statement.executeUpdate();
+            flag = true;
+        } catch (SQLException e) {
+            System.err.println("ERRO (DELETE USER BY NAME): " + e.getMessage());
+        }
+        ConnectionFactory.closeConnection();
+        return flag;
+    }
+
+    public static List<Usuario> queryUserPassword(String usuario, String senha) {
+        createTable();
         List<Usuario> results = null;
         ConnectionFactory.openConnection();
         try {
@@ -85,7 +99,8 @@ public class UsuarioDAO {
         return results;
     }
 
-    public List<Usuario> queryAllUser() {
+    public static List<Usuario> queryAllUser() {
+        createTable();
         List<Usuario> results = null;
         ConnectionFactory.openConnection();
         try {
@@ -101,7 +116,8 @@ public class UsuarioDAO {
         return results;
     }
 
-    public List<Usuario> queryUserByName(String name) {
+    public static List<Usuario> queryUserByName(String name) {
+        createTable();
         List<Usuario> results = null;
         ConnectionFactory.openConnection();
         try {
@@ -117,7 +133,8 @@ public class UsuarioDAO {
         return results;
     }
 
-    public List<Usuario> queryUserByPermission(String permission) {
+    public static List<Usuario> queryUserByPermission(String permission) {
+        createTable();
         List<Usuario> results = null;
         ConnectionFactory.openConnection();
         try {
@@ -134,7 +151,8 @@ public class UsuarioDAO {
         return results;
     }
 
-    public List<Usuario> queryUserByNameOrPermission(String name, String permission) {
+    public static List<Usuario> queryUserByNameOrPermission(String name, String permission) {
+        createTable();
         List<Usuario> results = null;
         ConnectionFactory.openConnection();
         try {

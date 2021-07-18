@@ -10,13 +10,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProdutoDAO {
+public abstract class ProdutoDAO {
 
-    public ProdutoDAO() {
-        createTable();
-    }
-
-    private boolean createTable() {
+    private static boolean createTable() {
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -37,7 +33,7 @@ public class ProdutoDAO {
         return flag;
     }
 
-    private List<Produto> getProductsList(ResultSet results) throws Exception {
+    private static List<Produto> getProductsList(ResultSet results) throws Exception {
         List<Produto> produtos = new ArrayList<Produto>();
         while (results.next()) {
             int codigo = results.getInt("PRODUTO_CODIGO");
@@ -48,8 +44,8 @@ public class ProdutoDAO {
         return produtos;
     }
 
-    // INSERIR
-    public boolean register(Produto produto) {
+    public static boolean register(Produto produto) {
+        createTable();
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
@@ -67,7 +63,45 @@ public class ProdutoDAO {
         return flag;
     }
 
-    public List<Produto> queryAllProducts() {
+    public static boolean update(Produto produto) {
+        createTable();
+        boolean flag = false;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "UPDATE produto SET PRODUTO_CODIGO = ?, PRODUTO_DESCRICAO = ?, PRODUTO_VALOR_VENDA = ? WHERE PRODUTO_CODIGO = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setInt(1, produto.getCodigo());
+            statement.setString(2, produto.getDescricao());
+            statement.setDouble(3, produto.getValorVenda());
+            statement.setInt(4, produto.getCodigo());
+            statement.executeUpdate();
+            flag = true;
+        } catch (SQLException e) {
+            System.err.println("ERRO (UPDATE PRODUCT): " + e.getMessage());
+        }
+        ConnectionFactory.closeConnection();
+        return flag;
+    }
+
+    public static boolean deleteByCode(int codigo) {
+        createTable();
+        boolean flag = false;
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "DELETE p, e FROM produto AS p JOIN estoque AS e ON p.PRODUTO_CODIGO = e.PRODUTO_CODIGO  WHERE p.PRODUTO_CODIGO = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setInt(1, codigo);
+            statement.executeUpdate();
+            flag = true;
+        } catch (SQLException e) {
+            System.err.println("ERRO (DELETE PRODUCT BY CODE): " + e.getMessage());
+        }
+        ConnectionFactory.closeConnection();
+        return flag;
+    }
+
+    public static List<Produto> queryAllProducts() {
+        createTable();
         List<Produto> results = new ArrayList<Produto>();
         ConnectionFactory.openConnection();
         try {
@@ -83,7 +117,8 @@ public class ProdutoDAO {
         return results;
     }
 
-    public List<Produto> queryByCodeProducts(int code) {
+    public static List<Produto> queryByCodeProducts(int code) {
+        createTable();
         List<Produto> results = new ArrayList<Produto>();
         ConnectionFactory.openConnection();
         try {
@@ -100,7 +135,8 @@ public class ProdutoDAO {
         return results;
     }
 
-    public List<Produto> queryByDescriptionProducts(String description) {
+    public static List<Produto> queryByDescriptionProducts(String description) {
+        createTable();
         List<Produto> results = new ArrayList<Produto>();
         ConnectionFactory.openConnection();
         try {
@@ -116,7 +152,8 @@ public class ProdutoDAO {
         return results;
     }
 
-    public List<Produto> queryByCodeOrDescriptionProducts(int code, String description) {
+    public static List<Produto> queryByCodeOrDescriptionProducts(int code, String description) {
+        createTable();
         List<Produto> results = new ArrayList<Produto>();
         ConnectionFactory.openConnection();
         try {

@@ -76,8 +76,7 @@ public class CadastrarClienteController implements Initializable {
 
         if(validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
             Cliente cliente =  cliente = new Cliente(nome, cpf, telefone, email, endereco, numero, cidade, uf);
-            ClienteDAO clienteDAO =  new ClienteDAO();
-            if(clienteDAO.register(cliente)) {
+            if(ClienteDAO.register(cliente)) {
                 AlertBox.registrationCompleted();
                 clearFields();
                 field_name.requestFocus();

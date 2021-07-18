@@ -10,7 +10,10 @@ public class Estoque {
 
     private int quantidade;
 
-    public Estoque() {
+    public Estoque(Produto produto, int quantidade) {
+        this.produto = produto;
+        this.tipoEmbalado = tipoEmbalado;
+        this.quantidade = quantidade;
     }
 
     public Estoque(Produto produto, String tipoEmbalado, int quantidade) {

@@ -74,6 +74,7 @@
                         <ContextMenu>
                           <items>
                             <MenuItem fx:id="table_item_refresh" mnemonicParsing="false" text="Refresh" />
+                              <MenuItem fx:id="table_item_add" mnemonicParsing="false" text="Adicionar" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

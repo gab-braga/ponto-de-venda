@@ -1,6 +1,9 @@
 package controller;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
 
 public class AlertBox {
     public static void registrationCompleted(){
@@ -16,6 +19,38 @@ public class AlertBox {
         alert.setTitle("ERRO");
         alert.setHeaderText(null);
         alert.setContentText("Erro ao efetuar cadastro.");
+        alert.showAndWait();
+    }
+
+    public static void editionCompleted(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("AVISO");
+        alert.setHeaderText(null);
+        alert.setContentText("Editado com sucesso.");
+        alert.showAndWait();
+    }
+
+    public static void editionError(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ERRO");
+        alert.setHeaderText(null);
+        alert.setContentText("Erro ao efetuar edição.");
+        alert.showAndWait();
+    }
+
+    public static void deleteCompleted(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("AVISO");
+        alert.setHeaderText(null);
+        alert.setContentText("Excluido com sucesso.");
+        alert.showAndWait();
+    }
+
+    public static void deleteError(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ERRO");
+        alert.setHeaderText(null);
+        alert.setContentText("Erro ao efetuar exclusão.");
         alert.showAndWait();
     }
 
@@ -89,5 +124,34 @@ public class AlertBox {
         alert.setHeaderText(null);
         alert.setContentText("Estoque alimentado.");
         alert.showAndWait();
+    }
+
+    public static void stockUpError(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ERRO");
+        alert.setHeaderText(null);
+        alert.setContentText("Erro ao alimentar o estoque.");
+        alert.showAndWait();
+    }
+
+    public static void selectARecord(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Selecione um registro!");
+        alert.showAndWait();
+    }
+
+    public static boolean confirmationDelete() {
+        boolean flag = false;
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setHeaderText(null);
+        confirmation.setContentText("Cofirma exclusão?");
+        confirmation.setTitle("CONFIRMAÇÃO");
+        Optional<ButtonType> response = confirmation.showAndWait();
+        if (response.get() == ButtonType.OK) {
+            flag = true;
+        }
+        return flag;
     }
 }

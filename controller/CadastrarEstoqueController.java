@@ -58,13 +58,11 @@ public class CadastrarEstoqueController implements Initializable {
         if(validateFields(codeProduct, packed, quantity)) {
             if(Helper.validateInteger(quantity) && Helper.validateInteger(codeProduct)) {
                 if(Helper.validateQuantity(Integer.parseInt(quantity))) {
-                    ProdutoDAO produtoDAO = new ProdutoDAO();
-                    List<Produto> produtos = produtoDAO.queryByCodeProducts(Integer.parseInt(codeProduct));
+                    List<Produto> produtos = ProdutoDAO.queryByCodeProducts(Integer.parseInt(codeProduct));
                     if(produtos.size() > 0) {
-                        EstoqueDAO estoqueDAO = new EstoqueDAO();
-                        if(estoqueDAO.queryByCode(Integer.parseInt(codeProduct)).size() == 0) {
+                        if(EstoqueDAO.queryByCode(Integer.parseInt(codeProduct)).size() == 0) {
                             Estoque estoque = new Estoque(produtos.get(0), packed, Integer.parseInt(quantity));
-                            if(estoqueDAO.register(estoque)) {
+                            if(EstoqueDAO.register(estoque)) {
                                 AlertBox.registrationCompleted();
                                 clearFields();
                                 field_code_product.requestFocus();

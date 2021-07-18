@@ -42,8 +42,7 @@ public class LoginController implements Initializable {
         String username = login_user.getText();
         String password = login_password.getText();
         if(validateFields(username, password)) {
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            List<Usuario> usuarios = usuarioDAO.queryUserPassword(username, password);
+            List<Usuario> usuarios = UsuarioDAO.queryUserPassword(username, password);
             if(!usuarios.isEmpty()) {
                 Usuario usuario = usuarios.get(0);
                 Acesso.checkFullAccess(usuario.getPermissao());

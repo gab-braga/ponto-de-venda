@@ -14,9 +14,6 @@ public class Venda {
 
     private Cliente cliente;
 
-    public Venda() {
-    }
-
     public Venda(double valor, Date dataHora, String vedendor, Cliente cliente) {
         this.valor = valor;
         this.dataHora = dataHora;

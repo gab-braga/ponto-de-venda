@@ -8,9 +8,6 @@ public class Produto {
 
     private double valorVenda;
 
-    public Produto() {
-    }
-
     public Produto(int codigo, String descricao, double valorVenda) {
         this.codigo = codigo;
         this.descricao = descricao;
