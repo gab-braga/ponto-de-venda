@@ -22,6 +22,22 @@ public class AlertBox {
         alert.showAndWait();
     }
 
+    public static void operationCompleted(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("AVISO");
+        alert.setHeaderText(null);
+        alert.setContentText("Operação efetuada com sucesso.");
+        alert.showAndWait();
+    }
+
+    public static void operationError(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ERRO");
+        alert.setHeaderText(null);
+        alert.setContentText("Erro ao efetuar operação.");
+        alert.showAndWait();
+    }
+
     public static void editionCompleted(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVISO");
@@ -153,5 +169,13 @@ public class AlertBox {
             flag = true;
         }
         return flag;
+    }
+
+    public static void dateInvalided(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Formato de data inválido!");
+        alert.showAndWait();
     }
 }

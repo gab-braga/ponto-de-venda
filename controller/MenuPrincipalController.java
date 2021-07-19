@@ -22,9 +22,6 @@ public class MenuPrincipalController implements Initializable {
     private MenuItem item_remove;
 
     @FXML
-    private MenuItem item_consult_sales;
-
-    @FXML
     private MenuItem item_consult_product;
 
     @FXML
@@ -32,6 +29,12 @@ public class MenuPrincipalController implements Initializable {
 
     @FXML
     private MenuItem item_consult_stock;
+
+    @FXML
+    private MenuItem item_consult_sales;
+
+    @FXML
+    private MenuItem item_consult_exits;
 
     @FXML
     private MenuItem item_register_product;
@@ -73,11 +76,6 @@ public class MenuPrincipalController implements Initializable {
             retirar.start(new Stage());
         });
 
-        item_consult_sales.setOnAction(event -> {
-            ConsultarVendas consultarVendas = new ConsultarVendas();
-            consultarVendas.start(new Stage());
-        });
-
         item_consult_product.setOnAction(event -> {
             ConsultarProdutos consultarProdutos = new ConsultarProdutos();
             consultarProdutos.start(new Stage());
@@ -91,6 +89,16 @@ public class MenuPrincipalController implements Initializable {
         item_consult_stock.setOnAction(event -> {
             ConsultarEstoque consultarEstoque = new ConsultarEstoque();
             consultarEstoque.start(new Stage());
+        });
+
+        item_consult_sales.setOnAction(event -> {
+            ConsultarVendas consultarVendas = new ConsultarVendas();
+            consultarVendas.start(new Stage());
+        });
+
+        item_consult_exits.setOnAction(event -> {
+            ConsultarSaidas consultarSaidas = new ConsultarSaidas();
+            consultarSaidas.start(new Stage());
         });
 
         item_register_product.setOnAction(event -> {

@@ -25,10 +25,11 @@
                         </Menu>
                       <Menu mnemonicParsing="false" text="Consultar">
                         <items>
-                              <MenuItem fx:id="item_consult_sales" mnemonicParsing="false" text="Vendas" />
                           <MenuItem fx:id="item_consult_product" mnemonicParsing="false" text="Produtos" />
                               <MenuItem fx:id="item_consult_client" mnemonicParsing="false" text="Clientes" />
                               <MenuItem fx:id="item_consult_stock" mnemonicParsing="false" text="Estoque" />
+                              <MenuItem fx:id="item_consult_sales" mnemonicParsing="false" text="Vendas" />
+                              <MenuItem fx:id="item_consult_exits" mnemonicParsing="false" text="Saídas" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Cadastrar">
