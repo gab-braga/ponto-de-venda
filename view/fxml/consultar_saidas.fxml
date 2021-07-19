@@ -86,8 +86,6 @@
                         <ContextMenu>
                           <items>
                             <MenuItem fx:id="table_item_refresh" mnemonicParsing="false" text="Refresh" />
-                              <MenuItem fx:id="table_item_edit" mnemonicParsing="false" text="Editar" />
-                              <MenuItem fx:id="table_item_delete" mnemonicParsing="false" text="Excluir" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

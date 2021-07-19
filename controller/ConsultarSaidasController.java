@@ -58,12 +58,6 @@ public class ConsultarSaidasController implements Initializable {
     @FXML
     private MenuItem table_item_refresh;
 
-    @FXML
-    private MenuItem table_item_edit;
-
-    @FXML
-    private MenuItem table_item_delete;
-
     private boolean validateFields(String day, String month, String year) {
         return !(day.isEmpty() || month.isEmpty() || year.isEmpty());
     }
@@ -142,6 +136,10 @@ public class ConsultarSaidasController implements Initializable {
         field_search_year.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
                 filter();
+        });
+
+        table_item_refresh.setOnAction(action -> {
+            filter();
         });
 
         field_search_day.setOnKeyTyped(event -> {

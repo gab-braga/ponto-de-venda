@@ -88,7 +88,7 @@ public abstract class ProdutoDAO {
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
-            String sql = "DELETE p, e FROM produto AS p JOIN estoque AS e ON p.PRODUTO_CODIGO = e.PRODUTO_CODIGO  WHERE p.PRODUTO_CODIGO = ?;";
+            String sql = "DELETE p, e FROM produto AS p LEFT JOIN estoque AS e ON p.PRODUTO_CODIGO = e.PRODUTO_CODIGO  WHERE p.PRODUTO_CODIGO = ?;";
             PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
             statement.setInt(1, codigo);
             statement.executeUpdate();

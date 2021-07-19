@@ -172,12 +172,29 @@ public abstract class ClienteDAO {
         List<Cliente> clientes = new ArrayList<Cliente>();
         ConnectionFactory.openConnection();
         try {
-            String sql = "SELECT * FROM cliente WHERE  CLIENTE_NOME LIKE '%"+ name +"%' OR CLIENTE_CPF = '"+ cpf +"';";
+            String sql = "SELECT * FROM cliente WHERE CLIENTE_NOME LIKE '%"+ name +"%' OR CLIENTE_CPF = '"+ cpf +"';";
             PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
             clientes = getClientsList(statement.executeQuery());
         }
         catch(SQLException e) {
             System.err.println("ERRO (QUERY BY NAME AND CPF CLIENTS): " + e.getMessage());
+        }
+        ConnectionFactory.closeConnection();
+        return clientes;
+    }
+
+    public static List<Cliente> queryByCodeClient(int codigo) {
+        createTable();
+        List<Cliente> clientes = new ArrayList<Cliente>();
+        ConnectionFactory.openConnection();
+        try {
+            String sql = "SELECT * FROM cliente WHERE CLIENTE_CODIGO = ?;";
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            statement.setInt(1, codigo);
+            clientes = getClientsList(statement.executeQuery());
+        }
+        catch(SQLException e) {
+            System.err.println("ERRO (QUERY BY CODE CLIENTS): " + e.getMessage());
         }
         ConnectionFactory.closeConnection();
         return clientes;
