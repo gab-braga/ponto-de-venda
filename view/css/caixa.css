@@ -23,3 +23,11 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 15px;
 }
+
+.root .pane .box-fields TextField {
+    -fx-background-color: none;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-prompt-text-fill: #FFFFFF;
+}

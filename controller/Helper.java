@@ -67,6 +67,18 @@ public class Helper {
         return date;
     }
 
+    protected static String getDateFormattedString(Date date) {
+        String dateString = "-";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            dateString = format.format(date);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return dateString;
+    }
+
     protected static String getDateStringByDayMonthYear(String day, String month, String year) {
         return String.format("%s/%s/%s", day, getMonthNumber(month), year);
     }

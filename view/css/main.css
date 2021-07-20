@@ -58,6 +58,10 @@
     -fx-background-color: #FF2F2F;
 }
 
+.root .pane ListView {
+    -fx-cursor: hand;
+}
+
 /*LOGIN*/
 .root .pane .legend {
     -fx-fill: #F6911F;
