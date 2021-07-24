@@ -64,6 +64,10 @@ public class ConsultarClientesController implements Initializable {
     @FXML
     private MenuItem table_item_delete;
 
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
+
     private void fillTable(List<Cliente> clientes) {
         column_name.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nome"));
         column_cpf.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cpf"));
@@ -123,10 +127,6 @@ public class ConsultarClientesController implements Initializable {
         }
     }
 
-    private void close() {
-        ConsultarClientes.getWindow().close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -158,15 +158,7 @@ public class ConsultarClientesController implements Initializable {
             delete();
         });
 
-        field_search_name.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_search_name.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_search_cpf.setOnKeyTyped(event -> {
-            int maxCharacters = 11;
-            if(field_search_name.getText().length() >= maxCharacters) event.consume();
-        });
-
+        Helper.addTextLimiter(field_search_name, 40);
+        Helper.addTextLimiter(field_search_cpf, 11);
     }
 }

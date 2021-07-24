@@ -34,6 +34,10 @@ public class LoginController implements Initializable {
     @FXML
     private JFXButton btn_cancel;
 
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
+
     private boolean validateFields(String usuario, String senha) {
         return !(usuario.isEmpty() || senha.isEmpty());
     }
@@ -59,10 +63,6 @@ public class LoginController implements Initializable {
         }
     }
 
-    private void close() {
-        Login.getWindow().close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -84,14 +84,7 @@ public class LoginController implements Initializable {
             close();
         });
 
-        login_user.setOnKeyTyped(event ->{
-            int maxCharacters = 40;
-            if(login_user.getText().length() >= maxCharacters) event.consume();
-        });
-
-        login_password.setOnKeyTyped(event ->{
-            int maxCharacters = 40;
-            if(login_user.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(login_user, 40);
+        Helper.addTextLimiter(login_password, 20);
     }
 }

@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Estoque;
 import model.Produto;
 import view.AdicionarEstoque;
@@ -46,7 +47,7 @@ public class AdicionarEstoqueController implements Initializable {
     }
 
     private void close() {
-        AdicionarEstoque.getWindow().close();
+        ((Stage) root.getScene().getWindow()).close();
     }
 
     private boolean validateFields(String quantity) {
@@ -97,10 +98,6 @@ public class AdicionarEstoqueController implements Initializable {
                 add();
         });
 
-        field_quantity.setOnKeyTyped(event -> {
-            int maxCharacters = 10;
-            if(field_quantity.getText().length() >= maxCharacters) event.consume();
-        });
-
+        Helper.addTextLimiter(field_quantity, 10);
     }
 }

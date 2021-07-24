@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Produto;
 import view.EditarProduto;
 
@@ -32,6 +33,10 @@ public class EditarProdutoController implements Initializable {
 
     @FXML
     private Button btn_edit;
+
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
 
     private Produto productEdit;
 
@@ -71,10 +76,6 @@ public class EditarProdutoController implements Initializable {
         }
     }
 
-    private void close() {
-        EditarProduto.getWindow().close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -101,19 +102,8 @@ public class EditarProdutoController implements Initializable {
                 edit();
         });
 
-        field_code.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_code.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_description.setOnKeyTyped(event -> {
-            int maxCharacters = 100;
-            if(field_description.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_sale_value.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_sale_value.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(field_code, 4);
+        Helper.addTextLimiter(field_description, 100);
+        Helper.addTextLimiter(field_sale_value, 8);
     }
 }

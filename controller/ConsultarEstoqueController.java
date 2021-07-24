@@ -58,6 +58,10 @@ public class ConsultarEstoqueController implements Initializable {
     @FXML
     private MenuItem table_item_add;
 
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
+
     private void fillTable(List<Estoque> estoque) {
         column_code_product.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getProduto().getCodigo()).asObject());
         column_description_product.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao()));
@@ -102,13 +106,13 @@ public class ConsultarEstoqueController implements Initializable {
         }
     }
 
-    private void close() {
-        ConsultarEstoque.getWindow().close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         filter();
+
+        btn_close.setOnMouseClicked(click -> {
+            close();
+        });
 
         field_search_code_product.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
@@ -128,18 +132,7 @@ public class ConsultarEstoqueController implements Initializable {
             add();
         });
 
-        field_search_code_product.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_search_code_product.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_search_description_product.setOnKeyTyped(event -> {
-            int maxCharacters = 80;
-            if(field_search_description_product.getText().length() >= maxCharacters) event.consume();
-        });
-
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
+        Helper.addTextLimiter(field_search_code_product, 40);
+        Helper.addTextLimiter(field_search_description_product, 100);
     }
 }

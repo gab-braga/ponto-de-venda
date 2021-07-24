@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import model.Cliente;
 import view.PesquisarCliente;
@@ -37,7 +38,7 @@ public class PesquisarClienteController implements Initializable {
 
     private void search() {
         String name = field_name_client.getText();
-        if(name.isEmpty()) {
+        if(name == null || name.isEmpty()) {
             fillList(ClienteDAO.queryAllClients());
         }
         else {
@@ -60,7 +61,7 @@ public class PesquisarClienteController implements Initializable {
             AlertBox.selectARecord();
         }
         else {
-            this.caixaController.fillFieldClient(cliente);
+            this.caixaController.insertAndFillClient(cliente);
             close();
         }
 
@@ -68,6 +69,11 @@ public class PesquisarClienteController implements Initializable {
 
     public void setCaixaController(CaixaController caixaController) {
         this.caixaController = caixaController;
+    }
+
+    public void setClientName(String clientName) {
+        field_name_client.setText(clientName);
+        search();
     }
 
     @Override
@@ -86,9 +92,11 @@ public class PesquisarClienteController implements Initializable {
             search();
         });
 
-        field_name_client.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_name_client.getText().length() >= maxCharacters) event.consume();
+        list_clients.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                selectClient();
         });
+
+        Helper.addTextLimiter(field_name_client, 40);
     }
 }

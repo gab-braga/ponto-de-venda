@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Cliente;
 import model.Usuario;
 import view.EditarCliente;
@@ -51,6 +52,10 @@ public class EditarClienteController implements Initializable {
 
     private Cliente clientEdit;
 
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
+
     public void fillFields(Cliente cliente) {
         this.clientEdit = cliente;
         field_name.setText(cliente.getNome());
@@ -90,10 +95,6 @@ public class EditarClienteController implements Initializable {
         else {
             AlertBox.fillAllFields();
         }
-    }
-
-    private void close() {
-        EditarCliente.getWindow().close();
     }
 
     @Override
@@ -147,45 +148,13 @@ public class EditarClienteController implements Initializable {
                 edit();
         } );
 
-        field_name.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_name.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_cpf.setOnKeyTyped(event -> {
-            int maxCharacters = 14;
-            if(field_cpf.getText().length() >= maxCharacters)
-                event.consume();
-        });
-
-        field_phone.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_phone.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_email.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_email.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_address.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_address.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_number.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_number.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_city.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_city.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_uf.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_uf.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(field_name, 40);
+        Helper.addTextLimiter(field_cpf, 11);
+        Helper.addTextLimiter(field_phone, 15);
+        Helper.addTextLimiter(field_email, 50);
+        Helper.addTextLimiter(field_address, 80);
+        Helper.addTextLimiter(field_number, 5);
+        Helper.addTextLimiter(field_city, 40);
+        Helper.addTextLimiter(field_uf, 2);
     }
 }

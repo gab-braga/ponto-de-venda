@@ -1,5 +1,11 @@
 package controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TextField;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,15 +37,8 @@ public class Helper {
         return (value >= 0);
     }
 
-    protected static Date getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        return date;
-    }
-
-    protected static String getDateTimeStringFormatted(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return dateFormat.format(date);
+    protected static boolean validateQuantity(double value) {
+        return (value >= 0.0);
     }
 
     protected static boolean validateDate(String date) {
@@ -53,6 +52,40 @@ public class Helper {
             flag = false;
         }
         return flag;
+    }
+
+    protected static void addTextLimiter(final TextField textField, final int maxLength) {
+        textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+                if (textField.getText().length() > maxLength) {
+                    String s = textField.getText().substring(0, maxLength);
+                    textField.setText(s);
+                }
+            }
+        });
+    }
+
+    protected static Double round(double value) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+        String valueString = decimalFormat.format(value).replace(",", ".");
+        return Double.parseDouble(valueString);
+    }
+
+    protected static Date getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        return date;
+    }
+
+    protected static String getStringValueDouble(double value) {
+        return Double.toString(value).replace(".", ",");
+    }
+
+    protected static String getDateTimeStringFormatted(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return dateFormat.format(date);
     }
 
     protected static Date getDateFormatted(String dateString) {

@@ -4,30 +4,45 @@
     -fx-background-color: #F6911F;
 }
 
-.root .pane .description Text,
-.root .pane VBox Text,
+.root .pane HBox Label,
 .root .pane VBox Label {
+    -fx-text-fill: #FFFFFF;
+}
+
+.root .pane .description Text,
+.root .pane HBox Text,
+.root .pane VBox Text {
     -fx-fill: #FFFFFF;
+}
+
+.root .pane .description Text,
+.root .pane HBox Label,
+.root .pane VBox Label,
+.root .pane HBox Text,
+.root .pane VBox Text {
     -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.root .pane .box-fields Text {
+    -fx-fill: #FFFFFF;
+}
+
+.root .pane .box-fields .text-default {
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+}
+
+.root .pane .box-fields TextField {
+    -fx-background-color: none;
+    -fx-prompt-text-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
 }
 
 .root .pane .description Text {
     -fx-font-size: 50px;
 }
 
-.root .pane VBox Text {
-    -fx-font-size: 25px;
-}
-
-.root .pane VBox Label {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 15px;
-}
-
-.root .pane .box-fields TextField {
-    -fx-background-color: none;
-    -fx-font-size: 25px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #FFFFFF;
-    -fx-prompt-text-fill: #FFFFFF;
+.root .pane .text-value-total {
+    -fx-font-size: 35px;
 }

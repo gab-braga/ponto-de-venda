@@ -51,6 +51,20 @@ public class UsuariosController implements Initializable {
     @FXML
     private MenuItem table_item_delete;
 
+    private void fillFieldPermission() {
+        List<String> permissions = new ArrayList<String>();
+        permissions.add("");
+        permissions.add(Acesso.accessUser);
+        permissions.add(Acesso.accessAdmin);
+        ObservableList<String> items = FXCollections.observableArrayList(permissions);
+        field_search_permission.setItems(items);
+        field_search_permission.setValue("");
+    }
+
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
+
     private void fillTable(List<Usuario> usuarios) {
         column_name.setCellValueFactory(new PropertyValueFactory<Usuario, String>("nome"));
         column_permission.setCellValueFactory(new PropertyValueFactory<Usuario, String>("permissao"));
@@ -79,16 +93,6 @@ public class UsuariosController implements Initializable {
         }
     }
 
-    private void fillFieldPermission() {
-        List<String> permissions = new ArrayList<String>();
-        permissions.add("");
-        permissions.add(Acesso.accessUser);
-        permissions.add(Acesso.accessAdmin);
-        ObservableList<String> items = FXCollections.observableArrayList(permissions);
-        field_search_permission.setItems(items);
-        field_search_permission.setValue("");
-    }
-
     private void delete() {
         if(AlertBox.confirmationDelete()) {
             Usuario usuario = tableUser.getSelectionModel().getSelectedItem();
@@ -104,10 +108,6 @@ public class UsuariosController implements Initializable {
                 }
             }
         }
-    }
-
-    private void close() {
-        Usuarios.getWindow().close();
     }
 
     @Override
@@ -144,9 +144,6 @@ public class UsuariosController implements Initializable {
             delete();
         });
 
-        field_search_name.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_search_name.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(field_search_name, 40);
     }
 }

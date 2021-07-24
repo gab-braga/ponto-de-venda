@@ -57,6 +57,10 @@ public class ConsultarProdutosController implements Initializable {
     @FXML
     private MenuItem table_item_delete;
 
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
+
     private void fillTable(List<Produto> produtos) {
         column_code.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("codigo"));
         column_description.setCellValueFactory(new PropertyValueFactory<Produto, String>("descricao"));
@@ -115,14 +119,14 @@ public class ConsultarProdutosController implements Initializable {
         }
     }
 
-    private void close() {
-        ConsultarProdutos.getWindow().close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         filter();
+
+        btn_close.setOnMouseClicked(click -> {
+            close();
+        });
 
         field_search_code.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
@@ -132,10 +136,6 @@ public class ConsultarProdutosController implements Initializable {
         field_search_description.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
                 filter();
-        });
-
-        btn_close.setOnMouseClicked(click -> {
-            close();
         });
 
         table_item_refresh.setOnAction(action -> {
@@ -150,14 +150,7 @@ public class ConsultarProdutosController implements Initializable {
             delete();
         });
 
-        field_search_code.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_search_code.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_search_description.setOnKeyTyped(event -> {
-            int maxCharacters = 80;
-            if(field_search_description.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(field_search_code, 40);
+        Helper.addTextLimiter(field_search_description, 100);
     }
 }

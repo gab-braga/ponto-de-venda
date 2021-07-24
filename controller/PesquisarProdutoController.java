@@ -1,6 +1,5 @@
 package controller;
 
-import dao.ClienteDAO;
 import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,10 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import model.Cliente;
 import model.Produto;
-import view.PesquisarCliente;
 import view.PesquisarProduto;
 
 import java.net.URL;
@@ -42,9 +40,14 @@ public class PesquisarProdutoController implements Initializable {
         this.caixaController = caixaController;
     }
 
+    public void setProductDescription(String productDescription) {
+        field_description_product.setText(productDescription);
+        search();
+    }
+
     private void search() {
         String description = field_description_product.getText();
-        if(description.isEmpty()) {
+        if(description == null || description.isEmpty()) {
             fillList(ProdutoDAO.queryAllProducts());
         }
         else {
@@ -63,7 +66,7 @@ public class PesquisarProdutoController implements Initializable {
             AlertBox.selectARecord();
         }
         else {
-            this.caixaController.fillFieldProduct(product);
+            this.caixaController.insertAndFillProduct(product);
             close();
         }
 
@@ -89,9 +92,11 @@ public class PesquisarProdutoController implements Initializable {
             search();
         });
 
-        field_description_product.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_description_product.getText().length() >= maxCharacters) event.consume();
+        list_products.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                selectProduct();
         });
+
+        Helper.addTextLimiter(field_description_product, 100);
     }
 }

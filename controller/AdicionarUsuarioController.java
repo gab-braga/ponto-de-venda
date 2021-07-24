@@ -10,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Usuario;
 import view.AdicionarUsuario;
 
@@ -37,6 +38,20 @@ public class AdicionarUsuarioController implements Initializable {
 
     @FXML
     private Button btn_add;
+
+    private void fillFieldPermission() {
+        List<String> permissions = new ArrayList<String>();
+        permissions.add("");
+        permissions.add(Acesso.accessUser);
+        permissions.add(Acesso.accessAdmin);
+        ObservableList<String> items = FXCollections.observableArrayList(permissions);
+        field_permission.setItems(items);
+        field_permission.setValue("");
+    }
+
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
 
     private void clearFields() {
         field_name.clear();
@@ -73,20 +88,6 @@ public class AdicionarUsuarioController implements Initializable {
         }
     }
 
-    private void close() {
-        AdicionarUsuario.getWindow().close();
-    }
-
-    private void fillFieldPermission() {
-        List<String> permissions = new ArrayList<String>();
-        permissions.add("");
-        permissions.add(Acesso.accessUser);
-        permissions.add(Acesso.accessAdmin);
-        ObservableList<String> items = FXCollections.observableArrayList(permissions);
-        field_permission.setItems(items);
-        field_permission.setValue("");
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -115,14 +116,7 @@ public class AdicionarUsuarioController implements Initializable {
                 register();
         });
 
-        field_name.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_name.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_password.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_password.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(field_name, 40);
+        Helper.addTextLimiter(field_password, 20);
     }
 }

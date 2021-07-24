@@ -98,7 +98,7 @@ public class AlertBox {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
-        alert.setContentText("Valor de quantidade inválido!");
+        alert.setContentText("Valor quantitativo inválido!");
         alert.showAndWait();
     }
 
@@ -176,6 +176,22 @@ public class AlertBox {
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
         alert.setContentText("Formato de data inválido!");
+        alert.showAndWait();
+    }
+
+    public static void insertAProduct() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Insira um produto!");
+        alert.showAndWait();
+    }
+
+    public static void amountChargedIsInsufficient() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("O valor recebido é insuficiente!");
         alert.showAndWait();
     }
 }

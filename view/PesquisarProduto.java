@@ -15,10 +15,12 @@ import java.io.IOException;
 
 public class PesquisarProduto extends Application {
 
-    CaixaController caixaController = new CaixaController();
+    private CaixaController caixaController;
+    private String productDescription;
 
-    public PesquisarProduto(CaixaController caixaController) {
+    public PesquisarProduto(CaixaController caixaController, String productDescription) {
         this.caixaController = caixaController;
+        this.productDescription = productDescription;
     }
 
     private final String title = "Pesquisar Produto";
@@ -40,6 +42,7 @@ public class PesquisarProduto extends Application {
             Parent root = fxmlLoader.load();
             PesquisarProdutoController pesquisarProdutoController = fxmlLoader.getController();
             pesquisarProdutoController.setCaixaController(this.caixaController);
+            pesquisarProdutoController.setProductDescription(productDescription);
             Scene scene = new Scene(root);
 
             setWindow(stage);

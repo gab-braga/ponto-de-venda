@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Caixa;
 import model.Saida;
 import view.Retirar;
@@ -34,6 +35,15 @@ public class RetirarController implements Initializable {
 
     @FXML
     private Button btn_remove;
+
+    private void insertOperator() {
+        field_operator.setText(Acesso.getUser());
+        field_operator.setDisable(true);
+    }
+
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
 
     private void clerFields() {
         field_value_exit.clear();
@@ -71,26 +81,17 @@ public class RetirarController implements Initializable {
         }
     }
 
-    private void insertOperator() {
-        field_operator.setText(Acesso.getUser());
-        field_operator.setDisable(true);
-    }
-
-    private void close() {
-        Retirar.getWindow().close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         insertOperator();
 
-        btn_remove.setOnMouseClicked(click -> {
-            remove();
-        });
-
         btn_cancel.setOnMouseClicked(click -> {
             close();
+        });
+
+        btn_remove.setOnMouseClicked(click -> {
+            remove();
         });
 
         field_operator.setOnKeyPressed(keyEvent -> {
@@ -108,22 +109,8 @@ public class RetirarController implements Initializable {
                 remove();
         });
 
-        field_operator.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_operator.getText().length() >= maxCharacters)
-                event.consume();
-        });
-
-        field_value_exit.setOnKeyTyped(event -> {
-            int maxCharacters = 10;
-            if(field_value_exit.getText().length() >= maxCharacters)
-                event.consume();
-        });
-
-        field_reason.setOnKeyTyped(event -> {
-            int maxCharacters = 100;
-            if(field_reason.getText().length() >= maxCharacters)
-                event.consume();
-        });
+        Helper.addTextLimiter(field_operator, 40);
+        Helper.addTextLimiter(field_value_exit, 8);
+        Helper.addTextLimiter(field_reason, 100);
     }
 }

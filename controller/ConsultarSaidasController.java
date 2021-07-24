@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Saida;
 import view.ConsultarSaidas;
 
@@ -57,6 +58,17 @@ public class ConsultarSaidasController implements Initializable {
 
     @FXML
     private MenuItem table_item_refresh;
+
+    private void fillFieldMonth() {
+        List<String> months = Helper.getListMonths();
+        ObservableList<String> items = FXCollections.observableArrayList(months);
+        field_search_month.setItems(items);
+        field_search_month.setValue("");
+    }
+
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
 
     private boolean validateFields(String day, String month, String year) {
         return !(day.isEmpty() || month.isEmpty() || year.isEmpty());
@@ -101,17 +113,6 @@ public class ConsultarSaidasController implements Initializable {
         }
     }
 
-    private void fillFieldMonth() {
-        List<String> months = Helper.getListMonths();
-        ObservableList<String> items = FXCollections.observableArrayList(months);
-        field_search_month.setItems(items);
-        field_search_month.setValue("");
-    }
-
-    private void close() {
-        ConsultarSaidas.getWindow().close();
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -125,12 +126,12 @@ public class ConsultarSaidasController implements Initializable {
 
         field_search_day.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
-                field_search_month.requestFocus();
+                filter();
         });
 
         field_search_month.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
-                field_search_year.requestFocus();
+                filter();
         });
 
         field_search_year.setOnKeyPressed(keyEvent -> {
@@ -142,14 +143,7 @@ public class ConsultarSaidasController implements Initializable {
             filter();
         });
 
-        field_search_day.setOnKeyTyped(event -> {
-            int maxCharacters = 2;
-            if(field_search_day.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_search_year.setOnKeyTyped(event -> {
-            int maxCharacters = 4;
-            if(field_search_year.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(field_search_day, 2);
+        Helper.addTextLimiter(field_search_year, 4);
     }
 }

@@ -11,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.Estoque;
 import model.Produto;
 import view.CadastrarEstoque;
@@ -39,6 +40,23 @@ public class CadastrarEstoqueController implements Initializable {
 
     @FXML
     private Button btn_cancel;
+
+    private void fillFieldPacked() {
+        List<String> unidades = new ArrayList<String>();
+        unidades.add("UN (Unidade)");
+        unidades.add("CX (Caixa)");
+        unidades.add("FD (Fardo)");
+        unidades.add("PCT (Pacote)");
+        unidades.add("KG (Quilograma)");
+
+        ObservableList<String> items = FXCollections.observableArrayList(unidades);
+        field_packed.setItems(items);
+        field_packed.setValue("");
+    }
+
+    private void close() {
+        ((Stage) root.getScene().getWindow()).close();
+    }
 
     private void clearFields() {
         field_code_product.clear();
@@ -92,23 +110,6 @@ public class CadastrarEstoqueController implements Initializable {
         }
     }
 
-    private void fillFieldPacked() {
-        List<String> unidades = new ArrayList<String>();
-        unidades.add("UN (Unidade)");
-        unidades.add("CX (Caixa)");
-        unidades.add("FD (Fardo)");
-        unidades.add("PCT (Pacote)");
-        unidades.add("KG (Quilograma)");
-
-        ObservableList<String> items = FXCollections.observableArrayList(unidades);
-        field_packed.setItems(items);
-        field_packed.setValue("");
-    }
-
-    private void close() {
-        CadastrarEstoque.getWindow().close();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -137,14 +138,7 @@ public class CadastrarEstoqueController implements Initializable {
                 register();
         });
 
-        field_code_product.setOnKeyTyped(event -> {
-            int maxCharacters = 40;
-            if(field_code_product.getText().length() >= maxCharacters) event.consume();
-        });
-
-        field_quantity.setOnKeyTyped(event -> {
-            int maxCharacters = 10;
-            if(field_quantity.getText().length() >= maxCharacters) event.consume();
-        });
+        Helper.addTextLimiter(field_code_product, 40);
+        Helper.addTextLimiter(field_quantity, 6);
     }
 }
