@@ -10,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Usuario;
-import view.Login;
 import view.MenuPrincipal;
 
 import java.net.URL;
@@ -49,8 +48,8 @@ public class LoginController implements Initializable {
             List<Usuario> usuarios = UsuarioDAO.queryUserPassword(username, password);
             if(!usuarios.isEmpty()) {
                 Usuario usuario = usuarios.get(0);
-                Acesso.checkFullAccess(usuario.getPermissao());
-                Acesso.setUser(usuario.getNome());
+                Access.checkFullAccess(usuario.getPermissao());
+                Access.setUser(usuario.getNome());
                 close();
                 (new MenuPrincipal()).start(new Stage());
             }

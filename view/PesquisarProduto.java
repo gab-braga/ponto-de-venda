@@ -1,7 +1,6 @@
 package view;
 
-import controller.CaixaController;
-import controller.PesquisarClienteController;
+import controller.DataDriver;
 import controller.PesquisarProdutoController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,11 +14,11 @@ import java.io.IOException;
 
 public class PesquisarProduto extends Application {
 
-    private CaixaController caixaController;
+    private DataDriver dataDriver;
     private String productDescription;
 
-    public PesquisarProduto(CaixaController caixaController, String productDescription) {
-        this.caixaController = caixaController;
+    public PesquisarProduto(DataDriver dataDriver, String productDescription) {
+        this.dataDriver = dataDriver;
         this.productDescription = productDescription;
     }
 
@@ -41,7 +40,7 @@ public class PesquisarProduto extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/pesquisar_produto.fxml"));
             Parent root = fxmlLoader.load();
             PesquisarProdutoController pesquisarProdutoController = fxmlLoader.getController();
-            pesquisarProdutoController.setCaixaController(this.caixaController);
+            pesquisarProdutoController.setDataDriver(this.dataDriver);
             pesquisarProdutoController.setProductDescription(productDescription);
             Scene scene = new Scene(root);
 

@@ -1,6 +1,6 @@
 package controller;
 
-public class Acesso {
+public class Access {
 
     protected final static String accessAdmin = "Administrador";
     protected final static String accessUser = "Usuário";
@@ -27,6 +27,6 @@ public class Acesso {
     }
 
     public static void setUser(String user) {
-        Acesso.user = user;
+        Access.user = user;
     }
 }

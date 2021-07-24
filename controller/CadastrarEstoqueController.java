@@ -12,16 +12,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Cliente;
 import model.Estoque;
 import model.Produto;
 import view.CadastrarEstoque;
+import view.PesquisarProduto;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class CadastrarEstoqueController implements Initializable {
+public class CadastrarEstoqueController implements Initializable, DataDriver {
 
     @FXML
     private AnchorPane root;
@@ -34,6 +36,9 @@ public class CadastrarEstoqueController implements Initializable {
 
     @FXML
     private TextField field_quantity;
+
+    @FXML
+    private Button btn_search_product;
 
     @FXML
     private Button btn_register;
@@ -110,6 +115,22 @@ public class CadastrarEstoqueController implements Initializable {
         }
     }
 
+    private void searchProduct() {
+        PesquisarProduto pesquisarProduto = new PesquisarProduto(this, "");
+        pesquisarProduto.start(new Stage());
+    }
+
+    @Override
+    public void insertAndFillClient(Cliente cliente) {
+    }
+
+    @Override
+    public void insertAndFillProduct(Produto produto) {
+        if(!(produto == null)) {
+            field_code_product.setText(Integer.toString(produto.getCodigo()));
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -136,6 +157,10 @@ public class CadastrarEstoqueController implements Initializable {
         field_quantity.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
                 register();
+        });
+
+        btn_search_product.setOnMouseClicked(click -> {
+            searchProduct();
         });
 
         Helper.addTextLimiter(field_code_product, 40);

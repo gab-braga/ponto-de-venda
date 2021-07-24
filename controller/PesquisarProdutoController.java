@@ -34,10 +34,10 @@ public class PesquisarProdutoController implements Initializable {
     @FXML
     private ListView<Produto> list_products;
 
-    private CaixaController caixaController;
+    private DataDriver dataDriver;
 
-    public void setCaixaController(CaixaController caixaController) {
-        this.caixaController = caixaController;
+    public void setDataDriver(DataDriver dataDriver) {
+        this.dataDriver = dataDriver;
     }
 
     public void setProductDescription(String productDescription) {
@@ -66,7 +66,7 @@ public class PesquisarProdutoController implements Initializable {
             AlertBox.selectARecord();
         }
         else {
-            this.caixaController.insertAndFillProduct(product);
+            this.dataDriver.insertAndFillProduct(product);
             close();
         }
 

@@ -1,6 +1,6 @@
 package view;
 
-import controller.CaixaController;
+import controller.DataDriver;
 import controller.PesquisarClienteController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,11 +14,11 @@ import java.io.IOException;
 
 public class PesquisarCliente extends Application {
 
-    private CaixaController caixaController;
+    private DataDriver dataDriver;
     private String clientName;
 
-    public PesquisarCliente(CaixaController caixaController, String clientName) {
-        this.caixaController = caixaController;
+    public PesquisarCliente(DataDriver dataDriver, String clientName) {
+        this.dataDriver = dataDriver;
         this.clientName = clientName;
     }
 
@@ -40,7 +40,7 @@ public class PesquisarCliente extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/pesquisar_cliente.fxml"));
             Parent root = fxmlLoader.load();
             PesquisarClienteController pesquisarClienteController = fxmlLoader.getController();
-            pesquisarClienteController.setCaixaController(this.caixaController);
+            pesquisarClienteController.setCaixaController(this.dataDriver);
             pesquisarClienteController.setClientName(clientName);
             Scene scene = new Scene(root);
 

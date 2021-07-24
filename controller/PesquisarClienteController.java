@@ -34,7 +34,7 @@ public class PesquisarClienteController implements Initializable {
     @FXML
     private ListView<Cliente> list_clients;
 
-    private CaixaController caixaController;
+    private DataDriver dataDriver;
 
     private void search() {
         String name = field_name_client.getText();
@@ -61,14 +61,14 @@ public class PesquisarClienteController implements Initializable {
             AlertBox.selectARecord();
         }
         else {
-            this.caixaController.insertAndFillClient(cliente);
+            this.dataDriver.insertAndFillClient(cliente);
             close();
         }
 
     }
 
-    public void setCaixaController(CaixaController caixaController) {
-        this.caixaController = caixaController;
+    public void setCaixaController(DataDriver dataDriver) {
+        this.dataDriver = dataDriver;
     }
 
     public void setClientName(String clientName) {

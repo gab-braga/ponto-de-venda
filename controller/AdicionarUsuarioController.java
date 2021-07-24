@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Usuario;
-import view.AdicionarUsuario;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,8 +41,8 @@ public class AdicionarUsuarioController implements Initializable {
     private void fillFieldPermission() {
         List<String> permissions = new ArrayList<String>();
         permissions.add("");
-        permissions.add(Acesso.accessUser);
-        permissions.add(Acesso.accessAdmin);
+        permissions.add(Access.accessUser);
+        permissions.add(Access.accessAdmin);
         ObservableList<String> items = FXCollections.observableArrayList(permissions);
         field_permission.setItems(items);
         field_permission.setValue("");

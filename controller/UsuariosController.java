@@ -12,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Usuario;
 import view.AdicionarUsuario;
-import view.Usuarios;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,8 +53,8 @@ public class UsuariosController implements Initializable {
     private void fillFieldPermission() {
         List<String> permissions = new ArrayList<String>();
         permissions.add("");
-        permissions.add(Acesso.accessUser);
-        permissions.add(Acesso.accessAdmin);
+        permissions.add(Access.accessUser);
+        permissions.add(Access.accessAdmin);
         ObservableList<String> items = FXCollections.observableArrayList(permissions);
         field_search_permission.setItems(items);
         field_search_permission.setValue("");

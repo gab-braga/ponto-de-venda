@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class CaixaController implements Initializable {
+public class CaixaController implements Initializable, DataDriver {
 
     @FXML
     private AnchorPane root;
@@ -74,7 +74,7 @@ public class CaixaController implements Initializable {
     private final int initialValueQuantity = 1;
 
     private Date date = Helper.getCurrentDate();
-    private String operator = Acesso.getUser();
+    private String operator = Access.getUser();
 
     private double valueReceived = initialValueDouble;
     private double valueBuy = initialValueDouble;
@@ -181,14 +181,16 @@ public class CaixaController implements Initializable {
         pesquisarProduto.start(new Stage());
     }
 
-    protected void insertAndFillClient(Cliente cliente) {
+    @Override
+    public void insertAndFillClient(Cliente cliente) {
         if(!(cliente == null)) {
             setCliente(cliente);
             field_client.setText(getCliente().getNome());
         }
     }
 
-    protected void insertAndFillProduct(Produto produto) {
+    @Override
+    public void insertAndFillProduct(Produto produto) {
         if(!(produto == null)) {
             setProduto(produto);
             field_product_code.setText(Integer.toString(getProduto().getCodigo()));

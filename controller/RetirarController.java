@@ -11,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Caixa;
 import model.Saida;
-import view.Retirar;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,7 +36,7 @@ public class RetirarController implements Initializable {
     private Button btn_remove;
 
     private void insertOperator() {
-        field_operator.setText(Acesso.getUser());
+        field_operator.setText(Access.getUser());
         field_operator.setDisable(true);
     }
 
