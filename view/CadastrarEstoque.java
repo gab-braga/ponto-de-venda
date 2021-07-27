@@ -32,7 +32,7 @@ public class CadastrarEstoque extends Application {
             setWindow(stage);
             stage.setScene(scene);
             stage.initStyle(StageStyle.DECORATED);
-            stage.initModality(Modality.NONE);
+            stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(MenuPrincipal.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);

@@ -61,7 +61,7 @@ public class RetirarController implements Initializable {
         if(validateFields(operator, value, reason)) {
             if(Helper.validateDouble(value)) {
                 Saida saida = new Saida(Double.parseDouble(value), Helper.getCurrentDate(), reason, operator);
-                Caixa caixa = new Caixa(Double.parseDouble(value), Helper.getCurrentDate(), 2);
+                Caixa caixa = new Caixa(Double.parseDouble(value), Helper.getCurrentDate(), Helper.outputOperation);
                 if(SaidaDAO.register(saida) && CaixaDAO.register(caixa)) {
                     AlertBox.operationCompleted();
                     clerFields();

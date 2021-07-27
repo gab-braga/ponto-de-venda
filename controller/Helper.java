@@ -13,7 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Helper {
+public abstract class Helper {
+
+    protected static final int salesOperation = 1;
+    protected static final int outputOperation = 2;
 
     protected static boolean validateInteger(String text) {
         try {

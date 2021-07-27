@@ -58,6 +58,10 @@ public class ConsultarEstoqueController implements Initializable {
     @FXML
     private MenuItem table_item_add;
 
+    private void blockFullAccess() {
+        table_item_add.setVisible(false);
+    }
+
     private void close() {
         ((Stage) root.getScene().getWindow()).close();
     }
@@ -108,6 +112,8 @@ public class ConsultarEstoqueController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        blockFullAccess();
+
         filter();
 
         btn_close.setOnMouseClicked(click -> {

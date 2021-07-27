@@ -1,6 +1,6 @@
 package controller;
 
-public class Access {
+public abstract class Access {
 
     protected final static String accessAdmin = "Administrador";
     protected final static String accessUser = "Usuário";

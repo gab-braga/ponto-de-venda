@@ -46,7 +46,7 @@ public class EditarProduto extends Application {
             setWindow(stage);
             stage.setScene(scene);
             stage.initStyle(StageStyle.DECORATED);
-            stage.initModality(Modality.NONE);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(ConsultarProdutos.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);

@@ -64,8 +64,14 @@ public class MenuPrincipalController implements Initializable {
         ((Stage) this.root.getScene().getWindow()).close();
     }
 
+    private void blockFullAccess() {
+        item_users.setVisible(false);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        blockFullAccess();
+
         item_seller.setOnAction(event -> {
             Caixa caixa = new Caixa();
             caixa.start(new Stage());

@@ -2,7 +2,7 @@ package dao;
 
 import java.sql.*;
 
-public class ConnectionFactory {
+public abstract class ConnectionFactory {
 
     final static private String url = "jdbc:mysql://127.0.0.1:3306/pontodevenda";
     final static private String usuario = "usuario";

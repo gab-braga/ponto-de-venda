@@ -57,6 +57,11 @@ public class ConsultarProdutosController implements Initializable {
     @FXML
     private MenuItem table_item_delete;
 
+    private void blockFullAccess() {
+        table_item_delete.setVisible(false);
+        table_item_edit.setVisible(false);
+    }
+
     private void close() {
         ((Stage) root.getScene().getWindow()).close();
     }
@@ -121,6 +126,7 @@ public class ConsultarProdutosController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        blockFullAccess();
 
         filter();
 

@@ -47,8 +47,8 @@ public class PesquisarCliente extends Application {
             setWindow(stage);
             stage.setScene(scene);
             stage.initStyle(StageStyle.DECORATED);
-            stage.initModality(Modality.NONE);
-            stage.initOwner(Caixa.getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(MenuPrincipal.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);
             stage.show();

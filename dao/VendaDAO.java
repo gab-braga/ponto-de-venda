@@ -1,6 +1,7 @@
 package dao;
 
 import model.Cliente;
+import model.Item;
 import model.Saida;
 import model.Venda;
 
@@ -21,7 +22,10 @@ public abstract class VendaDAO {
                     "VENDA_DATA DATE NOT NULL," +
                     "VENDA_HORA TIME NOT NULL," +
                     "VENDA_VENDEDOR VARCHAR(100) NOT NULL," +
-                    "CLIENTE_CODIGO INT NOT NULL" +
+                    "CLIENTE_CODIGO INT NOT NULL," +
+                    "PRODUTO_CODIGO INT NOT NULL," +
+                    "FOREIGN (CLIENTE_CODIGO) REFERENCES cliente," +
+                    "FOREIGN (PRODUTO_CODIGO) REFERENCES produto" +
                     ")" +
                     "ENGINE=InnoDB;";
             Statement statement = ConnectionFactory.connection.createStatement();
@@ -48,19 +52,26 @@ public abstract class VendaDAO {
         return vendas;
     }
 
-    public static boolean register(Venda venda) {
+    private static int getKeyTable(ResultSet results) throws SQLException {
+        return results.getInt("VENDA_CODIGO");
+    }
+
+    public static boolean register(Venda venda, Integer key) {
         createTable();
         boolean flag = false;
         ConnectionFactory.openConnection();
         try {
             String sql = "INSERT INTO venda (VENDA_VALOR, VENDA_DATA, VENDA_HORA, VENDA_VENDEDOR, CLIENTE_CODIGO) VALUES (?, ?, ?, ?, ?);";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setDouble(1, venda.getValor());
             statement.setDate(2, new Date(venda.getDataHora().getTime()));
             statement.setTime(3, new Time(venda.getDataHora().getTime()));
             statement.setString(4, venda.getVedendor());
             statement.setInt(5, venda.getCliente().getCodigo());
-            statement.executeUpdate();
+            statement.executeQuery();
+            ResultSet results = statement.getGeneratedKeys();
+            results.first();
+            key = getKeyTable(results);
             flag = true;
         } catch (SQLException e) {
             System.err.println("ERRO (REGISTER SALE): " + e.getMessage());

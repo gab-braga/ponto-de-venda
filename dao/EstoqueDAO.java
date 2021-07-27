@@ -20,7 +20,8 @@ public abstract class EstoqueDAO {
                     "ESTOQUE_CODIGO INT AUTO_INCREMENT PRIMARY KEY," +
                     "ESTOQUE_TIPO_EMBALADO VARCHAR(100) NOT NULL," +
                     "ESTOQUE_QUANTIDADE INT NOT NULL," +
-                    "PRODUTO_CODIGO INT NOT NULL" +
+                    "PRODUTO_CODIGO INT NOT NULL," +
+                    "FOREIGN KEY (PRODUTO_CODIGO) REFERENCES produto" +
                     ")" +
                     "ENGINE=InnoDB;";
             Statement statement = ConnectionFactory.connection.createStatement();
