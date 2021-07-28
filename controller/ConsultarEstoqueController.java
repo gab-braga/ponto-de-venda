@@ -1,6 +1,5 @@
 package controller;
 
-import dao.ClienteDAO;
 import dao.EstoqueDAO;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,11 +12,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Cliente;
 import model.Estoque;
-import model.Produto;
 import view.AdicionarEstoque;
-import view.ConsultarEstoque;
 
 import java.net.URL;
 import java.util.List;
@@ -59,7 +55,7 @@ public class ConsultarEstoqueController implements Initializable {
     private MenuItem table_item_add;
 
     private void blockFullAccess() {
-        table_item_add.setVisible(false);
+        table_item_add.setVisible(Access.isFullAccess());
     }
 
     private void close() {

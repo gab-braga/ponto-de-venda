@@ -10,19 +10,22 @@ public class Venda {
 
     private Date dataHora;
 
-    private String vedendor;
-
     private Cliente cliente;
 
-    public Venda(double valor, Date dataHora, String vedendor, Cliente cliente) {
+    private Caixa caixa;
+
+    private Usuario vendedor;
+
+    public Venda(double valor, Date dataHora, Cliente cliente, Caixa caixa, Usuario vendedor) {
         this.valor = valor;
         this.dataHora = dataHora;
-        this.vedendor = vedendor;
         this.cliente = cliente;
+        this.caixa = caixa;
+        this.vendedor = vendedor;
     }
 
-    public Venda(int codigo, double valor, Date dataHora, String vedendor, Cliente cliente) {
-        this(valor, dataHora, vedendor, cliente);
+    public Venda(int codigo, double valor, Date dataHora, Cliente cliente, Caixa caixa, Usuario vendedor) {
+        this(valor, dataHora, cliente, caixa, vendedor);
         this.codigo = codigo;
     }
 
@@ -50,19 +53,27 @@ public class Venda {
         this.dataHora = dataHora;
     }
 
-    public String getVedendor() {
-        return vedendor;
-    }
-
-    public void setVedendor(String vedendor) {
-        this.vedendor = vedendor;
-    }
-
     public Cliente getCliente() {
         return cliente;
     }
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Caixa getCaixa() {
+        return caixa;
+    }
+
+    public void setCaixa(Caixa caixa) {
+        this.caixa = caixa;
+    }
+
+    public Usuario getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
     }
 }

@@ -12,12 +12,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Cliente;
-import view.ConsultarClientes;
 import view.EditarCliente;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ConsultarClientesController implements Initializable {
@@ -65,8 +63,8 @@ public class ConsultarClientesController implements Initializable {
     private MenuItem table_item_delete;
 
     private void blockFullAccess() {
-        table_item_delete.setVisible(false);
-        table_item_edit.setVisible(false);
+        table_item_delete.setVisible(Access.isFullAccess());
+        table_item_edit.setVisible(Access.isFullAccess());
     }
 
     private void close() {

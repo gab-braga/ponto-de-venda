@@ -1,6 +1,7 @@
 package controller;
 
 import dao.ProdutoDAO;
+import dao.VendaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -9,8 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.Cliente;
-import model.Produto;
+import model.*;
 import view.PesquisarCliente;
 import view.PesquisarProduto;
 
@@ -74,7 +74,7 @@ public class CaixaController implements Initializable, DataDriver {
     private final int initialValueQuantity = 1;
 
     private Date date = Helper.getCurrentDate();
-    private String operator = Access.getUser();
+    private Usuario operator = Access.getUser();
 
     private double valueReceived = initialValueDouble;
     private double valueBuy = initialValueDouble;
@@ -84,6 +84,22 @@ public class CaixaController implements Initializable, DataDriver {
     private Produto produto;
 
     // GETTERS AND SETTERS
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Usuario getOperator() {
+        return operator;
+    }
+
+    public void setOperator(Usuario operator) {
+        this.operator = operator;
+    }
+
     public double getValueReceived() {
         return valueReceived;
     }
@@ -126,11 +142,11 @@ public class CaixaController implements Initializable, DataDriver {
 
 
     private void defineOperator() {
-        text_operator.setText(this.operator);
+        text_operator.setText(getOperator().getNome());
     }
 
     private void defineDate() {
-        text_date.setText(Helper.getDateFormattedString(this.date));
+        text_date.setText(Helper.getDateFormattedString(getDate()));
     }
 
     private void defineProduct() {
@@ -167,6 +183,12 @@ public class CaixaController implements Initializable, DataDriver {
         AlertBox.insertAProduct();
         clearFields();
         field_product_code.requestFocus();
+    }
+
+    private void insertAClient() {
+        AlertBox.insertAClient();
+        clearFields();
+        field_client.requestFocus();
     }
 
     private void searchClient() {
@@ -315,6 +337,28 @@ public class CaixaController implements Initializable, DataDriver {
         }
     }
 
+    private void seller() {
+        if(validateProduct()) {
+            if(validateClient()) {
+                Caixa caixa = null;
+                Venda venda = new Venda(getValueBuy(), getDate(), getCliente(), caixa, getOperator());
+                if(VendaDAO.register(venda)) {
+                    System.out.println("CODIGO: " + venda.getCodigo());
+                    AlertBox.sallerCompleted();
+                }
+                else {
+                    AlertBox.operationError();
+                }
+            }
+            else {
+                insertAClient();
+            }
+        }
+        else {
+            insertAProduct();
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         defineOperator();
@@ -330,6 +374,10 @@ public class CaixaController implements Initializable, DataDriver {
 
         btn_search_product.setOnMouseClicked(click -> {
             searchProduct();
+        });
+
+        btn_seller.setOnMouseClicked(click -> {
+            seller();
         });
 
         field_quantity.setOnKeyReleased(keyEvent -> {

@@ -8,30 +8,34 @@ import java.util.List;
 
 public abstract class ClienteDAO {
 
-    private static boolean createTable() {
+    protected static boolean createTable() {
         boolean flag = false;
-        ConnectionFactory.openConnection();
-        try {
-            String sql =
-                    "CREATE TABLE IF NOT EXISTS cliente(" +
-                    "CLIENTE_CODIGO INT AUTO_INCREMENT PRIMARY KEY," +
-                    "CLIENTE_NOME VARCHAR(100) NOT NULL," +
-                    "CLIENTE_CPF VARCHAR(80) NOT NULL," +
-                    "CLIENTE_TELEFONE VARCHAR(15) NOT NULL," +
-                    "CLIENTE_EMAIL VARCHAR(100) DEFAULT '-'," +
-                    "CLIENTE_ENDERECO VARCHAR(100) DEFAULT '-'," +
-                    "CLIENTE_NUMERO VARCHAR(10) DEFAULT '-'," +
-                    "CLIENTE_CIDADE VARCHAR(100) DEFAULT '-'," +
-                    "CLIENTE_UF VARCHAR(10) DEFAULT '-'" +
-                    ")" +
-                    "ENGINE=InnoDB;";
-            Statement statement = ConnectionFactory.connection.createStatement();
-            statement.execute(sql);
-            flag = true;
-        } catch (SQLException e) {
-            System.err.println("ERRO (CREATE TABLE CLIENT): " + e.getMessage());
+        if (ConnectionFactory.createDatabase()) {
+            if(ConnectionFactory.openConnection()) {
+                try {
+                    String sql =
+                            "CREATE TABLE IF NOT EXISTS " + ConnectionFactory.database + ".cliente(" +
+                                    "CLIENTE_CODIGO INT AUTO_INCREMENT," +
+                                    "CLIENTE_NOME VARCHAR(100) NOT NULL," +
+                                    "CLIENTE_CPF VARCHAR(80) NOT NULL," +
+                                    "CLIENTE_TELEFONE VARCHAR(15) NOT NULL," +
+                                    "CLIENTE_EMAIL VARCHAR(100) DEFAULT '-'," +
+                                    "CLIENTE_ENDERECO VARCHAR(100) DEFAULT '-'," +
+                                    "CLIENTE_NUMERO VARCHAR(10) DEFAULT '-'," +
+                                    "CLIENTE_CIDADE VARCHAR(100) DEFAULT '-'," +
+                                    "CLIENTE_UF VARCHAR(10) DEFAULT '-'," +
+                                    "PRIMARY KEY (CLIENTE_CODIGO)" +
+                                    ")" +
+                                    "ENGINE=InnoDB;";
+                    Statement statement = ConnectionFactory.connection.createStatement();
+                    statement.execute(sql);
+                    flag = true;
+                } catch (SQLException e) {
+                    System.err.println("ERRO (CREATE TABLE CLIENT): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return flag;
     }
 
@@ -53,150 +57,160 @@ public abstract class ClienteDAO {
     }
 
     public static boolean register(Cliente cliente) {
-        createTable();
         boolean flag = false;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "INSERT INTO cliente (CLIENTE_NOME, CLIENTE_CPF, CLIENTE_TELEFONE, CLIENTE_EMAIL, CLIENTE_ENDERECO, CLIENTE_NUMERO, CLIENTE_CIDADE, CLIENTE_UF) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setString(1, cliente.getNome());
-            statement.setString(2, cliente.getCpf());
-            statement.setString(3, cliente.getTelefone());
-            statement.setString(4, cliente.getEmail());
-            statement.setString(5, cliente.getEndereco());
-            statement.setString(6, cliente.getNumero());
-            statement.setString(7, cliente.getCidade());
-            statement.setString(8, cliente.getUf());
-            statement.executeUpdate();
-            flag = true;
-        } catch (SQLException e) {
-            System.err.println("ERRO (REGISTER CLIENT): " + e.getMessage());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "INSERT INTO " + ConnectionFactory.database + ".cliente (CLIENTE_NOME, CLIENTE_CPF, CLIENTE_TELEFONE, CLIENTE_EMAIL, CLIENTE_ENDERECO, CLIENTE_NUMERO, CLIENTE_CIDADE, CLIENTE_UF) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setString(1, cliente.getNome());
+                    statement.setString(2, cliente.getCpf());
+                    statement.setString(3, cliente.getTelefone());
+                    statement.setString(4, cliente.getEmail());
+                    statement.setString(5, cliente.getEndereco());
+                    statement.setString(6, cliente.getNumero());
+                    statement.setString(7, cliente.getCidade());
+                    statement.setString(8, cliente.getUf());
+                    statement.executeUpdate();
+                    flag = true;
+                } catch (SQLException e) {
+                    System.err.println("ERRO (REGISTER CLIENT): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return flag;
     }
 
     public static boolean update(Cliente cliente) {
-        createTable();
         boolean flag = false;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "UPDATE cliente SET CLIENTE_NOME = ?, CLIENTE_CPF = ?, CLIENTE_TELEFONE = ?, CLIENTE_EMAIL = ?, CLIENTE_ENDERECO = ?, CLIENTE_NUMERO = ?, CLIENTE_CIDADE = ?, CLIENTE_UF = ? WHERE CLIENTE_CODIGO = ?;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setString(1, cliente.getNome());
-            statement.setString(2, cliente.getCpf());
-            statement.setString(3, cliente.getTelefone());
-            statement.setString(4, cliente.getEmail());
-            statement.setString(5, cliente.getEndereco());
-            statement.setString(6, cliente.getNumero());
-            statement.setString(7, cliente.getCidade());
-            statement.setString(8, cliente.getUf());
-            statement.setInt(9, cliente.getCodigo());
-            statement.executeUpdate();
-            flag = true;
-        } catch (SQLException e) {
-            System.err.println("ERRO (UPDATE CLIENT): " + e.getMessage());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "UPDATE " + ConnectionFactory.database + ".cliente SET CLIENTE_NOME = ?, CLIENTE_CPF = ?, CLIENTE_TELEFONE = ?, CLIENTE_EMAIL = ?, CLIENTE_ENDERECO = ?, CLIENTE_NUMERO = ?, CLIENTE_CIDADE = ?, CLIENTE_UF = ? WHERE CLIENTE_CODIGO = ?;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setString(1, cliente.getNome());
+                    statement.setString(2, cliente.getCpf());
+                    statement.setString(3, cliente.getTelefone());
+                    statement.setString(4, cliente.getEmail());
+                    statement.setString(5, cliente.getEndereco());
+                    statement.setString(6, cliente.getNumero());
+                    statement.setString(7, cliente.getCidade());
+                    statement.setString(8, cliente.getUf());
+                    statement.setInt(9, cliente.getCodigo());
+                    statement.executeUpdate();
+                    flag = true;
+                } catch (SQLException e) {
+                    System.err.println("ERRO (UPDATE CLIENT): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return flag;
     }
 
     public static boolean deleteByCode(int codigo) {
-        createTable();
         boolean flag = false;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "DELETE FROM cliente WHERE CLIENTE_CODIGO = ?;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setInt(1, codigo);
-            statement.executeUpdate();
-            flag = true;
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "DELETE FROM " + ConnectionFactory.database + ".cliente WHERE CLIENTE_CODIGO = ?;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setInt(1, codigo);
+                    statement.executeUpdate();
+                    flag = true;
+                } catch (SQLException e) {
+                    System.err.println("ERRO (DELETE CLIENT BY CODE): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        catch(SQLException e) {
-            System.err.println("ERRO (DELETE CLIENT BY CODE): " + e.getMessage());
-        }
-        ConnectionFactory.closeConnection();
         return flag;
     }
 
     public static List<Cliente> queryAllClients() {
-        createTable();
-        List<Cliente> clientes = null;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM cliente;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            clientes = getClientsList(statement.executeQuery());
+        List<Cliente> clientes = new ArrayList<Cliente>();
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".cliente ORDER BY CLIENTE_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    clientes = getClientsList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY ALL CLIENTS): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        catch(SQLException e) {
-            System.err.println("ERRO (QUERY ALL CLIENTS): " + e.getMessage());
-        }
-        ConnectionFactory.closeConnection();
         return clientes;
     }
 
     public static List<Cliente> queryByNameClients(String name) {
-        createTable();
         List<Cliente> clientes = new ArrayList<Cliente>();
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM cliente WHERE CLIENTE_NOME LIKE '%"+ name +"%';";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            clientes = getClientsList(statement.executeQuery());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".cliente WHERE CLIENTE_NOME LIKE '%" + name + "%' ORDER BY CLIENTE_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    clientes = getClientsList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY BY NAME CLIENTS): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        catch(SQLException e) {
-            System.err.println("ERRO (QUERY BY NAME CLIENTS): " + e.getMessage());
-        }
-        ConnectionFactory.closeConnection();
         return clientes;
     }
 
     public static List<Cliente> queryByCpfClients(String cpf) {
-        createTable();
         List<Cliente> clientes = new ArrayList<Cliente>();
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM cliente WHERE CLIENTE_CPF = '"+ cpf +"';";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            clientes = getClientsList(statement.executeQuery());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".cliente WHERE CLIENTE_CPF = '" + cpf + "' ORDER BY CLIENTE_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    clientes = getClientsList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY BY CPF CLIENTS): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        catch(SQLException e) {
-            System.err.println("ERRO (QUERY BY CPF CLIENTS): " + e.getMessage());
-        }
-        ConnectionFactory.closeConnection();
         return clientes;
     }
 
     public static List<Cliente> queryByNameOrCpfClients(String name, String cpf) {
-        createTable();
         List<Cliente> clientes = new ArrayList<Cliente>();
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM cliente WHERE CLIENTE_NOME LIKE '%"+ name +"%' OR CLIENTE_CPF = '"+ cpf +"';";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            clientes = getClientsList(statement.executeQuery());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".cliente WHERE CLIENTE_NOME LIKE '%" + name + "%' OR CLIENTE_CPF = '" + cpf + "' ORDER BY CLIENTE_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    clientes = getClientsList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY BY NAME AND CPF CLIENTS): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        catch(SQLException e) {
-            System.err.println("ERRO (QUERY BY NAME AND CPF CLIENTS): " + e.getMessage());
-        }
-        ConnectionFactory.closeConnection();
         return clientes;
     }
 
     public static List<Cliente> queryByCodeClient(int codigo) {
-        createTable();
         List<Cliente> clientes = new ArrayList<Cliente>();
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM cliente WHERE CLIENTE_CODIGO = ?;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setInt(1, codigo);
-            clientes = getClientsList(statement.executeQuery());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".cliente WHERE CLIENTE_CODIGO = ? ORDER BY CLIENTE_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setInt(1, codigo);
+                    clientes = getClientsList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY BY CODE CLIENTS): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        catch(SQLException e) {
-            System.err.println("ERRO (QUERY BY CODE CLIENTS): " + e.getMessage());
-        }
-        ConnectionFactory.closeConnection();
         return clientes;
     }
 }

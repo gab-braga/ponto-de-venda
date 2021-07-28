@@ -1,6 +1,5 @@
 package dao;
 
-import model.Cliente;
 import model.Usuario;
 
 import java.sql.PreparedStatement;
@@ -12,24 +11,28 @@ import java.util.List;
 
 public abstract class UsuarioDAO {
 
-    private static boolean createTable() {
+    protected static boolean createTable() {
         boolean flag = false;
-        ConnectionFactory.openConnection();
-        try {
-            String sql =
-                    "CREATE TABLE IF NOT EXISTS usuario(" +
-                    "USUARIO_NOME VARCHAR(100) PRIMARY KEY," +
-                    "USUARIO_SENHA VARCHAR(50) NOT NULL," +
-                    "USUARIO_PERMISSAO VARCHAR(80) NOT NULL" +
-                    ")" +
-                    "ENGINE=InnoDB;";
-            Statement statement = ConnectionFactory.connection.createStatement();
-            statement.execute(sql);
-            flag = true;
-        } catch (SQLException e) {
-            System.err.println("ERRO (CREATE TABLE USER): " + e.getMessage());
+        if (ConnectionFactory.createDatabase()) {
+            if(ConnectionFactory.openConnection()) {
+                try {
+                    String sql =
+                            "CREATE TABLE IF NOT EXISTS " + ConnectionFactory.database + ".usuario(" +
+                                    "USUARIO_NOME VARCHAR(100)," +
+                                    "USUARIO_SENHA VARCHAR(50) NOT NULL," +
+                                    "USUARIO_PERMISSAO VARCHAR(80) NOT NULL," +
+                                    "PRIMARY KEY (USUARIO_NOME)" +
+                                    ")" +
+                                    "ENGINE=InnoDB;";
+                    Statement statement = ConnectionFactory.connection.createStatement();
+                    statement.execute(sql);
+                    flag = true;
+                } catch (SQLException e) {
+                    System.err.println("ERRO (CREATE TABLE USER): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return flag;
     }
 
@@ -45,127 +48,141 @@ public abstract class UsuarioDAO {
     }
 
     public static boolean register(Usuario usuario) {
-        createTable();
         boolean flag = false;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "INSERT INTO usuario (USUARIO_NOME, USUARIO_SENHA, USUARIO_PERMISSAO) VALUES (?, ?, ?);";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setString(1, usuario.getNome());
-            statement.setString(2, usuario.getSenha());
-            statement.setString(3, usuario.getPermissao());
-            statement.executeUpdate();
-            flag = true;
-        } catch (SQLException e) {
-            System.err.println("ERRO (REGISTER USER): " + e.getMessage());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "INSERT INTO " + ConnectionFactory.database + ".usuario (USUARIO_NOME, USUARIO_SENHA, USUARIO_PERMISSAO) VALUES (?, ?, ?);";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setString(1, usuario.getNome());
+                    statement.setString(2, usuario.getSenha());
+                    statement.setString(3, usuario.getPermissao());
+                    statement.executeUpdate();
+                    flag = true;
+                } catch (SQLException e) {
+                    System.err.println("ERRO (REGISTER USER): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return flag;
     }
 
     public static boolean deleteByName(String nome) {
-        createTable();
         boolean flag = false;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "DELETE FROM usuario WHERE USUARIO_NOME = ?;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setString(1, nome);
-            statement.executeUpdate();
-            flag = true;
-        } catch (SQLException e) {
-            System.err.println("ERRO (DELETE USER BY NAME): " + e.getMessage());
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "DELETE FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME = ?;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setString(1, nome);
+                    statement.executeUpdate();
+                    flag = true;
+                } catch (SQLException e) {
+                    System.err.println("ERRO (DELETE USER BY NAME): " + e.getMessage());
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return flag;
     }
 
     public static List<Usuario> queryUserPassword(String usuario, String senha) {
-        createTable();
-        List<Usuario> results = null;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM usuario WHERE USUARIO_NOME = ? AND USUARIO_SENHA = ?;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setString(1, usuario);
-            statement.setString(2, senha);
-            results = getUserList(statement.executeQuery());
-        } catch (SQLException e) {
-            System.err.println("ERRO (QUERY USER AND PASSWORD): " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Usuario> results = new ArrayList<Usuario>();
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME = ? AND USUARIO_SENHA = ?;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setString(1, usuario);
+                    statement.setString(2, senha);
+                    results = getUserList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY USER AND PASSWORD): " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return results;
     }
 
     public static List<Usuario> queryAllUser() {
-        createTable();
-        List<Usuario> results = null;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM usuario ORDER BY USUARIO_NOME;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            results = getUserList(statement.executeQuery());
-        } catch (SQLException e) {
-            System.err.println("ERRO (QUERY ALL USER): " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Usuario> results = new ArrayList<Usuario>();
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario ORDER BY USUARIO_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    results = getUserList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY ALL USER): " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return results;
     }
 
     public static List<Usuario> queryUserByName(String name) {
-        createTable();
-        List<Usuario> results = null;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%"+ name +"%' ORDER BY USUARIO_NOME;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            results = getUserList(statement.executeQuery());
-        } catch (SQLException e) {
-            System.err.println("ERRO (QUERY USER BY NAME): " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Usuario> results = new ArrayList<Usuario>();
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME LIKE '%" + name + "%' ORDER BY USUARIO_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    results = getUserList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY USER BY NAME): " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return results;
     }
 
     public static List<Usuario> queryUserByPermission(String permission) {
-        createTable();
-        List<Usuario> results = null;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM usuario WHERE USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setString(1, permission);
-            results = getUserList(statement.executeQuery());
-        } catch (SQLException e) {
-            System.err.println("ERRO (QUERY USER BY PERMISSION): " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Usuario> results = new ArrayList<Usuario>();
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setString(1, permission);
+                    results = getUserList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY USER BY PERMISSION): " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return results;
     }
 
     public static List<Usuario> queryUserByNameOrPermission(String name, String permission) {
-        createTable();
-        List<Usuario> results = null;
-        ConnectionFactory.openConnection();
-        try {
-            String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%"+ name +"%' OR USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
-            PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-            statement.setString(1, permission);
-            results = getUserList(statement.executeQuery());
-        } catch (SQLException e) {
-            System.err.println("ERRO (QUERY USER BY NAME OR PERMISSION): " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Usuario> results = new ArrayList<Usuario>();
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                try {
+                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME LIKE '%" + name + "%' OR USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
+                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                    statement.setString(1, permission);
+                    results = getUserList(statement.executeQuery());
+                } catch (SQLException e) {
+                    System.err.println("ERRO (QUERY USER BY NAME OR PERMISSION): " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ConnectionFactory.closeConnection();
+            }
         }
-        ConnectionFactory.closeConnection();
         return results;
     }
 }

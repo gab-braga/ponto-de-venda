@@ -1,5 +1,7 @@
 package controller;
 
+import model.Usuario;
+
 public abstract class Access {
 
     protected final static String accessAdmin = "Administrador";
@@ -7,7 +9,7 @@ public abstract class Access {
 
     private static boolean fullAccess = false;
 
-    private static String user;
+    private static Usuario user;
 
     public static void checkFullAccess(String accessLevel) {
         if(accessLevel.equals(accessAdmin)) {
@@ -22,11 +24,11 @@ public abstract class Access {
         return fullAccess;
     }
 
-    public static String getUser() {
+    public static Usuario getUser() {
         return user;
     }
 
-    public static void setUser(String user) {
+    public static void setUser(Usuario user) {
         Access.user = user;
     }
 }

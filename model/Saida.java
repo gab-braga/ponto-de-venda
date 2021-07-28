@@ -12,17 +12,20 @@ public class Saida {
 
     private String motivo;
 
-    private String operador;
+    private Caixa caixa;
 
-    public Saida(double valor, Date dataHora, String motivo, String operador) {
+    private Usuario operador;
+
+    public Saida(double valor, Date dataHora, String motivo, Caixa caixa, Usuario operador) {
         this.valor = valor;
         this.dataHora = dataHora;
         this.motivo = motivo;
+        this.caixa = caixa;
         this.operador = operador;
     }
 
-    public Saida(int codigo, double valor, Date dataHora, String motivo, String operador) {
-        this(valor, dataHora, motivo, operador);
+    public Saida(int codigo, double valor, Date dataHora, String motivo, Caixa caixa, Usuario operador) {
+        this(valor, dataHora, motivo, caixa, operador);
         this.codigo = codigo;
     }
 
@@ -58,11 +61,19 @@ public class Saida {
         this.motivo = motivo;
     }
 
-    public String getOperador() {
+    public Caixa getCaixa() {
+        return caixa;
+    }
+
+    public void setCaixa(Caixa caixa) {
+        this.caixa = caixa;
+    }
+
+    public Usuario getOperador() {
         return operador;
     }
 
-    public void setOperador(String operador) {
+    public void setOperador(Usuario operador) {
         this.operador = operador;
     }
 }

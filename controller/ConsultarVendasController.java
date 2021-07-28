@@ -1,6 +1,5 @@
 package controller;
 
-import dao.SaidaDAO;
 import dao.VendaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -12,9 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Saida;
 import model.Venda;
-import view.ConsultarVendas;
 
 import java.net.URL;
 import java.util.Date;

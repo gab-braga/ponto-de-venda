@@ -65,7 +65,7 @@ public class MenuPrincipalController implements Initializable {
     }
 
     private void blockFullAccess() {
-        item_users.setVisible(false);
+        item_users.setVisible(Access.isFullAccess());
     }
 
     @Override

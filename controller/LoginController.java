@@ -46,10 +46,10 @@ public class LoginController implements Initializable {
         String password = login_password.getText();
         if(validateFields(username, password)) {
             List<Usuario> usuarios = UsuarioDAO.queryUserPassword(username, password);
-            if(!usuarios.isEmpty()) {
+            if(!usuarios.isEmpty() || usuarios == null) {
                 Usuario usuario = usuarios.get(0);
                 Access.checkFullAccess(usuario.getPermissao());
-                Access.setUser(usuario.getNome());
+                Access.setUser(usuario);
                 close();
                 (new MenuPrincipal()).start(new Stage());
             }

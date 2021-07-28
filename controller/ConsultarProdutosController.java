@@ -1,7 +1,5 @@
 package controller;
 
-import com.sun.xml.internal.bind.v2.runtime.property.ValueProperty;
-import dao.ClienteDAO;
 import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,10 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Cliente;
 import model.Produto;
-import view.ConsultarProdutos;
-import view.EditarCliente;
 import view.EditarProduto;
 
 import java.net.URL;
@@ -58,8 +53,8 @@ public class ConsultarProdutosController implements Initializable {
     private MenuItem table_item_delete;
 
     private void blockFullAccess() {
-        table_item_delete.setVisible(false);
-        table_item_edit.setVisible(false);
+        table_item_delete.setVisible(Access.isFullAccess());
+        table_item_edit.setVisible(Access.isFullAccess());
     }
 
     private void close() {

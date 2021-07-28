@@ -70,6 +70,14 @@ public class AlertBox {
         alert.showAndWait();
     }
 
+    public static void sallerCompleted(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("AVISO");
+        alert.setHeaderText(null);
+        alert.setContentText("Venda realizada com sucesso.");
+        alert.showAndWait();
+    }
+
     public static void fillAllFields(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
@@ -184,6 +192,14 @@ public class AlertBox {
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
         alert.setContentText("Insira um produto!");
+        alert.showAndWait();
+    }
+
+    public static void insertAClient() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Insira um cliente!");
         alert.showAndWait();
     }
 

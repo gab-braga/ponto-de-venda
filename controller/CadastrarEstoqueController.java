@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import model.Cliente;
 import model.Estoque;
 import model.Produto;
-import view.CadastrarEstoque;
 import view.PesquisarProduto;
 
 import java.net.URL;

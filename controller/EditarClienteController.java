@@ -9,8 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Cliente;
-import model.Usuario;
-import view.EditarCliente;
 
 import java.net.URL;
 import java.util.ResourceBundle;

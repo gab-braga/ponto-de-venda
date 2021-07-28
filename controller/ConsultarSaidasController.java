@@ -17,7 +17,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Saida;
-import view.ConsultarSaidas;
 
 import java.net.URL;
 import java.util.Date;

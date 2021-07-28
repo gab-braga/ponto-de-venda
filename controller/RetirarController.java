@@ -36,7 +36,7 @@ public class RetirarController implements Initializable {
     private Button btn_remove;
 
     private void insertOperator() {
-        field_operator.setText(Access.getUser());
+        field_operator.setText(Access.getUser().getNome());
         field_operator.setDisable(true);
     }
 
@@ -60,14 +60,15 @@ public class RetirarController implements Initializable {
 
         if(validateFields(operator, value, reason)) {
             if(Helper.validateDouble(value)) {
-                Saida saida = new Saida(Double.parseDouble(value), Helper.getCurrentDate(), reason, operator);
                 Caixa caixa = new Caixa(Double.parseDouble(value), Helper.getCurrentDate(), Helper.outputOperation);
-                if(SaidaDAO.register(saida) && CaixaDAO.register(caixa)) {
-                    AlertBox.operationCompleted();
-                    clerFields();
-                    field_value_exit.requestFocus();
-                }
-                else {
+                if (CaixaDAO.register(caixa)) {
+                    Saida saida = new Saida(Double.parseDouble(value), Helper.getCurrentDate(), reason, caixa, Access.getUser());
+                    if (SaidaDAO.register(saida)) {
+                        AlertBox.operationCompleted();
+                        clerFields();
+                        field_value_exit.requestFocus();
+                    }
+                } else {
                     AlertBox.operationError();
                 }
             }

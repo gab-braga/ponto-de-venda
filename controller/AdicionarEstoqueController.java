@@ -11,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Estoque;
 import model.Produto;
-import view.AdicionarEstoque;
 
 import java.net.URL;
 import java.util.ResourceBundle;
