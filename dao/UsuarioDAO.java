@@ -1,5 +1,6 @@
 package dao;
 
+import model.Saida;
 import model.Usuario;
 
 import java.sql.PreparedStatement;
@@ -10,31 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class UsuarioDAO {
-
-    protected static boolean createTable() {
-        boolean flag = false;
-        if (ConnectionFactory.createDatabase()) {
-            if(ConnectionFactory.openConnection()) {
-                try {
-                    String sql =
-                            "CREATE TABLE IF NOT EXISTS " + ConnectionFactory.database + ".usuario(" +
-                                    "USUARIO_NOME VARCHAR(100)," +
-                                    "USUARIO_SENHA VARCHAR(50) NOT NULL," +
-                                    "USUARIO_PERMISSAO VARCHAR(80) NOT NULL," +
-                                    "PRIMARY KEY (USUARIO_NOME)" +
-                                    ")" +
-                                    "ENGINE=InnoDB;";
-                    Statement statement = ConnectionFactory.connection.createStatement();
-                    statement.execute(sql);
-                    flag = true;
-                } catch (SQLException e) {
-                    System.err.println("ERRO (CREATE TABLE USER): " + e.getMessage());
-                }
-                ConnectionFactory.closeConnection();
-            }
-        }
-        return flag;
-    }
 
     private static List<Usuario> getUserList(ResultSet results) throws Exception {
         List<Usuario> usuarios = new ArrayList<Usuario>();
@@ -47,20 +23,49 @@ public abstract class UsuarioDAO {
         return usuarios;
     }
 
+    protected static boolean createTable() {
+        boolean flag = false;
+        if (ConnectionFactory.createDatabase()) {
+            if(ConnectionFactory.openConnection()) {
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql =
+                                "CREATE TABLE IF NOT EXISTS usuario(" +
+                                        "USUARIO_NOME VARCHAR(100)," +
+                                        "USUARIO_SENHA VARCHAR(50) NOT NULL," +
+                                        "USUARIO_PERMISSAO VARCHAR(80) NOT NULL," +
+                                        "PRIMARY KEY (USUARIO_NOME)" +
+                                        ")" +
+                                        "ENGINE=InnoDB;";
+                        Statement statement = ConnectionFactory.connection.createStatement();
+                        statement.execute(sql);
+                        flag = true;
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (CREATE TABLE USER): " + e.getMessage());
+                    }
+                }
+                ConnectionFactory.closeConnection();
+            }
+        }
+        return flag;
+    }
+
     public static boolean register(Usuario usuario) {
         boolean flag = false;
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "INSERT INTO " + ConnectionFactory.database + ".usuario (USUARIO_NOME, USUARIO_SENHA, USUARIO_PERMISSAO) VALUES (?, ?, ?);";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    statement.setString(1, usuario.getNome());
-                    statement.setString(2, usuario.getSenha());
-                    statement.setString(3, usuario.getPermissao());
-                    statement.executeUpdate();
-                    flag = true;
-                } catch (SQLException e) {
-                    System.err.println("ERRO (REGISTER USER): " + e.getMessage());
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "INSERT INTO usuario (USUARIO_NOME, USUARIO_SENHA, USUARIO_PERMISSAO) VALUES (?, ?, ?);";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        statement.setString(1, usuario.getNome());
+                        statement.setString(2, usuario.getSenha());
+                        statement.setString(3, usuario.getPermissao());
+                        statement.executeUpdate();
+                        flag = true;
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (REGISTER USER): " + e.getMessage());
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
@@ -72,14 +77,16 @@ public abstract class UsuarioDAO {
         boolean flag = false;
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "DELETE FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME = ?;";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    statement.setString(1, nome);
-                    statement.executeUpdate();
-                    flag = true;
-                } catch (SQLException e) {
-                    System.err.println("ERRO (DELETE USER BY NAME): " + e.getMessage());
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "DELETE FROM usuario WHERE USUARIO_NOME = ?;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        statement.setString(1, nome);
+                        statement.executeUpdate();
+                        flag = true;
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (DELETE USER BY NAME): " + e.getMessage());
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
@@ -91,16 +98,18 @@ public abstract class UsuarioDAO {
         List<Usuario> results = new ArrayList<Usuario>();
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME = ? AND USUARIO_SENHA = ?;";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    statement.setString(1, usuario);
-                    statement.setString(2, senha);
-                    results = getUserList(statement.executeQuery());
-                } catch (SQLException e) {
-                    System.err.println("ERRO (QUERY USER AND PASSWORD): " + e.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "SELECT * FROM usuario WHERE USUARIO_NOME = ? AND USUARIO_SENHA = ?;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        statement.setString(1, usuario);
+                        statement.setString(2, senha);
+                        results = getUserList(statement.executeQuery());
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (QUERY USER AND PASSWORD): " + e.getMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
@@ -112,14 +121,16 @@ public abstract class UsuarioDAO {
         List<Usuario> results = new ArrayList<Usuario>();
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario ORDER BY USUARIO_NOME;";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    results = getUserList(statement.executeQuery());
-                } catch (SQLException e) {
-                    System.err.println("ERRO (QUERY ALL USER): " + e.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "SELECT * FROM usuario ORDER BY USUARIO_NOME;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        results = getUserList(statement.executeQuery());
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (QUERY ALL USER): " + e.getMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
@@ -131,14 +142,16 @@ public abstract class UsuarioDAO {
         List<Usuario> results = new ArrayList<Usuario>();
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME LIKE '%" + name + "%' ORDER BY USUARIO_NOME;";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    results = getUserList(statement.executeQuery());
-                } catch (SQLException e) {
-                    System.err.println("ERRO (QUERY USER BY NAME): " + e.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%" + name + "%' ORDER BY USUARIO_NOME;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        results = getUserList(statement.executeQuery());
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (QUERY USER BY NAME): " + e.getMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
@@ -150,15 +163,17 @@ public abstract class UsuarioDAO {
         List<Usuario> results = new ArrayList<Usuario>();
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    statement.setString(1, permission);
-                    results = getUserList(statement.executeQuery());
-                } catch (SQLException e) {
-                    System.err.println("ERRO (QUERY USER BY PERMISSION): " + e.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "SELECT * FROM usuario WHERE USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        statement.setString(1, permission);
+                        results = getUserList(statement.executeQuery());
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (QUERY USER BY PERMISSION): " + e.getMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
@@ -170,19 +185,25 @@ public abstract class UsuarioDAO {
         List<Usuario> results = new ArrayList<Usuario>();
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".usuario WHERE USUARIO_NOME LIKE '%" + name + "%' OR USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    statement.setString(1, permission);
-                    results = getUserList(statement.executeQuery());
-                } catch (SQLException e) {
-                    System.err.println("ERRO (QUERY USER BY NAME OR PERMISSION): " + e.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%" + name + "%' OR USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        statement.setString(1, permission);
+                        results = getUserList(statement.executeQuery());
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (QUERY USER BY NAME OR PERMISSION): " + e.getMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
         }
         return results;
+    }
+
+    protected static Usuario getUserByName(String nome) {
+        return queryUserByName(nome).get(0);
     }
 }

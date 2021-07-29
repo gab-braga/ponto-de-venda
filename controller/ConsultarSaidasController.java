@@ -81,7 +81,7 @@ public class ConsultarSaidasController implements Initializable {
         column_date_hour.setCellValueFactory(data -> new SimpleStringProperty(Helper.getDateTimeStringFormatted(data.getValue().getDataHora())));
         column_value.setCellValueFactory(new PropertyValueFactory<Saida, Double>("valor"));
         column_reason.setCellValueFactory(new PropertyValueFactory<Saida, String>("motivo"));
-        column_operator.setCellValueFactory(new PropertyValueFactory<Saida, String>("operador"));
+        column_operator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperador().getNome()));
 
         ObservableList<Saida> items = FXCollections.observableArrayList(saidas);
         table_exits.setItems(items);

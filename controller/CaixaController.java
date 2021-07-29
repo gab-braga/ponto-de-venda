@@ -156,7 +156,7 @@ public class CaixaController implements Initializable, DataDriver {
         }
         else {
             if(Helper.validateInteger(code_product)) {
-                List<Produto> produtos = ProdutoDAO.queryByCodeProducts(Integer.parseInt(code_product));
+                List<Produto> produtos = ProdutoDAO.queryProductByCode(Integer.parseInt(code_product));
                 if(produtos.size() > 0) {
                     insertAndFillProduct(produtos.get(0));
                 }

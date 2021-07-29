@@ -58,7 +58,7 @@ public class AdicionarEstoqueController implements Initializable {
         if(Helper.validateInteger(quantity)) {
             if(validateFields(quantity)) {
                 if(Helper.validateQuantity(Integer.parseInt(quantity))) {
-                    Produto produto = ProdutoDAO.queryByCodeProducts(stockEdit.getProduto().getCodigo()).get(0);
+                    Produto produto = ProdutoDAO.queryProductByCode(stockEdit.getProduto().getCodigo()).get(0);
                     Estoque estoque = new Estoque(produto, Integer.parseInt(quantity));
                     if(EstoqueDAO.add(estoque)) {
                         AlertBox.stockUp();

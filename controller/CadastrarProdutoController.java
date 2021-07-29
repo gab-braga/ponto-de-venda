@@ -54,7 +54,7 @@ public class CadastrarProdutoController implements Initializable {
 
         if(validateFields(code, description, saleValue)) {
             if(Helper.validateInteger(code) && Helper.validateDouble(saleValue)) {
-                if(ProdutoDAO.queryByCodeProducts(Integer.parseInt(code)).size() == 0) {
+                if(ProdutoDAO.queryProductByCode(Integer.parseInt(code)).size() == 0) {
                     Produto produto = new Produto(Integer.parseInt(code), description, Double.parseDouble(saleValue));
                     if(ProdutoDAO.register(produto)) {
                         AlertBox.registrationCompleted();

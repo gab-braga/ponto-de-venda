@@ -51,7 +51,20 @@ public abstract class ConnectionFactory {
         return flag;
     }
 
-
+    protected static boolean useDataBase() {
+        boolean flag = false;
+        try {
+            if(!connection.isClosed()) {
+                Statement statement = connection.createStatement();
+                String sql = "USE "+ database +";";
+                statement.execute(sql);
+                flag = true;
+            }
+        } catch (SQLException e) {
+            System.err.println("ERRO (USE DATABASE): " + e.getCause());
+        }
+        return flag;
+    }
 
     protected static int getKeyTable(ResultSet results) throws SQLException {
         return results.getInt(1);

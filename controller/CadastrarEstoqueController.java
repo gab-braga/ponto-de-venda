@@ -80,9 +80,9 @@ public class CadastrarEstoqueController implements Initializable, DataDriver {
         if(validateFields(codeProduct, packed, quantity)) {
             if(Helper.validateInteger(quantity) && Helper.validateInteger(codeProduct)) {
                 if(Helper.validateQuantity(Integer.parseInt(quantity))) {
-                    List<Produto> produtos = ProdutoDAO.queryByCodeProducts(Integer.parseInt(codeProduct));
+                    List<Produto> produtos = ProdutoDAO.queryProductByCode(Integer.parseInt(codeProduct));
                     if(produtos.size() > 0) {
-                        if(EstoqueDAO.queryByCode(Integer.parseInt(codeProduct)).size() == 0) {
+                        if(EstoqueDAO.queryStockByCode(Integer.parseInt(codeProduct)).size() == 0) {
                             Estoque estoque = new Estoque(produtos.get(0), packed, Integer.parseInt(quantity));
                             if(EstoqueDAO.register(estoque)) {
                                 AlertBox.registrationCompleted();

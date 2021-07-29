@@ -82,7 +82,7 @@ public class ConsultarEstoqueController implements Initializable {
                 fillTable(EstoqueDAO.queryByCodeOrDescription(Integer.parseInt(code), description));
             }
             else if(filterByCode && !filterByDescription) {
-                fillTable(EstoqueDAO.queryByCode(Integer.parseInt(code)));
+                fillTable(EstoqueDAO.queryStockByCode(Integer.parseInt(code)));
             }
             else if(!filterByCode && filterByDescription) {
                 fillTable(EstoqueDAO.queryByDescription(description));

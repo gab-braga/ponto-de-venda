@@ -2,25 +2,25 @@ package model;
 
 public class Item {
     private int codigo;
-    private int codigoProduto;
-    private int codigoVenda;
     private int quantidade;
+    private Venda venda;
+    private Produto produto;
 
     public Item() {
     }
 
-    public Item(int codigoProduto, int quantidade) {
-        this.codigoProduto = codigoProduto;
+    public Item(Produto produto, int quantidade) {
+        this.produto = produto;
         this.quantidade = quantidade;
     }
 
-    public Item(int codigoProduto, int codigoVenda, int quantidade) {
-        this(codigoProduto, quantidade);
-        this.codigoVenda = codigoVenda;
+    public Item(Produto produto, Venda venda, int quantidade) {
+        this(produto, quantidade);
+        this.venda = venda;
     }
 
-    public Item(int codigo, int codigoProduto, int codigoVenda, int quantidade) {
-        this(codigoProduto, codigoVenda, quantidade);
+    public Item(int codigo, Produto produto, Venda venda, int quantidade) {
+        this(produto, venda, quantidade);
         this.codigo = codigo;
     }
 
@@ -32,20 +32,20 @@ public class Item {
         this.codigo = codigo;
     }
 
-    public int getCodigoProduto() {
-        return codigoProduto;
+    public Venda getVenda() {
+        return venda;
     }
 
-    public void setCodigoProduto(int codigoProduto) {
-        this.codigoProduto = codigoProduto;
+    public void setVenda(Venda venda) {
+        this.venda = venda;
     }
 
-    public int getCodigoVenda() {
-        return codigoVenda;
+    public Produto getProduto() {
+        return produto;
     }
 
-    public void setCodigoVenda(int codigoVenda) {
-        this.codigoVenda = codigoVenda;
+    public void setProduto(Produto produto) {
+        this.produto = produto;
     }
 
     public int getQuantidade() {

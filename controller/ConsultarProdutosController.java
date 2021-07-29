@@ -81,7 +81,7 @@ public class ConsultarProdutosController implements Initializable {
                 fillTable(ProdutoDAO.queryByDescriptionProducts(description));
             }
             else if(filterByCode && !filterByDescription) {
-                fillTable(ProdutoDAO.queryByCodeProducts(Integer.parseInt(code)));
+                fillTable(ProdutoDAO.queryProductByCode(Integer.parseInt(code)));
             }
             else if(filterByCode && filterByDescription) {
                 fillTable(ProdutoDAO.queryByCodeOrDescriptionProducts(Integer.parseInt(code), description));

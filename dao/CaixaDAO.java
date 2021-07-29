@@ -10,33 +10,6 @@ import java.util.List;
 
 public abstract class CaixaDAO {
 
-    protected static boolean createTable() {
-        boolean flag = false;
-        if(ConnectionFactory.createDatabase()) {
-            if(ConnectionFactory.openConnection()) {
-                try {
-                    String sql =
-                            "CREATE TABLE IF NOT EXISTS " + ConnectionFactory.database +".caixa(" +
-                                    "CAIXA_CODIGO INT AUTO_INCREMENT," +
-                                    "CAIXA_VALOR DOUBLE NOT NULL," +
-                                    "CAIXA_DATA DATE NOT NULL," +
-                                    "CAIXA_HORA TIME NOT NULL," +
-                                    "CAIXA_NATUREZA INT NOT NULL," +
-                                    "PRIMARY KEY(CAIXA_CODIGO)" +
-                                    ")" +
-                                    "ENGINE=InnoDB;";
-                    Statement statement = ConnectionFactory.connection.createStatement();
-                    statement.execute(sql);
-                    flag = true;
-                } catch (SQLException e) {
-                    System.err.println("ERRO (CREATE TABLE BOX): " + e.getMessage());
-                }
-                ConnectionFactory.closeConnection();
-            }
-        }
-        return flag;
-    }
-
     private static List<Caixa> getBoxList(ResultSet results) throws SQLException {
         List<Caixa> caixas = new ArrayList<Caixa>();
         while (results.next()) {
@@ -50,25 +23,56 @@ public abstract class CaixaDAO {
         return caixas;
     }
 
+    protected static boolean createTable() {
+        boolean flag = false;
+        if(ConnectionFactory.createDatabase()) {
+            if(ConnectionFactory.openConnection()) {
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql =
+                                "CREATE TABLE IF NOT EXISTS caixa(" +
+                                        "CAIXA_CODIGO INT AUTO_INCREMENT," +
+                                        "CAIXA_VALOR DOUBLE NOT NULL," +
+                                        "CAIXA_DATA DATE NOT NULL," +
+                                        "CAIXA_HORA TIME NOT NULL," +
+                                        "CAIXA_NATUREZA INT NOT NULL," +
+                                        "PRIMARY KEY(CAIXA_CODIGO)" +
+                                        ")" +
+                                        "ENGINE=InnoDB;";
+                        Statement statement = ConnectionFactory.connection.createStatement();
+                        statement.execute(sql);
+                        flag = true;
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (CREATE TABLE BOX): " + e.getMessage());
+                    }
+                }
+                ConnectionFactory.closeConnection();
+            }
+        }
+        return flag;
+    }
+
     public static boolean register(Caixa caixa) {
         boolean flag = false;
         if(createTable()) {
             if(ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "INSERT INTO " + ConnectionFactory.database + ".caixa (CAIXA_VALOR, CAIXA_DATA, CAIXA_HORA, CAIXA_NATUREZA) VALUES (?, ?, ?, ?);";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-                    statement.setDouble(1, caixa.getValor());
-                    statement.setDate(2, new Date(caixa.getDataHora().getTime()));
-                    statement.setTime(3, new Time(caixa.getDataHora().getTime()));
-                    statement.setInt(4, caixa.getNatureza());
-                    statement.executeUpdate();
-                    ResultSet results = statement.getGeneratedKeys();
-                    results.first();
-                    int key = ConnectionFactory.getKeyTable(results);
-                    caixa.setCodigo(key);
-                    flag = true;
-                } catch (SQLException e) {
-                    System.err.println("ERRO (REGISTER BOX): " + e.getMessage());
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "INSERT INTO caixa (CAIXA_VALOR, CAIXA_DATA, CAIXA_HORA, CAIXA_NATUREZA) VALUES (?, ?, ?, ?);";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+                        statement.setDouble(1, caixa.getValor());
+                        statement.setDate(2, new Date(caixa.getDataHora().getTime()));
+                        statement.setTime(3, new Time(caixa.getDataHora().getTime()));
+                        statement.setInt(4, caixa.getNatureza());
+                        statement.executeUpdate();
+                        ResultSet results = statement.getGeneratedKeys();
+                        results.first();
+                        int key = ConnectionFactory.getKeyTable(results);
+                        caixa.setCodigo(key);
+                        flag = true;
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (REGISTER BOX): " + e.getMessage());
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
@@ -80,17 +84,23 @@ public abstract class CaixaDAO {
         List<Caixa> caixas = new ArrayList<Caixa>();
         if(createTable()) {
             if (ConnectionFactory.openConnection()) {
-                try {
-                    String sql = "SELECT * FROM " + ConnectionFactory.database + ".caixa WHERE CAIXA_CODIGO = ? ORDER BY VENDA_DATA;";
-                    PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                    statement.setInt(1, codigo);
-                    caixas = getBoxList(statement.executeQuery());
-                } catch (SQLException e) {
-                    System.err.println("ERRO (QUERY BOX BY CODE): " + e.getMessage());
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "SELECT * FROM caixa WHERE CAIXA_CODIGO = ? ORDER BY CAIXA_DATA;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        statement.setInt(1, codigo);
+                        caixas = getBoxList(statement.executeQuery());
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (QUERY BOX BY CODE): " + e.getMessage());
+                    }
                 }
                 ConnectionFactory.closeConnection();
             }
         }
         return caixas;
+    }
+
+    protected static Caixa getBoxByCode(int codigo) {
+        return queryBoxByCode(codigo).get(0);
     }
 }
