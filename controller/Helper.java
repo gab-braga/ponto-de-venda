@@ -3,6 +3,8 @@ package controller;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
+import model.Cliente;
+import model.Produto;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -17,6 +19,14 @@ public abstract class Helper {
 
     protected static final int salesOperation = 1;
     protected static final int outputOperation = 2;
+
+    protected static boolean validateClient(Cliente cliente) {
+        return !(cliente == null);
+    }
+
+    protected static boolean validateProduct(Produto produto) {
+        return !(produto == null);
+    }
 
     protected static boolean validateInteger(String text) {
         try {
