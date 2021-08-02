@@ -99,6 +99,28 @@ public abstract class EstoqueDAO {
         return flag;
     }
 
+    public static boolean decrease(Estoque estoque) {
+        boolean flag = false;
+        if(createTable()) {
+            if (ConnectionFactory.openConnection()) {
+                if(ConnectionFactory.useDataBase()) {
+                    try {
+                        String sql = "UPDATE estoque SET ESTOQUE_QUANTIDADE = ESTOQUE_QUANTIDADE - ? WHERE PRODUTO_CODIGO = ?;";
+                        PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
+                        statement.setInt(1, estoque.getQuantidade());
+                        statement.setInt(2, estoque.getProduto().getCodigo());
+                        statement.executeUpdate();
+                        flag = true;
+                    } catch (SQLException e) {
+                        System.err.println("ERRO (DECREASE STOCK): " + e.getMessage());
+                    }
+                }
+                ConnectionFactory.closeConnection();
+            }
+        }
+        return flag;
+    }
+
     public static List<Estoque> queryAllStock() {
         List<Estoque> results = new ArrayList<Estoque>();
         if(createTable()) {
@@ -184,7 +206,12 @@ public abstract class EstoqueDAO {
         return results;
     }
 
-    protected static Estoque getStockByCode(int codigo) {
-        return queryStockByCode(codigo).get(0);
+    public static Estoque getStockByCode(int codigo) {
+        Estoque estoque = null;
+        List<Estoque> estoqueList = queryStockByCode(codigo);
+        if(estoqueList.size() > 0) {
+            estoque = estoqueList.get(0);
+        }
+        return estoque;
     }
 }

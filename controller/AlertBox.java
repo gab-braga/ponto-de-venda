@@ -78,6 +78,22 @@ public class AlertBox {
         alert.showAndWait();
     }
 
+    public static void insufficientStock() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Estoque insuficiente!");
+        alert.showAndWait();
+    }
+
+    public static void insufficientValueReceived() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("ATENÇÃO");
+        alert.setHeaderText(null);
+        alert.setContentText("Valor recebido insuficiente!");
+        alert.showAndWait();
+    }
+
     public static void fillAllFields(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");

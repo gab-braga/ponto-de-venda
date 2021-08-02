@@ -137,7 +137,7 @@ public abstract class ItemDAO {
         return items;
     }
 
-    protected static Item getItemByCode(int codigo) {
+    public static Item getItemByCode(int codigo) {
         return queryItemByCode(codigo).get(0);
     }
 }

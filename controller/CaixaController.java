@@ -1,18 +1,13 @@
 package controller;
 
-import dao.CaixaDAO;
-import dao.ProdutoDAO;
-import dao.VendaDAO;
+import dao.*;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -81,13 +76,13 @@ public class CaixaController implements Initializable, DataDriver {
     private TableColumn<Item, Integer> table_column_quantity;
 
     @FXML
+    private MenuItem table_item_remove;
+
+    @FXML
     private TextField field_product_code;
 
     @FXML
     private TextField field_product_description;
-
-    @FXML
-    private Button btn_search_product;
 
     @FXML
     private Text text_operator;
@@ -99,8 +94,8 @@ public class CaixaController implements Initializable, DataDriver {
     private final int initialValueInteger = 0;
     private final int initialValueQuantity = 1;
 
-    private Date date = Helper.getCurrentDate();
-    private Usuario operator = Access.getUser();
+    private Date date;
+    private Usuario operator;
 
     private double valueReceived = initialValueDouble;
     private int quantity = initialValueQuantity;
@@ -173,6 +168,10 @@ public class CaixaController implements Initializable, DataDriver {
         return items;
     }
 
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
     private void close() {
         ((Stage) root.getScene().getWindow()).close();
     }
@@ -243,10 +242,12 @@ public class CaixaController implements Initializable, DataDriver {
     }
 
     private void defineOperator() {
+        setOperator(Access.getUser());
         text_operator.setText(getOperator().getNome());
     }
 
     private void defineDate() {
+        setDate(Helper.getCurrentDate());
         text_date.setText(Helper.getDateFormattedString(getDate()));
     }
 
@@ -360,13 +361,38 @@ public class CaixaController implements Initializable, DataDriver {
     }
 
     public void removeAndResetProduct() {
-        removeItem(getProduto());
-        setQuantity(initialValueQuantity);
-        setProduto(null);
-        clearFields();
-        calculateAndFillValueBuy(getItems());
-        calculateAndFillChange(getValueReceived(), getValueBuy());
-        fillTableItems(getItems());
+        Item item = table_items.getSelectionModel().getSelectedItem();
+        if(!(item == null)) {
+            Produto produto = item.getProduto();
+            removeItem(produto);
+            if(produto.getCodigo() == getProduto().getCodigo()) {
+                setProduto(null);
+                setQuantity(initialValueQuantity);
+                clearFields();
+                calculateAndFillValueTotal(getQuantity(), getProduto());
+
+            }
+            calculateAndFillValueBuy(getItems());
+            calculateAndFillChange(getValueReceived(), getValueBuy());
+            fillTableItems(getItems());
+        }
+    }
+
+    private void viewItem() {
+        Item item = table_items.getSelectionModel().getSelectedItem();
+        if(!(item == null)) {
+            Produto produto = item.getProduto();
+            setProduto(produto);
+            setQuantity(item.getQuantidade());
+            fillInUnitValueField(getProduto());
+            calculateAndFillValueTotal(getQuantity(), getProduto());
+            calculateAndFillValueBuy(getItems());
+            calculateAndFillChange(getValueReceived(), getValueBuy());
+            field_quantity.setText(Integer.toString(getQuantity()));
+            text_product_description.setText(getProduto().getDescricao());
+            field_product_code.setText(Integer.toString(getProduto().getCodigo()));
+            field_product_description.setText(getProduto().getDescricao());
+        }
     }
 
     private void removeItem(Produto produto) {
@@ -417,8 +443,13 @@ public class CaixaController implements Initializable, DataDriver {
     }
 
     private void calculateAndFillValueTotal(int quantity, Produto produto) {
-        double valueTotal = Helper.round(produto.getValorVenda() * quantity);
-        text_value_total.setText(Helper.getStringValueDouble(valueTotal));
+        if(Helper.validateProduct(getProduto())) {
+            double valueTotal = Helper.round(produto.getValorVenda() * quantity);
+            text_value_total.setText(Helper.getStringValueDouble(valueTotal));
+        }
+        else {
+            text_value_total.setText("-");
+        }
     }
 
     private void calculateAndFillValueBuy(List<Item> items) {
@@ -471,19 +502,85 @@ public class CaixaController implements Initializable, DataDriver {
         calculateAndFillChange(getValueReceived(), getValueBuy());
     }
 
+    private void finalizeSale() {
+        setCliente(null);
+        setProduto(null);
+        setQuantity(initialValueQuantity);
+        setItems(new ArrayList<Item>());
+        clearFields();
+        field_value_received.clear();
+        field_client.clear();
+        calculateAndFillValueTotal(getQuantity(), getProduto());
+        calculateAndFillValueBuy(getItems());
+        calculateAndFillChange(getValueReceived(), getValueBuy());
+        fillTableItems(getItems());
+    }
+
+    private void registerItemsSold(List<Item> items, Venda venda) {
+        for(Item item : items) {
+            Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
+            estoque.setQuantidade(item.getQuantidade());
+            if (EstoqueDAO.decrease(estoque)) {
+                item.setVenda(venda);
+                ItemDAO.register(item);
+            }
+        }
+    }
+
+    private boolean checkStock(List<Item> items) {
+        boolean flag = true;
+        for(Item item : items) {
+            Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
+            if(estoque == null) {
+                flag = false;
+                break;
+            }
+            else {
+                if(estoque.getQuantidade() < item.getQuantidade()) {
+                    flag = false;
+                    break;
+                }
+            }
+        }
+        return flag;
+    }
+
+    private boolean validatePayment() {
+        boolean flag = false;
+        if(getValueReceived() >= getValueBuy()) {
+            flag = true;
+        }
+        return flag;
+    }
+
     private void seller() {
-        if(Helper.validateProduct(getProduto())) {
+        if(getItems().size() > 0) {
             if(Helper.validateClient(getCliente())) {
-                Caixa caixa = new Caixa(getValueBuy(), getDate(), Helper.salesOperation);
-                if(CaixaDAO.register(caixa)) {
-                    Venda venda = new Venda(getValueBuy(), getDate(), getCliente(), caixa, getOperator());
-                    if(VendaDAO.register(venda)) {
-                        System.out.println("CODIGO: " + venda.getCodigo());
-                        AlertBox.sallerCompleted();
+                if(validatePayment()) {
+                    List<Item> items = getItems();
+                    if(checkStock(items)) {
+                        Caixa caixa = new Caixa(getValueBuy(), getDate(), Helper.salesOperation);
+                        if(CaixaDAO.register(caixa)) {
+                            Venda venda = new Venda(getValueBuy(), getDate(), getCliente(), caixa, getOperator());
+                            if(VendaDAO.register(venda)) {
+                                registerItemsSold(items, venda);
+                                AlertBox.sallerCompleted();
+                                finalizeSale();
+                            }
+                            else {
+                                AlertBox.operationError();
+                            }
+                        }
+                        else {
+                            AlertBox.operationError();
+                        }
+                    }
+                    else {
+                        AlertBox.insufficientStock();
                     }
                 }
                 else {
-                    AlertBox.operationError();
+                    AlertBox.insufficientValueReceived();
                 }
             }
             else {
@@ -504,21 +601,17 @@ public class CaixaController implements Initializable, DataDriver {
             close();
         });
 
-        btn_search_client.setOnMouseClicked(click -> {
-            searchClient();
-        });
-
-        btn_search_product.setOnMouseClicked(click -> {
-            removeAndResetProduct();
-            searchProduct();
-        });
-
         btn_add_item.setOnMouseClicked(click -> {
             searchProduct();
         });
 
-        btn_seller.setOnMouseClicked(click -> {
-            seller();
+        btn_search_client.setOnMouseClicked(click -> {
+            searchClient();
+        });
+
+        field_client.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER)
+                searchClient();
         });
 
         field_quantity.setOnKeyReleased(keyEvent -> {
@@ -529,11 +622,6 @@ public class CaixaController implements Initializable, DataDriver {
             modifiedReceivedValue();
         });
 
-        field_client.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
-                searchClient();
-        });
-
         field_product_description.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
                 searchProduct();
@@ -542,6 +630,19 @@ public class CaixaController implements Initializable, DataDriver {
         field_product_code.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER)
                 defineProduct();
+        });
+
+        table_items.setOnMouseClicked(click -> {
+            viewItem();
+        });
+
+        table_item_remove.setOnAction(action -> {
+            removeAndResetProduct();
+        });
+
+        btn_seller.setOnMouseClicked(click -> {
+            defineDate();
+            seller();
         });
 
         Helper.addTextLimiter(field_quantity, 3);
