@@ -38,7 +38,7 @@ public class PesquisarProduto extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/pesquisar_produto.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/fxml/pesquisar_produto.fxml"));
             Parent root = fxmlLoader.load();
             PesquisarProdutoController pesquisarProdutoController = fxmlLoader.getController();
             pesquisarProdutoController.setDataDriver(this.dataDriver);
@@ -55,7 +55,7 @@ public class PesquisarProduto extends Application {
             stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
             stage.show();
         } catch (IOException ex) {
-            System.err.println(String.format("ERRO (%s): ", title));
+            System.err.println(String.format("ERRO (%s)", title));
             ex.printStackTrace();
         }
     }

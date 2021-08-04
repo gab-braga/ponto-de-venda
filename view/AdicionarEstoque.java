@@ -36,7 +36,7 @@ public class AdicionarEstoque extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader file = new FXMLLoader(getClass().getResource("fxml/adicionar_estoque.fxml"));
+            FXMLLoader file = new FXMLLoader(getClass().getResource("/view/fxml/adicionar_estoque.fxml"));
             Parent root = file.load();
 
             AdicionarEstoqueController adicionarEstoqueController = (AdicionarEstoqueController) file.getController();
@@ -54,7 +54,7 @@ public class AdicionarEstoque extends Application {
             stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
             stage.show();
         } catch (IOException ex) {
-            System.err.println(String.format("ERRO (%s): ", title));
+            System.err.println(String.format("ERRO (%s)", title));
             ex.printStackTrace();
         }
     }

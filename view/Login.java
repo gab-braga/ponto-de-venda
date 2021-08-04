@@ -26,7 +26,7 @@ public class Login extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Parent root = FXMLLoader.load(Login.class.getResource("fxml/login.fxml"));
+            Parent root = FXMLLoader.load(Login.class.getResource("/view/fxml/login.fxml"));
             Scene scene = new Scene(root);
             setWindow(stage);
             stage.initStyle(StageStyle.UNDECORATED);
@@ -36,7 +36,8 @@ public class Login extends Application {
             stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
             stage.show();
         } catch (IOException e) {
-            System.out.println(String.format("ERRO (%s): ", title));
+            System.out.println(String.format("ERRO (%s)", title));
+            e.printStackTrace();
         }
     }
 

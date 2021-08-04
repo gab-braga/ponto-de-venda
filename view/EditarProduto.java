@@ -36,7 +36,7 @@ public class EditarProduto extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/editar_produto.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/fxml/editar_produto.fxml"));
             Parent root = fxmlLoader.load();
 
             EditarProdutoController editarProdutoController = (EditarProdutoController) fxmlLoader.getController();
@@ -54,7 +54,7 @@ public class EditarProduto extends Application {
             stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
             stage.show();
         } catch (IOException ex) {
-            System.err.println(String.format("ERRO (%s): ", title));
+            System.err.println(String.format("ERRO (%s)", title));
             ex.printStackTrace();
         }
     }

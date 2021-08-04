@@ -27,7 +27,7 @@ public class RelatorioAnual extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("fxml/relatorio_anual.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/fxml/relatorio_anual.fxml"));
             Scene scene = new Scene(root);
 
             setWindow(stage);
@@ -40,7 +40,7 @@ public class RelatorioAnual extends Application {
             stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
             stage.show();
         } catch (IOException ex) {
-            System.err.println(String.format("ERRO (%s): ", title));
+            System.err.println(String.format("ERRO (%s)", title));
             ex.printStackTrace();
         }
     }
