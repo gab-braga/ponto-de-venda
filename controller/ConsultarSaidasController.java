@@ -35,10 +35,13 @@ public class ConsultarSaidasController implements Initializable {
     private ComboBox<String> field_search_month;
 
     @FXML
-    private TextField field_search_year;
+    private ComboBox<String> field_search_year;
 
     @FXML
     private Button btn_close;
+
+    @FXML
+    private Button btn_search;
 
     @FXML
     private TableView<Saida> table_exits;
@@ -57,6 +60,13 @@ public class ConsultarSaidasController implements Initializable {
 
     @FXML
     private MenuItem table_item_refresh;
+
+    private void fillFieldYear() {
+        List<String> years = Helper.getListYears();
+        ObservableList<String> items = FXCollections.observableArrayList(years);
+        field_search_year.setItems(items);
+        field_search_year.setValue("");
+    }
 
     private void fillFieldMonth() {
         List<String> months = Helper.getListMonths();
@@ -90,23 +100,20 @@ public class ConsultarSaidasController implements Initializable {
     private void filter() {
         String day = field_search_day.getText();
         String month = field_search_month.getValue();
-        String year = field_search_year.getText();
+        String year = field_search_year.getValue();
 
-        if(isSearchAll(day, month, year)) {
+        if (isSearchAll(day, month, year)) {
             fillTable(SaidaDAO.queryAllExits());
-        }
-        else {
-            if(validateFields(day, month, year)) {
+        } else {
+            if (validateFields(day, month, year)) {
                 String dateString = Helper.getDateStringByDayMonthYear(day, month, year);
-                if(Helper.validateDate(dateString)) {
-                    Date date = Helper.getDateFormatted(dateString);
+                if (Helper.validateDate(dateString)) {
+                    Date date = Helper.getDateFormattedDayMonthYear(dateString);
                     fillTable(SaidaDAO.queryExitsByDate(date));
-                }
-                else {
+                } else {
                     AlertBox.dateInvalided();
                 }
-            }
-            else {
+            } else {
                 AlertBox.fillAllFields();
             }
         }
@@ -114,6 +121,8 @@ public class ConsultarSaidasController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        fillFieldYear();
 
         fillFieldMonth();
 
@@ -123,18 +132,22 @@ public class ConsultarSaidasController implements Initializable {
             close();
         });
 
+        btn_search.setOnMouseClicked(click -> {
+            filter();
+        });
+
         field_search_day.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
         field_search_month.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
         field_search_year.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
@@ -143,6 +156,5 @@ public class ConsultarSaidasController implements Initializable {
         });
 
         Helper.addTextLimiter(field_search_day, 2);
-        Helper.addTextLimiter(field_search_year, 4);
     }
 }

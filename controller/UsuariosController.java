@@ -36,6 +36,9 @@ public class UsuariosController implements Initializable {
     private Button btn_close;
 
     @FXML
+    private Button btn_search;
+
+    @FXML
     private TableView<Usuario> tableUser;
 
     @FXML
@@ -78,31 +81,27 @@ public class UsuariosController implements Initializable {
         String permission = field_search_permission.getValue();
         boolean filterByName = !name.isEmpty();
         boolean filterByPermission = !permission.isEmpty();
-        if(filterByName && !filterByPermission) {
+        if (filterByName && !filterByPermission) {
             fillTable(UsuarioDAO.queryUserByName(name));
-        }
-        else if(!filterByName && filterByPermission) {
+        } else if (!filterByName && filterByPermission) {
             fillTable(UsuarioDAO.queryUserByPermission(permission));
-        }
-        else if(filterByName && filterByPermission) {
+        } else if (filterByName && filterByPermission) {
             fillTable(UsuarioDAO.queryUserByNameOrPermission(name, permission));
-        }
-        else {
+        } else {
             fillTable(UsuarioDAO.queryAllUser());
         }
     }
 
     private void delete() {
-        if(AlertBox.confirmationDelete()) {
+        if (AlertBox.confirmationDelete()) {
             Usuario usuario = tableUser.getSelectionModel().getSelectedItem();
             if (usuario == null) {
                 AlertBox.selectARecord();
             } else {
-                if(UsuarioDAO.deleteByName(usuario.getNome())) {
+                if (UsuarioDAO.deleteByName(usuario.getNome())) {
                     AlertBox.deleteCompleted();
                     filter();
-                }
-                else {
+                } else {
                     AlertBox.deleteError();
                 }
             }
@@ -120,18 +119,22 @@ public class UsuariosController implements Initializable {
             close();
         });
 
+        btn_search.setOnMouseClicked(click -> {
+            filter();
+        });
+
         btn_add_user.setOnMouseClicked(click -> {
             AdicionarUsuario adicionarUsuario = new AdicionarUsuario();
             adicionarUsuario.start(new Stage());
         });
 
         field_search_name.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
         field_search_permission.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 

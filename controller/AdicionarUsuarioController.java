@@ -66,23 +66,20 @@ public class AdicionarUsuarioController implements Initializable {
         String name = field_name.getText();
         String password = field_password.getText();
         String permission = field_permission.getValue();
-        if(validateFields(name, password, permission)) {
-            if(UsuarioDAO.queryUserByName(name).size() == 0) {
+        if (validateFields(name, password, permission)) {
+            if (UsuarioDAO.queryUserByName(name).size() == 0) {
                 Usuario usuario = new Usuario(name, password, permission);
-                if(UsuarioDAO.register(usuario)) {
+                if (UsuarioDAO.register(usuario)) {
                     AlertBox.registrationCompleted();
                     clearFields();
                     field_name.requestFocus();
-                }
-                else {
+                } else {
                     AlertBox.registrationError();
                 }
-            }
-            else {
+            } else {
                 AlertBox.userAlreadyRegistered();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -101,17 +98,17 @@ public class AdicionarUsuarioController implements Initializable {
         });
 
         field_name.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_password.requestFocus();
         });
 
         field_password.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_permission.requestFocus();
         });
 
         field_permission.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 register();
         });
 

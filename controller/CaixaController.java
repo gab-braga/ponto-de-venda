@@ -179,7 +179,7 @@ public class CaixaController implements Initializable, DataDriver {
     // PUBLIC FUNCTIONS
     @Override
     public void insertAndFillClient(Cliente cliente) {
-        if(Helper.validateClient(cliente)) {
+        if (Helper.validateClient(cliente)) {
             setCliente(cliente);
             field_client.setText(getCliente().getNome());
         }
@@ -187,7 +187,7 @@ public class CaixaController implements Initializable, DataDriver {
 
     @Override
     public void insertAndFillProduct(Produto produto) {
-        if(Helper.validateProduct(produto)) {
+        if (Helper.validateProduct(produto)) {
             setProduto(produto);
             insertAndFillQuantityProduto(getProduto());
             addItemAndUpdateTable(getProduto(), getQuantity());
@@ -204,8 +204,8 @@ public class CaixaController implements Initializable, DataDriver {
     private void insertAndFillQuantityProduto(Produto produto) {
         boolean isExist = false;
         List<Item> items = getItems();
-        for(Item item : items) {
-            if(item.getProduto().getCodigo() == produto.getCodigo()) {
+        for (Item item : items) {
+            if (item.getProduto().getCodigo() == produto.getCodigo()) {
                 int quantityValue = item.getQuantidade() + initialValueQuantity;
                 setQuantity(quantityValue);
                 item.setQuantidade(quantityValue);
@@ -213,7 +213,7 @@ public class CaixaController implements Initializable, DataDriver {
                 break;
             }
         }
-        if(!isExist) {
+        if (!isExist) {
             setQuantity(initialValueQuantity);
         }
         field_quantity.setText(Integer.toString(getQuantity()));
@@ -222,8 +222,8 @@ public class CaixaController implements Initializable, DataDriver {
     private void insertAndFillQuantityProduto(Produto produto, int quantity) {
         setQuantity(quantity);
         List<Item> items = getItems();
-        for(Item item : items) {
-            if(item.getProduto().getCodigo() == produto.getCodigo()) {
+        for (Item item : items) {
+            if (item.getProduto().getCodigo() == produto.getCodigo()) {
                 item.setQuantidade(quantity);
                 break;
             }
@@ -233,10 +233,9 @@ public class CaixaController implements Initializable, DataDriver {
     // PRIVATE FUNCTIONS
     private void fillInUnitValueField(Produto produto) {
         double valueUnitary = produto.getValorVenda();
-        if(Helper.validateProduct(getProduto())) {
+        if (Helper.validateProduct(getProduto())) {
             text_value_unitary.setText(Helper.getStringValueDouble(valueUnitary));
-        }
-        else {
+        } else {
             this.attentionInsertAProduct();
         }
     }
@@ -248,25 +247,22 @@ public class CaixaController implements Initializable, DataDriver {
 
     private void defineDate() {
         setDate(Helper.getCurrentDate());
-        text_date.setText(Helper.getDateFormattedString(getDate()));
+        text_date.setText(Helper.getStringDateFormatted(getDate()));
     }
 
     private void defineProduct() {
         String code_product = field_product_code.getText();
-        if(code_product.isEmpty()) {
+        if (code_product.isEmpty()) {
             searchProduct();
-        }
-        else {
-            if(Helper.validateInteger(code_product)) {
+        } else {
+            if (Helper.validateInteger(code_product)) {
                 List<Produto> produtos = ProdutoDAO.queryProductByCode(Integer.parseInt(code_product));
-                if(produtos.size() > 0) {
+                if (produtos.size() > 0) {
                     insertAndFillProduct(produtos.get(0));
-                }
-                else {
+                } else {
                     AlertBox.unregisteredProduct();
                 }
-            }
-            else {
+            } else {
                 AlertBox.onlyNumbers();
             }
         }
@@ -317,20 +313,17 @@ public class CaixaController implements Initializable, DataDriver {
     private int getValueOfTheQuantityEnteredInTheField() {
         int quantityValue = getQuantity();
         String quantityString = field_quantity.getText();
-        if(Helper.validateInteger(quantityString)) {
+        if (Helper.validateInteger(quantityString)) {
             int quantityInteger = Integer.parseInt(quantityString);
-            if(Helper.validateQuantity(quantityInteger)) {
+            if (Helper.validateQuantity(quantityInteger)) {
                 quantityValue = quantityInteger;
-            }
-            else {
+            } else {
                 AlertBox.invalidQuantityValue();
                 returnQuantityValueInField();
             }
-        }
-        else if(quantityString.isEmpty()) {
+        } else if (quantityString.isEmpty()) {
             quantityValue = initialValueInteger;
-        }
-        else {
+        } else {
             AlertBox.onlyNumbers();
             returnQuantityValueInField();
         }
@@ -340,20 +333,17 @@ public class CaixaController implements Initializable, DataDriver {
     private double getReceivedValueEnteredInTheField() {
         double receivedValue = getValueReceived();
         String receivedString = field_value_received.getText().replace(",", ".");
-        if(Helper.validateDouble(receivedString)) {
+        if (Helper.validateDouble(receivedString)) {
             double receivedDouble = Double.parseDouble(receivedString);
-            if(Helper.validateQuantity(receivedDouble)) {
+            if (Helper.validateQuantity(receivedDouble)) {
                 receivedValue = receivedDouble;
-            }
-            else {
+            } else {
                 AlertBox.invalidQuantityValue();
                 returnQuantityValueInField();
             }
-        }
-        else if(receivedString.isEmpty()) {
+        } else if (receivedString.isEmpty()) {
             receivedValue = initialValueDouble;
-        }
-        else {
+        } else {
             AlertBox.invalidQuantityValue();
             returnReceivedValueInField();
         }
@@ -362,10 +352,10 @@ public class CaixaController implements Initializable, DataDriver {
 
     public void removeAndResetProduct() {
         Item item = table_items.getSelectionModel().getSelectedItem();
-        if(!(item == null)) {
+        if (!(item == null)) {
             Produto produto = item.getProduto();
             removeItem(produto);
-            if(produto.getCodigo() == getProduto().getCodigo()) {
+            if (produto.getCodigo() == getProduto().getCodigo()) {
                 setProduto(null);
                 setQuantity(initialValueQuantity);
                 clearFields();
@@ -380,7 +370,7 @@ public class CaixaController implements Initializable, DataDriver {
 
     private void viewItem() {
         Item item = table_items.getSelectionModel().getSelectedItem();
-        if(!(item == null)) {
+        if (!(item == null)) {
             Produto produto = item.getProduto();
             setProduto(produto);
             setQuantity(item.getQuantidade());
@@ -396,10 +386,10 @@ public class CaixaController implements Initializable, DataDriver {
     }
 
     private void removeItem(Produto produto) {
-        if(Helper.validateProduct(getProduto())) {
+        if (Helper.validateProduct(getProduto())) {
             List<Item> items = getItems();
-            for(int i = 0; i < items.size(); i++) {
-                if(items.get(i).getProduto().getCodigo() == produto.getCodigo()) {
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).getProduto().getCodigo() == produto.getCodigo()) {
                     items.remove(i);
                     break;
                 }
@@ -410,13 +400,13 @@ public class CaixaController implements Initializable, DataDriver {
     private void addItemAndUpdateTable(Produto produto, int quantity) {
         boolean isExist = false;
         List<Item> items = getItems();
-        for(Item item : items) {
-            if(item.getProduto().getCodigo() == produto.getCodigo()) {
+        for (Item item : items) {
+            if (item.getProduto().getCodigo() == produto.getCodigo()) {
                 isExist = true;
                 break;
             }
         }
-        if(!isExist) {
+        if (!isExist) {
             items.add(new Item(produto, quantity));
         }
         fillTableItems(getItems());
@@ -434,32 +424,29 @@ public class CaixaController implements Initializable, DataDriver {
 
     private void alterNumberItems(List<Item> items) {
         int numberItems = items.size();
-        if(numberItems == 0) {
+        if (numberItems == 0) {
             text_number_items.setText("-");
-        }
-        else {
+        } else {
             text_number_items.setText(Integer.toString(numberItems));
         }
     }
 
     private void calculateAndFillValueTotal(int quantity, Produto produto) {
-        if(Helper.validateProduct(getProduto())) {
+        if (Helper.validateProduct(getProduto())) {
             double valueTotal = Helper.round(produto.getValorVenda() * quantity);
             text_value_total.setText(Helper.getStringValueDouble(valueTotal));
-        }
-        else {
+        } else {
             text_value_total.setText("-");
         }
     }
 
     private void calculateAndFillValueBuy(List<Item> items) {
-        if(items.isEmpty()) {
+        if (items.isEmpty()) {
             text_value_buy.setText("-");
             setValueBuy(initialValueDouble);
-        }
-        else {
+        } else {
             double valueBuy = initialValueDouble;
-            for(Item item : items) {
+            for (Item item : items) {
                 valueBuy += (item.getProduto().getValorVenda() * item.getQuantidade());
             }
             setValueBuy(Helper.round(valueBuy));
@@ -468,30 +455,27 @@ public class CaixaController implements Initializable, DataDriver {
     }
 
     private void calculateAndFillChange(double valueReceived, double valueBuy) {
-        if((valueReceived == initialValueDouble) || (valueBuy == initialValueDouble)) {
+        if ((valueReceived == initialValueDouble) || (valueBuy == initialValueDouble)) {
             text_change.setText("-");
-        }
-        else {
-            if(valueBuy <= valueReceived) {
+        } else {
+            if (valueBuy <= valueReceived) {
                 double valueChange = Helper.round(valueReceived - valueBuy);
                 text_change.setText(Helper.getStringValueDouble(valueChange));
-            }
-            else {
+            } else {
                 text_change.setText(Helper.getStringValueDouble(initialValueDouble));
             }
         }
     }
 
     private void modifiedQuantityValue() {
-        if(Helper.validateProduct(getProduto())) {
+        if (Helper.validateProduct(getProduto())) {
             int quantityValue = getValueOfTheQuantityEnteredInTheField();
             insertAndFillQuantityProduto(getProduto(), quantityValue);
             calculateAndFillValueTotal(getQuantity(), getProduto());
             calculateAndFillValueBuy(getItems());
             calculateAndFillChange(getValueReceived(), getValueBuy());
             fillTableItems(getItems());
-        }
-        else {
+        } else {
             attentionInsertAProduct();
         }
     }
@@ -517,7 +501,7 @@ public class CaixaController implements Initializable, DataDriver {
     }
 
     private void registerItemsSold(List<Item> items, Venda venda) {
-        for(Item item : items) {
+        for (Item item : items) {
             Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
             estoque.setQuantidade(item.getQuantidade());
             if (EstoqueDAO.decrease(estoque)) {
@@ -529,14 +513,13 @@ public class CaixaController implements Initializable, DataDriver {
 
     private boolean checkStock(List<Item> items) {
         boolean flag = true;
-        for(Item item : items) {
+        for (Item item : items) {
             Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
-            if(estoque == null) {
+            if (estoque == null) {
                 flag = false;
                 break;
-            }
-            else {
-                if(estoque.getQuantidade() < item.getQuantidade()) {
+            } else {
+                if (estoque.getQuantidade() < item.getQuantidade()) {
                     flag = false;
                     break;
                 }
@@ -547,47 +530,41 @@ public class CaixaController implements Initializable, DataDriver {
 
     private boolean validatePayment() {
         boolean flag = false;
-        if(getValueReceived() >= getValueBuy()) {
+        if (getValueReceived() >= getValueBuy()) {
             flag = true;
         }
         return flag;
     }
 
     private void seller() {
-        if(getItems().size() > 0) {
-            if(Helper.validateClient(getCliente())) {
-                if(validatePayment()) {
+        if (getItems().size() > 0) {
+            if (Helper.validateClient(getCliente())) {
+                if (validatePayment()) {
                     List<Item> items = getItems();
-                    if(checkStock(items)) {
-                        Caixa caixa = new Caixa(getValueBuy(), getDate(), Helper.salesOperation);
-                        if(CaixaDAO.register(caixa)) {
+                    if (checkStock(items)) {
+                        Caixa caixa = new Caixa(getValueBuy(), 0.0, getDate());
+                        if (CaixaDAO.register(caixa)) {
                             Venda venda = new Venda(getValueBuy(), getDate(), getCliente(), caixa, getOperator());
-                            if(VendaDAO.register(venda)) {
+                            if (VendaDAO.register(venda)) {
                                 registerItemsSold(items, venda);
                                 AlertBox.sallerCompleted();
                                 finalizeSale();
-                            }
-                            else {
+                            } else {
                                 AlertBox.operationError();
                             }
-                        }
-                        else {
+                        } else {
                             AlertBox.operationError();
                         }
-                    }
-                    else {
+                    } else {
                         AlertBox.insufficientStock();
                     }
-                }
-                else {
+                } else {
                     AlertBox.insufficientValueReceived();
                 }
-            }
-            else {
+            } else {
                 attentionInsertAClient();
             }
-        }
-        else {
+        } else {
             attentionInsertAProduct();
         }
     }
@@ -610,7 +587,7 @@ public class CaixaController implements Initializable, DataDriver {
         });
 
         field_client.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 searchClient();
         });
 
@@ -623,12 +600,12 @@ public class CaixaController implements Initializable, DataDriver {
         });
 
         field_product_description.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 searchProduct();
         });
 
         field_product_code.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 defineProduct();
         });
 
@@ -638,6 +615,11 @@ public class CaixaController implements Initializable, DataDriver {
 
         table_item_remove.setOnAction(action -> {
             removeAndResetProduct();
+        });
+
+        table_items.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.DELETE)
+                removeAndResetProduct();
         });
 
         btn_seller.setOnMouseClicked(click -> {

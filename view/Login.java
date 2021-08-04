@@ -33,8 +33,7 @@ public class Login extends Application {
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
-        }
-        catch(Exception e) {
+        } catch (IOException e) {
             System.out.println(String.format("ERRO (%s): ", title));
         }
     }

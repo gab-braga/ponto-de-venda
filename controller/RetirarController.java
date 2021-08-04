@@ -58,9 +58,9 @@ public class RetirarController implements Initializable {
         String value = field_value_exit.getText().replace(",", ".");
         String reason = field_reason.getText();
 
-        if(validateFields(operator, value, reason)) {
-            if(Helper.validateDouble(value)) {
-                Caixa caixa = new Caixa(Double.parseDouble(value), Helper.getCurrentDate(), Helper.outputOperation);
+        if (validateFields(operator, value, reason)) {
+            if (Helper.validateDouble(value)) {
+                Caixa caixa = new Caixa(0.0, Double.parseDouble(value), Helper.getCurrentDate());
                 if (CaixaDAO.register(caixa)) {
                     Saida saida = new Saida(Double.parseDouble(value), Helper.getCurrentDate(), reason, caixa, Access.getUser());
                     if (SaidaDAO.register(saida)) {
@@ -71,12 +71,10 @@ public class RetirarController implements Initializable {
                 } else {
                     AlertBox.operationError();
                 }
-            }
-            else {
+            } else {
                 AlertBox.onlyNumbers();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -95,17 +93,17 @@ public class RetirarController implements Initializable {
         });
 
         field_operator.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_value_exit.requestFocus();
         });
 
         field_value_exit.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_reason.requestFocus();
         });
 
         field_reason.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 remove();
         });
 

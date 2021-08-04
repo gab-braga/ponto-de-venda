@@ -55,22 +55,19 @@ public class EditarProdutoController implements Initializable {
         String description = field_description.getText();
         String saleValue = field_sale_value.getText().replace(",", ".");
 
-        if(validateFields(description, saleValue)) {
-            if(Helper.validateDouble(saleValue)) {
+        if (validateFields(description, saleValue)) {
+            if (Helper.validateDouble(saleValue)) {
                 Produto produto = new Produto(productEdit.getCodigo(), description, Double.parseDouble(saleValue));
-                if(ProdutoDAO.update(produto)) {
+                if (ProdutoDAO.update(produto)) {
                     AlertBox.editionCompleted();
                     close();
-                }
-                else {
+                } else {
                     AlertBox.editionError();
                 }
-            }
-            else {
+            } else {
                 AlertBox.onlyNumbers();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -87,17 +84,17 @@ public class EditarProdutoController implements Initializable {
         });
 
         field_code.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_description.requestFocus();
         });
 
         field_description.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_sale_value.requestFocus();
         });
 
         field_sale_value.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 edit();
         });
 

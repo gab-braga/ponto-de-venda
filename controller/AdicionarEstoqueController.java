@@ -55,28 +55,24 @@ public class AdicionarEstoqueController implements Initializable {
 
     private void add() {
         String quantity = field_quantity.getText();
-        if(Helper.validateInteger(quantity)) {
-            if(validateFields(quantity)) {
-                if(Helper.validateQuantity(Integer.parseInt(quantity))) {
+        if (Helper.validateInteger(quantity)) {
+            if (validateFields(quantity)) {
+                if (Helper.validateQuantity(Integer.parseInt(quantity))) {
                     Produto produto = ProdutoDAO.queryProductByCode(stockEdit.getProduto().getCodigo()).get(0);
                     Estoque estoque = new Estoque(produto, Integer.parseInt(quantity));
-                    if(EstoqueDAO.add(estoque)) {
+                    if (EstoqueDAO.add(estoque)) {
                         AlertBox.stockUp();
                         close();
-                    }
-                    else {
+                    } else {
                         AlertBox.stockUpError();
                     }
-                }
-                else {
+                } else {
                     AlertBox.invalidQuantityValue();
                 }
-            }
-            else {
+            } else {
                 AlertBox.fillAllFields();
             }
-        }
-        else {
+        } else {
             AlertBox.onlyNumbers();
         }
     }

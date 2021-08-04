@@ -16,8 +16,7 @@ public abstract class ConnectionFactory {
         try {
             connection = DriverManager.getConnection(url, usuario, senha);
             flag = true;
-        }
-        catch(SQLException e) {
+        } catch (SQLException e) {
             System.err.println("ERRO (OPEN CONNECTION): " + e.getCause());
         }
         return flag;
@@ -28,8 +27,7 @@ public abstract class ConnectionFactory {
         try {
             connection.close();
             flag = true;
-        }
-        catch(SQLException e) {
+        } catch (SQLException e) {
             System.err.println("ERRO (CLOSE CONNECTION): " + e.getCause());
         }
         return flag;
@@ -37,7 +35,7 @@ public abstract class ConnectionFactory {
 
     protected static boolean createDatabase() {
         boolean flag = false;
-        if(openConnection()) {
+        if (openConnection()) {
             try {
                 Statement statement = connection.createStatement();
                 String sql = "CREATE DATABASE IF NOT EXISTS pontodevenda;";
@@ -54,9 +52,9 @@ public abstract class ConnectionFactory {
     protected static boolean useDataBase() {
         boolean flag = false;
         try {
-            if(!connection.isClosed()) {
+            if (!connection.isClosed()) {
                 Statement statement = connection.createStatement();
-                String sql = "USE "+ database +";";
+                String sql = "USE " + database + ";";
                 statement.execute(sql);
                 flag = true;
             }

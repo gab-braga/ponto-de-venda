@@ -77,39 +77,33 @@ public class CadastrarEstoqueController implements Initializable, DataDriver {
         String packed = field_packed.getValue();
         String quantity = field_quantity.getText();
 
-        if(validateFields(codeProduct, packed, quantity)) {
-            if(Helper.validateInteger(quantity) && Helper.validateInteger(codeProduct)) {
-                if(Helper.validateQuantity(Integer.parseInt(quantity))) {
+        if (validateFields(codeProduct, packed, quantity)) {
+            if (Helper.validateInteger(quantity) && Helper.validateInteger(codeProduct)) {
+                if (Helper.validateQuantity(Integer.parseInt(quantity))) {
                     List<Produto> produtos = ProdutoDAO.queryProductByCode(Integer.parseInt(codeProduct));
-                    if(produtos.size() > 0) {
-                        if(EstoqueDAO.queryStockByCode(Integer.parseInt(codeProduct)).size() == 0) {
+                    if (produtos.size() > 0) {
+                        if (EstoqueDAO.queryStockByCode(Integer.parseInt(codeProduct)).size() == 0) {
                             Estoque estoque = new Estoque(produtos.get(0), packed, Integer.parseInt(quantity));
-                            if(EstoqueDAO.register(estoque)) {
+                            if (EstoqueDAO.register(estoque)) {
                                 AlertBox.registrationCompleted();
                                 clearFields();
                                 field_code_product.requestFocus();
-                            }
-                            else {
+                            } else {
                                 AlertBox.registrationError();
                             }
-                        }
-                        else {
+                        } else {
                             AlertBox.productAlreadyStocked();
                         }
-                    }
-                    else {
+                    } else {
                         AlertBox.unregisteredProduct();
                     }
-                }
-                else {
+                } else {
                     AlertBox.invalidQuantityValue();
                 }
-            }
-            else {
+            } else {
                 AlertBox.onlyNumbers();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -125,7 +119,7 @@ public class CadastrarEstoqueController implements Initializable, DataDriver {
 
     @Override
     public void insertAndFillProduct(Produto produto) {
-        if(!(produto == null)) {
+        if (!(produto == null)) {
             field_code_product.setText(Integer.toString(produto.getCodigo()));
         }
     }
@@ -143,8 +137,8 @@ public class CadastrarEstoqueController implements Initializable, DataDriver {
             close();
         });
 
-        field_code_product.setOnKeyPressed( keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+        field_code_product.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_packed.requestFocus();
         });
 

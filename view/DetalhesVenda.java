@@ -1,7 +1,6 @@
 package view;
 
-import controller.DataDriver;
-import controller.PesquisarClienteController;
+import controller.DetalhesVendaController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,20 +8,19 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Venda;
 
 import java.io.IOException;
 
-public class PesquisarCliente extends Application {
+public class DetalhesVenda extends Application {
 
-    private DataDriver dataDriver;
-    private String clientName;
+    private Venda venda;
 
-    public PesquisarCliente(DataDriver dataDriver, String clientName) {
-        this.dataDriver = dataDriver;
-        this.clientName = clientName;
+    public DetalhesVenda(Venda venda) {
+        this.venda = venda;
     }
 
-    private final String title = "Pesquisar Cliente";
+    private final String title = "Detalhes da Venda";
 
     private static Stage window;
 
@@ -37,18 +35,19 @@ public class PesquisarCliente extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/pesquisar_cliente.fxml"));
-            Parent root = fxmlLoader.load();
-            PesquisarClienteController pesquisarClienteController = fxmlLoader.getController();
-            pesquisarClienteController.setCaixaController(this.dataDriver);
-            pesquisarClienteController.setClientName(clientName);
+            FXMLLoader file = new FXMLLoader(getClass().getResource("fxml/detalhes_venda.fxml"));
+            Parent root = file.load();
+
+            DetalhesVendaController detalhesVendaController = (DetalhesVendaController) file.getController();
+            detalhesVendaController.fillListView(venda);
+
             Scene scene = new Scene(root);
 
             setWindow(stage);
             stage.setScene(scene);
             stage.initStyle(StageStyle.DECORATED);
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(MenuPrincipal.getWindow());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(ConsultarVendas.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);
             stage.show();

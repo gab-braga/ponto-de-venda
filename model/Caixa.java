@@ -6,19 +6,22 @@ public class Caixa {
     // NANUTEA DA OPERAÇÃO: 1 -> VENDA; 2 -> SAIDA
 
     private int codigo;
-    private double valor;
-    private Date dataHora;
-    private int natureza;
+    private double valorEntrada;
+    private double valorSaida;
+    private double valorTotal;
+    private Date data;
 
-    public Caixa(double valor, Date dataHora, int natureza) {
-        this.valor = valor;
-        this.dataHora = dataHora;
-        this.natureza = natureza;
+    public Caixa(double valorEntrada, double valorSaida, Date data) {
+        this.valorEntrada = valorEntrada;
+        this.valorSaida = valorSaida;
+        this.data = data;
     }
 
-    public Caixa(int codigo, double valor, Date dataHora, int natureza) {
-        this(valor, dataHora, natureza);
-        this.natureza = natureza;
+    public Caixa(int codigo, double valorEntrada, double valorSaida, Date data) {
+        this.codigo = codigo;
+        this.valorEntrada = valorEntrada;
+        this.valorSaida = valorSaida;
+        this.data = data;
     }
 
     public int getCodigo() {
@@ -29,27 +32,31 @@ public class Caixa {
         this.codigo = codigo;
     }
 
-    public double getValor() {
-        return valor;
+    public double getValorEntrada() {
+        return valorEntrada;
     }
 
-    public void setValor(double valor) {
-        this.valor = valor;
+    public void setValorEntrada(double valorEntrada) {
+        this.valorEntrada = valorEntrada;
     }
 
-    public Date getDataHora() {
-        return dataHora;
+    public double getValorSaida() {
+        return this.valorSaida;
     }
 
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
+    public void setValorSaida(double valorSaida) {
+        this.valorSaida = valorSaida;
     }
 
-    public int getNatureza() {
-        return natureza;
+    public Date getData() {
+        return data;
     }
 
-    public void setNatureza(int natureza) {
-        this.natureza = natureza;
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public double getValorTotal() {
+        return (valorEntrada - valorSaida);
     }
 }

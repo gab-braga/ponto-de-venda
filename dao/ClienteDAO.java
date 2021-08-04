@@ -28,8 +28,8 @@ public abstract class ClienteDAO {
     protected static boolean createTable() {
         boolean flag = false;
         if (ConnectionFactory.createDatabase()) {
-            if(ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+            if (ConnectionFactory.openConnection()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql =
                                 "CREATE TABLE IF NOT EXISTS cliente(" +
@@ -60,9 +60,9 @@ public abstract class ClienteDAO {
 
     public static boolean register(Cliente cliente) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "INSERT INTO cliente (CLIENTE_NOME, CLIENTE_CPF, CLIENTE_TELEFONE, CLIENTE_EMAIL, CLIENTE_ENDERECO, CLIENTE_NUMERO, CLIENTE_CIDADE, CLIENTE_UF) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -88,9 +88,9 @@ public abstract class ClienteDAO {
 
     public static boolean update(Cliente cliente) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "UPDATE cliente SET CLIENTE_NOME = ?, CLIENTE_CPF = ?, CLIENTE_TELEFONE = ?, CLIENTE_EMAIL = ?, CLIENTE_ENDERECO = ?, CLIENTE_NUMERO = ?, CLIENTE_CIDADE = ?, CLIENTE_UF = ? WHERE CLIENTE_CODIGO = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -117,9 +117,9 @@ public abstract class ClienteDAO {
 
     public static boolean deleteByCode(int codigo) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "DELETE FROM cliente WHERE CLIENTE_CODIGO = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -138,9 +138,9 @@ public abstract class ClienteDAO {
 
     public static List<Cliente> queryAllClients() {
         List<Cliente> clientes = new ArrayList<Cliente>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM cliente ORDER BY CLIENTE_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -157,9 +157,9 @@ public abstract class ClienteDAO {
 
     public static List<Cliente> queryByNameClients(String name) {
         List<Cliente> clientes = new ArrayList<Cliente>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM cliente WHERE CLIENTE_NOME LIKE '%" + name + "%' ORDER BY CLIENTE_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -176,9 +176,9 @@ public abstract class ClienteDAO {
 
     public static List<Cliente> queryByCpfClients(String cpf) {
         List<Cliente> clientes = new ArrayList<Cliente>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM cliente WHERE CLIENTE_CPF = '" + cpf + "' ORDER BY CLIENTE_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -195,9 +195,9 @@ public abstract class ClienteDAO {
 
     public static List<Cliente> queryByNameOrCpfClients(String name, String cpf) {
         List<Cliente> clientes = new ArrayList<Cliente>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM cliente WHERE CLIENTE_NOME LIKE '%" + name + "%' OR CLIENTE_CPF = '" + cpf + "' ORDER BY CLIENTE_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -214,9 +214,9 @@ public abstract class ClienteDAO {
 
     public static List<Cliente> queryClientByCode(int codigo) {
         List<Cliente> clientes = new ArrayList<Cliente>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM cliente WHERE CLIENTE_CODIGO = ? ORDER BY CLIENTE_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -233,6 +233,11 @@ public abstract class ClienteDAO {
     }
 
     protected static Cliente getClientByCode(int codigo) {
-        return queryClientByCode(codigo).get(0);
+        List<Cliente> clientes = queryClientByCode(codigo);
+        Cliente cliente = null;
+        if (clientes.size() > 0) {
+            cliente = clientes.get(0);
+        }
+        return cliente;
     }
 }

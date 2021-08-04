@@ -78,18 +78,16 @@ public class CadastrarClienteController implements Initializable {
         String uf = field_uf.getText();
 
 
-        if(validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
-            Cliente cliente =  cliente = new Cliente(nome, cpf, telefone, email, endereco, numero, cidade, uf);
-            if(ClienteDAO.register(cliente)) {
+        if (validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
+            Cliente cliente = cliente = new Cliente(nome, cpf, telefone, email, endereco, numero, cidade, uf);
+            if (ClienteDAO.register(cliente)) {
                 AlertBox.registrationCompleted();
                 clearFields();
                 field_name.requestFocus();
-            }
-            else {
+            } else {
                 AlertBox.registrationError();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -106,44 +104,44 @@ public class CadastrarClienteController implements Initializable {
         });
 
         field_name.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_cpf.requestFocus();
-        } );
+        });
 
         field_cpf.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_phone.requestFocus();
-        } );
+        });
 
         field_phone.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_email.requestFocus();
-        } );
+        });
 
         field_email.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_address.requestFocus();
-        } );
+        });
 
         field_address.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_number.requestFocus();
-        } );
+        });
 
         field_number.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_city.requestFocus();
-        } );
+        });
 
         field_city.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_uf.requestFocus();
-        } );
+        });
 
         field_uf.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 register();
-        } );
+        });
 
         Helper.addTextLimiter(field_name, 40);
         Helper.addTextLimiter(field_cpf, 11);

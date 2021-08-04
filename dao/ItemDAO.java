@@ -27,7 +27,7 @@ public abstract class ItemDAO {
         if (ConnectionFactory.createDatabase()) {
             if (ProdutoDAO.createTable() && VendaDAO.createTable()) {
                 if (ConnectionFactory.openConnection()) {
-                    if(ConnectionFactory.useDataBase()) {
+                    if (ConnectionFactory.useDataBase()) {
                         try {
                             String sql =
                                     "CREATE TABLE IF NOT EXISTS item(" +
@@ -56,9 +56,9 @@ public abstract class ItemDAO {
 
     public static boolean register(Item item) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "INSERT INTO item (ITEM_QUANTIDADE, PRODUTO_CODIGO, VENDA_CODIGO) VALUES (?, ?, ?);";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -79,9 +79,9 @@ public abstract class ItemDAO {
 
     public static List<Item> queryAllItems() {
         List<Item> items = new ArrayList<Item>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM item ORDER BY ITEM_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -96,19 +96,18 @@ public abstract class ItemDAO {
         return items;
     }
 
-    public static List<Item> queryItemsByCodeProductOrCodeSale(Item item) {
+    public static List<Item> queryItemsByCodeSale(int codigo) {
         List<Item> items = new ArrayList<Item>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
-                        String sql = "SELECT * FROM item WHERE PRODUTO_CODIGO = ? OR VENDA_CODIGO = ? ORDER BY ITEM_CODIGO;";
+                        String sql = "SELECT * FROM item WHERE VENDA_CODIGO = ? ORDER BY ITEM_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                        statement.setInt(1, item.getProduto().getCodigo());
-                        statement.setInt(2, item.getVenda().getCodigo());
+                        statement.setInt(1, codigo);
                         items = getItemsList(statement.executeQuery());
                     } catch (SQLException e) {
-                        System.err.println("ERRO (QUERY ITEMS BY PRODUCT CODE OR SALE CODE): " + e.getMessage());
+                        System.err.println("ERRO (QUERY ITEMS BY SALE CODE): " + e.getMessage());
                     }
                 }
                 ConnectionFactory.closeConnection();
@@ -119,9 +118,9 @@ public abstract class ItemDAO {
 
     public static List<Item> queryItemByCode(int codigo) {
         List<Item> items = new ArrayList<Item>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM item WHERE ITEM_CODIGO = ? ORDER BY ITEM_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -138,6 +137,11 @@ public abstract class ItemDAO {
     }
 
     public static Item getItemByCode(int codigo) {
-        return queryItemByCode(codigo).get(0);
+        List<Item> items = queryItemByCode(codigo);
+        Item item = null;
+        if (items.size() > 0) {
+            item = items.get(0);
+        }
+        return item;
     }
 }

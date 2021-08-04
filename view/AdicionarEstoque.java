@@ -1,7 +1,6 @@
 package view;
 
 import controller.AdicionarEstoqueController;
-import controller.EditarClienteController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Cliente;
 import model.Estoque;
 
 import java.io.IOException;
@@ -53,8 +51,7 @@ public class AdicionarEstoque extends Application {
             stage.setTitle(title);
             stage.setResizable(false);
             stage.show();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println(String.format("ERRO (%s): ", title));
             ex.printStackTrace();
         }

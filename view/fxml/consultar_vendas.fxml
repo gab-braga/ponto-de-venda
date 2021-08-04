@@ -33,7 +33,8 @@
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="405.0" minWidth="10.0" prefWidth="200.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="200.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="200.0" />
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -66,13 +67,14 @@
                                     <Insets right="10.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="field_search_year" maxWidth="190.0" minWidth="100.0" />
+                              <ComboBox fx:id="field_search_year" maxWidth="190.0" minWidth="100.0" prefWidth="150.0" />
                            </children>
                         </HBox>
-                        <Button fx:id="btn_close" mnemonicParsing="false" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="3" />
+                        <Button fx:id="btn_close" mnemonicParsing="false" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="4" />
+                        <Button fx:id="btn_search" mnemonicParsing="false" text="PESQUISAR" GridPane.columnIndex="3" />
                      </children>
                   </GridPane>
-                  <TableView fx:id="table_exits" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                  <TableView fx:id="table_sales" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                     <columns>
                       <TableColumn fx:id="column_date_hour" prefWidth="75.0" text="DATA/HORA" />
                       <TableColumn fx:id="column_value" prefWidth="75.0" text="VALOR (R$)" />
@@ -86,6 +88,7 @@
                         <ContextMenu>
                           <items>
                             <MenuItem fx:id="table_item_refresh" mnemonicParsing="false" text="Refresh" />
+                              <MenuItem fx:id="table_item_details" mnemonicParsing="false" text="Detalhes" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

@@ -44,20 +44,18 @@ public class LoginController implements Initializable {
     private void enter() {
         String username = login_user.getText();
         String password = login_password.getText();
-        if(validateFields(username, password)) {
+        if (validateFields(username, password)) {
             List<Usuario> usuarios = UsuarioDAO.queryUserPassword(username, password);
-            if(!usuarios.isEmpty() || usuarios == null) {
+            if (!usuarios.isEmpty() || usuarios == null) {
                 Usuario usuario = usuarios.get(0);
                 Access.checkFullAccess(usuario.getPermissao());
                 Access.setUser(usuario);
                 close();
                 (new MenuPrincipal()).start(new Stage());
-            }
-            else {
+            } else {
                 AlertBox.incorrectUserOrPassword();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -65,15 +63,15 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        login_user.setOnKeyPressed( keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+        login_user.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 login_password.requestFocus();
-        } );
+        });
 
-        login_password.setOnKeyPressed( keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+        login_password.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 enter();
-        } );
+        });
 
         btn_submit.setOnMouseClicked(click -> {
             enter();

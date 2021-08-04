@@ -1,9 +1,6 @@
 package dao;
 
-import model.Caixa;
-import model.Estoque;
 import model.Saida;
-import model.Usuario;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ public abstract class SaidaDAO {
         if (ConnectionFactory.createDatabase()) {
             if (CaixaDAO.createTable() && UsuarioDAO.createTable()) {
                 if (ConnectionFactory.openConnection()) {
-                    if(ConnectionFactory.useDataBase()) {
+                    if (ConnectionFactory.useDataBase()) {
                         try {
                             String sql =
                                     "CREATE TABLE IF NOT EXISTS saida(" +
@@ -63,9 +60,9 @@ public abstract class SaidaDAO {
 
     public static boolean register(Saida saida) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "INSERT INTO saida (SAIDA_VALOR, SAIDA_DATA, SAIDA_HORA, SAIDA_MOTIVO, CAIXA_CODIGO, USUARIO_NOME) VALUES (?, ?, ?, ?, ?, ?);";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -89,9 +86,9 @@ public abstract class SaidaDAO {
 
     public static List<Saida> queryAllExits() {
         List<Saida> saidas = new ArrayList<Saida>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM saida ORDER BY SAIDA_DATA;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -108,9 +105,9 @@ public abstract class SaidaDAO {
 
     public static List<Saida> queryExitsByDate(java.util.Date date) {
         List<Saida> saidas = new ArrayList<Saida>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM saida WHERE SAIDA_DATA = ? ORDER BY SAIDA_DATA;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -128,9 +125,9 @@ public abstract class SaidaDAO {
 
     public static List<Saida> queryExitByCode(int codigo) {
         List<Saida> saidas = new ArrayList<Saida>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM saida WHERE SAIDA_CODIGO = ? ORDER BY SAIDA_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -147,6 +144,11 @@ public abstract class SaidaDAO {
     }
 
     protected static Saida getExitByCode(int codigo) {
-        return queryExitByCode(codigo).get(0);
+        List<Saida> saidas = queryExitByCode(codigo);
+        Saida saida = null;
+        if (saidas.size() > 0) {
+            saida = saidas.get(0);
+        }
+        return saida;
     }
 }

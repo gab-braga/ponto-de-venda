@@ -37,8 +37,7 @@ public class AdicionarUsuario extends Application {
             stage.setTitle(title);
             stage.setResizable(false);
             stage.show();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println(String.format("ERRO (%s): ", title));
             ex.printStackTrace();
         }

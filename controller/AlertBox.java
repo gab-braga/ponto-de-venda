@@ -5,8 +5,8 @@ import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
 
-public class AlertBox {
-    public static void registrationCompleted(){
+public abstract class AlertBox {
+    public static void registrationCompleted() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVISO");
         alert.setHeaderText(null);
@@ -14,7 +14,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void registrationError(){
+    public static void registrationError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERRO");
         alert.setHeaderText(null);
@@ -22,7 +22,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void operationCompleted(){
+    public static void operationCompleted() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVISO");
         alert.setHeaderText(null);
@@ -30,7 +30,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void operationError(){
+    public static void operationError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERRO");
         alert.setHeaderText(null);
@@ -38,7 +38,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void editionCompleted(){
+    public static void editionCompleted() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVISO");
         alert.setHeaderText(null);
@@ -46,7 +46,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void editionError(){
+    public static void editionError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERRO");
         alert.setHeaderText(null);
@@ -54,7 +54,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void deleteCompleted(){
+    public static void deleteCompleted() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVISO");
         alert.setHeaderText(null);
@@ -62,7 +62,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void deleteError(){
+    public static void deleteError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERRO");
         alert.setHeaderText(null);
@@ -70,7 +70,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void sallerCompleted(){
+    public static void sallerCompleted() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVISO");
         alert.setHeaderText(null);
@@ -94,7 +94,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void fillAllFields(){
+    public static void fillAllFields() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -102,7 +102,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void incorrectUserOrPassword(){
+    public static void incorrectUserOrPassword() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -110,7 +110,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void onlyNumbers(){
+    public static void onlyNumbers() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -118,7 +118,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void invalidQuantityValue(){
+    public static void invalidQuantityValue() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -126,7 +126,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void unregisteredProduct(){
+    public static void unregisteredProduct() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -134,7 +134,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void productAlreadyStocked(){
+    public static void productAlreadyStocked() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -142,7 +142,15 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void productAlreadyRegistered(){
+    public static void productStillExistsInStock() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ERRO");
+        alert.setHeaderText(null);
+        alert.setContentText("O produto ainda existe no estoque.");
+        alert.showAndWait();
+    }
+
+    public static void productAlreadyRegistered() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -150,7 +158,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void userAlreadyRegistered(){
+    public static void userAlreadyRegistered() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -158,7 +166,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void stockUp(){
+    public static void stockUp() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVISO");
         alert.setHeaderText(null);
@@ -166,7 +174,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void stockUpError(){
+    public static void stockUpError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("ERRO");
         alert.setHeaderText(null);
@@ -174,7 +182,7 @@ public class AlertBox {
         alert.showAndWait();
     }
 
-    public static void selectARecord(){
+    public static void selectARecord() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);
@@ -195,7 +203,7 @@ public class AlertBox {
         return flag;
     }
 
-    public static void dateInvalided(){
+    public static void dateInvalided() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("ATENÇÃO");
         alert.setHeaderText(null);

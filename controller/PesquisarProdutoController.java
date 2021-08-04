@@ -47,10 +47,9 @@ public class PesquisarProdutoController implements Initializable {
 
     private void search() {
         String description = field_description_product.getText();
-        if(description == null || description.isEmpty()) {
+        if (description == null || description.isEmpty()) {
             fillList(ProdutoDAO.queryAllProducts());
-        }
-        else {
+        } else {
             fillList(ProdutoDAO.queryByDescriptionProducts(description));
         }
     }
@@ -62,10 +61,9 @@ public class PesquisarProdutoController implements Initializable {
 
     private void selectProduct() {
         Produto product = list_products.getSelectionModel().getSelectedItem();
-        if(product == null) {
+        if (product == null) {
             AlertBox.selectARecord();
-        }
-        else {
+        } else {
             this.dataDriver.insertAndFillProduct(product);
             close();
         }
@@ -93,7 +91,7 @@ public class PesquisarProdutoController implements Initializable {
         });
 
         list_products.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 selectProduct();
         });
 

@@ -12,10 +12,9 @@ public abstract class Access {
     private static Usuario user;
 
     public static void checkFullAccess(String accessLevel) {
-        if(accessLevel.equals(accessAdmin)) {
+        if (accessLevel.equals(accessAdmin)) {
             fullAccess = true;
-        }
-        else if(accessLevel.equals(accessUser)) {
+        } else if (accessLevel.equals(accessUser)) {
             fullAccess = false;
         }
     }

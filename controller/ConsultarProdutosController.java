@@ -1,5 +1,6 @@
 package controller;
 
+import dao.EstoqueDAO;
 import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +31,9 @@ public class ConsultarProdutosController implements Initializable {
 
     @FXML
     private Button btn_close;
+
+    @FXML
+    private Button btn_search;
 
     @FXML
     private TableView<Produto> table_product;
@@ -76,17 +80,14 @@ public class ConsultarProdutosController implements Initializable {
         String description = field_search_description.getText();
         boolean filterByCode = !code.isEmpty();
         boolean filterByDescription = !description.isEmpty();
-        if(Helper.validateInteger(code) || !filterByCode) {
-            if(!filterByCode && filterByDescription) {
+        if (Helper.validateInteger(code) || !filterByCode) {
+            if (!filterByCode && filterByDescription) {
                 fillTable(ProdutoDAO.queryByDescriptionProducts(description));
-            }
-            else if(filterByCode && !filterByDescription) {
+            } else if (filterByCode && !filterByDescription) {
                 fillTable(ProdutoDAO.queryProductByCode(Integer.parseInt(code)));
-            }
-            else if(filterByCode && filterByDescription) {
+            } else if (filterByCode && filterByDescription) {
                 fillTable(ProdutoDAO.queryByCodeOrDescriptionProducts(Integer.parseInt(code), description));
-            }
-            else {
+            } else {
                 fillTable(ProdutoDAO.queryAllProducts());
             }
         }
@@ -94,26 +95,29 @@ public class ConsultarProdutosController implements Initializable {
 
     private void edit() {
         Produto produto = table_product.getSelectionModel().getSelectedItem();
-        if(produto == null) {
+        if (produto == null) {
             AlertBox.selectARecord();
-        }
-        else {
+        } else {
             EditarProduto editarProduto = new EditarProduto(produto);
             editarProduto.start(new Stage());
         }
     }
 
     private void delete() {
-        if(AlertBox.confirmationDelete()) {
+        if (AlertBox.confirmationDelete()) {
             Produto produto = table_product.getSelectionModel().getSelectedItem();
             if (produto == null) {
                 AlertBox.selectARecord();
             } else {
-                if (ProdutoDAO.deleteByCode(produto.getCodigo())) {
-                    AlertBox.deleteCompleted();
-                    filter();
+                if (EstoqueDAO.queryStockByCode(produto.getCodigo()).size() == 0) {
+                    if (ProdutoDAO.deleteByCode(produto.getCodigo())) {
+                        AlertBox.deleteCompleted();
+                        filter();
+                    } else {
+                        AlertBox.deleteError();
+                    }
                 } else {
-                    AlertBox.deleteError();
+                    AlertBox.productStillExistsInStock();
                 }
             }
         }
@@ -129,13 +133,17 @@ public class ConsultarProdutosController implements Initializable {
             close();
         });
 
+        btn_search.setOnMouseClicked(click -> {
+            filter();
+        });
+
         field_search_code.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
         field_search_description.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 

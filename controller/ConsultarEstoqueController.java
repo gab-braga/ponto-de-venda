@@ -34,6 +34,9 @@ public class ConsultarEstoqueController implements Initializable {
     private Button btn_close;
 
     @FXML
+    private Button btn_search;
+
+    @FXML
     private TableView<Estoque> table_stock;
 
     @FXML
@@ -77,21 +80,17 @@ public class ConsultarEstoqueController implements Initializable {
         String description = field_search_description_product.getText();
         boolean filterByCode = !code.isEmpty();
         boolean filterByDescription = !description.isEmpty();
-        if(Helper.validateInteger(code) || !filterByCode) {
-            if(filterByCode && filterByDescription) {
+        if (Helper.validateInteger(code) || !filterByCode) {
+            if (filterByCode && filterByDescription) {
                 fillTable(EstoqueDAO.queryByCodeOrDescription(Integer.parseInt(code), description));
-            }
-            else if(filterByCode && !filterByDescription) {
+            } else if (filterByCode && !filterByDescription) {
                 fillTable(EstoqueDAO.queryStockByCode(Integer.parseInt(code)));
-            }
-            else if(!filterByCode && filterByDescription) {
+            } else if (!filterByCode && filterByDescription) {
                 fillTable(EstoqueDAO.queryByDescription(description));
-            }
-            else {
+            } else {
                 fillTable(EstoqueDAO.queryAllStock());
             }
-        }
-        else {
+        } else {
             AlertBox.onlyNumbers();
         }
     }
@@ -116,13 +115,17 @@ public class ConsultarEstoqueController implements Initializable {
             close();
         });
 
+        btn_search.setOnMouseClicked(click -> {
+            filter();
+        });
+
         field_search_code_product.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
         field_search_description_product.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 

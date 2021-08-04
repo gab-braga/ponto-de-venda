@@ -17,8 +17,7 @@ public abstract class Datetime {
         try {
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             datetime = format.parse(datetimeString);
-        }
-        catch(ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 

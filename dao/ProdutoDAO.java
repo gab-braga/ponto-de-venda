@@ -26,7 +26,7 @@ public abstract class ProdutoDAO {
         boolean flag = false;
         if (ConnectionFactory.createDatabase()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql =
                                 "CREATE TABLE IF NOT EXISTS produto(" +
@@ -51,9 +51,9 @@ public abstract class ProdutoDAO {
 
     public static boolean register(Produto produto) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "INSERT INTO produto (PRODUTO_CODIGO, PRODUTO_DESCRICAO, PRODUTO_VALOR_VENDA) VALUES (?, ?, ?);";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -74,9 +74,9 @@ public abstract class ProdutoDAO {
 
     public static boolean update(Produto produto) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "UPDATE produto SET PRODUTO_CODIGO = ?, PRODUTO_DESCRICAO = ?, PRODUTO_VALOR_VENDA = ? WHERE PRODUTO_CODIGO = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -98,9 +98,9 @@ public abstract class ProdutoDAO {
 
     public static boolean deleteByCode(int codigo) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "DELETE p, e FROM produto AS p LEFT JOIN estoque AS e ON p.PRODUTO_CODIGO = e.PRODUTO_CODIGO  WHERE p.PRODUTO_CODIGO = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -119,9 +119,9 @@ public abstract class ProdutoDAO {
 
     public static List<Produto> queryAllProducts() {
         List<Produto> results = new ArrayList<Produto>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM produto ORDER BY PRODUTO_DESCRICAO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -140,9 +140,9 @@ public abstract class ProdutoDAO {
 
     public static List<Produto> queryProductByCode(int code) {
         List<Produto> results = new ArrayList<Produto>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM produto WHERE PRODUTO_CODIGO = ? ORDER BY PRODUTO_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -162,9 +162,9 @@ public abstract class ProdutoDAO {
 
     public static List<Produto> queryByDescriptionProducts(String description) {
         List<Produto> results = new ArrayList<Produto>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM produto WHERE PRODUTO_DESCRICAO LIKE '%" + description + "%' ORDER BY PRODUTO_DESCRICAO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -183,9 +183,9 @@ public abstract class ProdutoDAO {
 
     public static List<Produto> queryByCodeOrDescriptionProducts(int code, String description) {
         List<Produto> results = new ArrayList<Produto>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM produto WHERE PRODUTO_CODIGO = " + code + " OR PRODUTO_DESCRICAO LIKE '%" + description + "%' ORDER BY PRODUTO_DESCRICAO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -203,6 +203,11 @@ public abstract class ProdutoDAO {
     }
 
     protected static Produto getProductByCode(int codigo) {
-        return queryProductByCode(codigo).get(0);
+        List<Produto> produtos = queryProductByCode(codigo);
+        Produto produto = null;
+        if (produtos.size() > 0) {
+            produto = produtos.get(0);
+        }
+        return produto;
     }
 }

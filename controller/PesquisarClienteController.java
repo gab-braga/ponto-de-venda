@@ -38,10 +38,9 @@ public class PesquisarClienteController implements Initializable {
 
     private void search() {
         String name = field_name_client.getText();
-        if(name == null || name.isEmpty()) {
+        if (name == null || name.isEmpty()) {
             fillList(ClienteDAO.queryAllClients());
-        }
-        else {
+        } else {
             fillList(ClienteDAO.queryByNameClients(name));
         }
     }
@@ -57,10 +56,9 @@ public class PesquisarClienteController implements Initializable {
 
     private void selectClient() {
         Cliente cliente = list_clients.getSelectionModel().getSelectedItem();
-        if(cliente == null) {
+        if (cliente == null) {
             AlertBox.selectARecord();
-        }
-        else {
+        } else {
             this.dataDriver.insertAndFillClient(cliente);
             close();
         }
@@ -93,7 +91,7 @@ public class PesquisarClienteController implements Initializable {
         });
 
         list_clients.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 selectClient();
         });
 

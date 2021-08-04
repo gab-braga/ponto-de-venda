@@ -26,9 +26,9 @@ public abstract class VendaDAO {
     protected static boolean createTable() {
         boolean flag = false;
         if (ConnectionFactory.createDatabase()) {
-            if(ClienteDAO.createTable() && CaixaDAO.createTable() && UsuarioDAO.createTable()) {
+            if (ClienteDAO.createTable() && CaixaDAO.createTable() && UsuarioDAO.createTable()) {
                 if (ConnectionFactory.openConnection()) {
-                    if(ConnectionFactory.useDataBase()) {
+                    if (ConnectionFactory.useDataBase()) {
                         try {
                             String sql =
                                     "CREATE TABLE IF NOT EXISTS venda(" +
@@ -40,7 +40,7 @@ public abstract class VendaDAO {
                                             "CAIXA_CODIGO INT NOT NULL," +
                                             "USUARIO_NOME VARCHAR(100) NOT NULL," +
                                             "PRIMARY KEY (VENDA_CODIGO)," +
-                                            "FOREIGN KEY (CLIENTE_CODIGO) REFERENCES cliente (CLIENTE_CODIGO)," +
+                                            "FOREIGN KEY (CLIENTE_CODIGO) REFERENCES cliente (CLIENTE_CODIGO) ON DELETE CASCADE ON UPDATE CASCADE," +
                                             "FOREIGN KEY (CAIXA_CODIGO) REFERENCES caixa (CAIXA_CODIGO)," +
                                             "FOREIGN KEY (USUARIO_NOME) REFERENCES usuario (USUARIO_NOME)" +
                                             ")" +
@@ -61,9 +61,9 @@ public abstract class VendaDAO {
 
     public static boolean register(Venda venda) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "INSERT INTO venda (VENDA_VALOR, VENDA_DATA, VENDA_HORA, CLIENTE_CODIGO, CAIXA_CODIGO, USUARIO_NOME) VALUES (?, ?, ?, ?, ?, ?);";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -89,11 +89,11 @@ public abstract class VendaDAO {
         return flag;
     }
 
-    public static List<Venda> queryAllSales() {
+    public static List<Venda> queryAllRegisters() {
         List<Venda> vendas = new ArrayList<Venda>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM venda ORDER BY VENDA_DATA;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -110,9 +110,9 @@ public abstract class VendaDAO {
 
     public static List<Venda> querySalesByDate(java.util.Date date) {
         List<Venda> vendas = new ArrayList<Venda>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM venda WHERE VENDA_DATA = ? ORDER BY VENDA_DATA;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -130,9 +130,9 @@ public abstract class VendaDAO {
 
     public static List<Venda> querySaleByCode(int codigo) {
         List<Venda> vendas = new ArrayList<Venda>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM venda WHERE VENDA_CODIGO = ? ORDER BY VENDA_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -149,6 +149,11 @@ public abstract class VendaDAO {
     }
 
     protected static Venda getSaleByCode(int codigo) {
-        return querySaleByCode(codigo).get(0);
+        List<Venda> vendas = querySaleByCode(codigo);
+        Venda venda = null;
+        if (vendas.size() > 0) {
+            venda = vendas.get(0);
+        }
+        return venda;
     }
 }

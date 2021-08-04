@@ -55,4 +55,9 @@ public class Item {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Descrição: %s | Quantidade: %d", getProduto().getDescricao(), getQuantidade());
+    }
 }

@@ -33,6 +33,9 @@ public class ConsultarClientesController implements Initializable {
     private Button btn_close;
 
     @FXML
+    private Button btn_search;
+
+    @FXML
     private TableView<Cliente> table_clients;
 
     @FXML
@@ -89,33 +92,29 @@ public class ConsultarClientesController implements Initializable {
         String cpf = field_search_cpf.getText();
         boolean filterByName = !name.isEmpty();
         boolean filterByCpf = !cpf.isEmpty();
-        if(filterByName && filterByCpf) {
-           fillTable(ClienteDAO.queryByNameOrCpfClients(name, cpf));
-        }
-        else if(filterByName && !filterByCpf) {
+        if (filterByName && filterByCpf) {
+            fillTable(ClienteDAO.queryByNameOrCpfClients(name, cpf));
+        } else if (filterByName && !filterByCpf) {
             fillTable(ClienteDAO.queryByNameClients(name));
-        }
-        else if(!filterByName && filterByCpf) {
+        } else if (!filterByName && filterByCpf) {
             fillTable(ClienteDAO.queryByCpfClients(cpf));
-        }
-        else {
+        } else {
             fillTable(ClienteDAO.queryAllClients());
         }
     }
 
     private void edit() {
         Cliente cliente = table_clients.getSelectionModel().getSelectedItem();
-        if(cliente == null) {
+        if (cliente == null) {
             AlertBox.selectARecord();
-        }
-        else {
+        } else {
             EditarCliente editarCliente = new EditarCliente(cliente);
             editarCliente.start(new Stage());
         }
     }
 
     private void delete() {
-        if(AlertBox.confirmationDelete()) {
+        if (AlertBox.confirmationDelete()) {
             Cliente cliente = table_clients.getSelectionModel().getSelectedItem();
             if (cliente == null) {
                 AlertBox.selectARecord();
@@ -132,12 +131,18 @@ public class ConsultarClientesController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        table_item_delete.setVisible(false); // BUG
+
         blockFullAccess();
 
         filter();
 
         btn_close.setOnMouseClicked(click -> {
             close();
+        });
+
+        btn_search.setOnMouseClicked(click -> {
+            filter();
         });
 
         field_search_name.setOnKeyPressed(keyEvent -> {

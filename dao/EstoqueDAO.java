@@ -26,9 +26,9 @@ public abstract class EstoqueDAO {
     protected static boolean createTable() {
         boolean flag = false;
         if (ConnectionFactory.createDatabase()) {
-            if(ProdutoDAO.createTable()) {
+            if (ProdutoDAO.createTable()) {
                 if (ConnectionFactory.openConnection()) {
-                    if(ConnectionFactory.useDataBase()) {
+                    if (ConnectionFactory.useDataBase()) {
                         try {
                             String sql =
                                     "CREATE TABLE IF NOT EXISTS estoque(" +
@@ -56,9 +56,9 @@ public abstract class EstoqueDAO {
 
     public static boolean register(Estoque estoque) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "INSERT INTO estoque (ESTOQUE_TIPO_EMBALADO, ESTOQUE_QUANTIDADE, PRODUTO_CODIGO) VALUES (?, ?, ?);";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -79,9 +79,9 @@ public abstract class EstoqueDAO {
 
     public static boolean add(Estoque estoque) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "UPDATE estoque SET ESTOQUE_QUANTIDADE = ESTOQUE_QUANTIDADE + ? WHERE PRODUTO_CODIGO = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -101,9 +101,9 @@ public abstract class EstoqueDAO {
 
     public static boolean decrease(Estoque estoque) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "UPDATE estoque SET ESTOQUE_QUANTIDADE = ESTOQUE_QUANTIDADE - ? WHERE PRODUTO_CODIGO = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -123,9 +123,9 @@ public abstract class EstoqueDAO {
 
     public static List<Estoque> queryAllStock() {
         List<Estoque> results = new ArrayList<Estoque>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM estoque ORDER BY PRODUTO_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -144,9 +144,9 @@ public abstract class EstoqueDAO {
 
     public static List<Estoque> queryStockByCode(int code) {
         List<Estoque> results = new ArrayList<Estoque>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM estoque WHERE PRODUTO_CODIGO = ? ORDER BY PRODUTO_CODIGO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -166,9 +166,9 @@ public abstract class EstoqueDAO {
 
     public static List<Estoque> queryByDescription(String description) {
         List<Estoque> results = new ArrayList<Estoque>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT e.* FROM estoque AS e JOIN produto AS p ON e.PRODUTO_CODIGO = p.PRODUTO_CODIGO WHERE p.PRODUTO_DESCRICAO LIKE '%" + description + "%' ORDER BY p.PRODUTO_DESCRICAO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -187,9 +187,9 @@ public abstract class EstoqueDAO {
 
     public static List<Estoque> queryByCodeOrDescription(int code, String description) {
         List<Estoque> results = new ArrayList<Estoque>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT e.* FROM estoque AS e JOIN produto AS p ON e.PRODUTO_CODIGO = p.PRODUTO_CODIGO WHERE e.PRODUTO_CODIGO = " + code + " OR p.PRODUTO_DESCRICAO LIKE '%" + description + "%' ORDER BY p.PRODUTO_DESCRICAO;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -209,7 +209,7 @@ public abstract class EstoqueDAO {
     public static Estoque getStockByCode(int codigo) {
         Estoque estoque = null;
         List<Estoque> estoqueList = queryStockByCode(codigo);
-        if(estoqueList.size() > 0) {
+        if (estoqueList.size() > 0) {
             estoque = estoqueList.get(0);
         }
         return estoque;

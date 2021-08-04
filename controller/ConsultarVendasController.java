@@ -12,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Venda;
+import view.DetalhesVenda;
 
 import java.net.URL;
 import java.util.Date;
@@ -30,13 +31,16 @@ public class ConsultarVendasController implements Initializable {
     private ComboBox<String> field_search_month;
 
     @FXML
-    private TextField field_search_year;
+    private ComboBox<String> field_search_year;
 
     @FXML
     private Button btn_close;
 
     @FXML
-    private TableView<Venda> table_exits;
+    private Button btn_search;
+
+    @FXML
+    private TableView<Venda> table_sales;
 
     @FXML
     private TableColumn<Venda, String> column_date_hour;
@@ -53,6 +57,16 @@ public class ConsultarVendasController implements Initializable {
     @FXML
     private MenuItem table_item_refresh;
 
+    @FXML
+    private MenuItem table_item_details;
+
+    private void fillFieldYear() {
+        List<String> years = Helper.getListYears();
+        ObservableList<String> items = FXCollections.observableArrayList(years);
+        field_search_year.setItems(items);
+        field_search_year.setValue("");
+    }
+
     private void fillFieldMonth() {
         List<String> months = Helper.getListMonths();
         ObservableList<String> items = FXCollections.observableArrayList(months);
@@ -62,6 +76,16 @@ public class ConsultarVendasController implements Initializable {
 
     private void close() {
         ((Stage) root.getScene().getWindow()).close();
+    }
+
+    private void detailsSale() {
+        Venda venda = table_sales.getSelectionModel().getSelectedItem();
+        if (venda == null) {
+            AlertBox.selectARecord();
+        } else {
+            DetalhesVenda detalhesVenda = new DetalhesVenda(venda);
+            detalhesVenda.start(new Stage());
+        }
     }
 
     private boolean validateFields(String day, String month, String year) {
@@ -76,32 +100,29 @@ public class ConsultarVendasController implements Initializable {
         column_date_hour.setCellValueFactory(data -> new SimpleStringProperty(Helper.getDateTimeStringFormatted(data.getValue().getDataHora())));
         column_value.setCellValueFactory(new PropertyValueFactory<Venda, Double>("valor"));
         column_client.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCliente().getNome()));
-        column_operator.setCellValueFactory(new PropertyValueFactory<Venda, String>("operador"));
+        column_operator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVendedor().getNome()));
 
         ObservableList<Venda> items = FXCollections.observableArrayList(vendas);
-        table_exits.setItems(items);
+        table_sales.setItems(items);
     }
 
     private void filter() {
         String day = field_search_day.getText();
         String month = field_search_month.getValue();
-        String year = field_search_year.getText();
+        String year = field_search_year.getValue();
 
-        if(isSearchAll(day, month, year)) {
-            fillTable(VendaDAO.queryAllSales());
-        }
-        else {
-            if(validateFields(day, month, year)) {
+        if (isSearchAll(day, month, year)) {
+            fillTable(VendaDAO.queryAllRegisters());
+        } else {
+            if (validateFields(day, month, year)) {
                 String dateString = Helper.getDateStringByDayMonthYear(day, month, year);
-                if(Helper.validateDate(dateString)) {
-                    Date date = Helper.getDateFormatted(dateString);
+                if (Helper.validateDate(dateString)) {
+                    Date date = Helper.getDateFormattedDayMonthYear(dateString);
                     fillTable(VendaDAO.querySalesByDate(date));
-                }
-                else {
+                } else {
                     AlertBox.dateInvalided();
                 }
-            }
-            else {
+            } else {
                 AlertBox.fillAllFields();
             }
         }
@@ -109,6 +130,8 @@ public class ConsultarVendasController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        fillFieldYear();
 
         fillFieldMonth();
 
@@ -118,18 +141,22 @@ public class ConsultarVendasController implements Initializable {
             close();
         });
 
+        btn_search.setOnMouseClicked(click -> {
+            filter();
+        });
+
         field_search_day.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
         field_search_month.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
         field_search_year.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 filter();
         });
 
@@ -137,7 +164,10 @@ public class ConsultarVendasController implements Initializable {
             filter();
         });
 
+        table_item_details.setOnAction(action -> {
+            detailsSale();
+        });
+
         Helper.addTextLimiter(field_search_day, 2);
-        Helper.addTextLimiter(field_search_year, 4);
     }
 }

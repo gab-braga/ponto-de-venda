@@ -80,17 +80,15 @@ public class EditarClienteController implements Initializable {
         String cidade = field_city.getText();
         String uf = field_uf.getText();
 
-        if(validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
-            Cliente cliente =  cliente = new Cliente(clientEdit.getCodigo(), nome, cpf, telefone, email, endereco, numero, cidade, uf);
-            if(ClienteDAO.update(cliente)) {
+        if (validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
+            Cliente cliente = cliente = new Cliente(clientEdit.getCodigo(), nome, cpf, telefone, email, endereco, numero, cidade, uf);
+            if (ClienteDAO.update(cliente)) {
                 AlertBox.editionCompleted();
                 close();
-            }
-            else {
+            } else {
                 AlertBox.editionError();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -107,44 +105,44 @@ public class EditarClienteController implements Initializable {
         });
 
         field_name.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_cpf.requestFocus();
-        } );
+        });
 
         field_cpf.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_phone.requestFocus();
-        } );
+        });
 
         field_phone.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_email.requestFocus();
-        } );
+        });
 
         field_email.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_address.requestFocus();
-        } );
+        });
 
         field_address.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_number.requestFocus();
-        } );
+        });
 
         field_number.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_city.requestFocus();
-        } );
+        });
 
         field_city.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_uf.requestFocus();
-        } );
+        });
 
         field_uf.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 edit();
-        } );
+        });
 
         Helper.addTextLimiter(field_name, 40);
         Helper.addTextLimiter(field_cpf, 11);

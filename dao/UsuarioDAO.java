@@ -1,6 +1,5 @@
 package dao;
 
-import model.Saida;
 import model.Usuario;
 
 import java.sql.PreparedStatement;
@@ -26,8 +25,8 @@ public abstract class UsuarioDAO {
     protected static boolean createTable() {
         boolean flag = false;
         if (ConnectionFactory.createDatabase()) {
-            if(ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+            if (ConnectionFactory.openConnection()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql =
                                 "CREATE TABLE IF NOT EXISTS usuario(" +
@@ -52,9 +51,9 @@ public abstract class UsuarioDAO {
 
     public static boolean register(Usuario usuario) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "INSERT INTO usuario (USUARIO_NOME, USUARIO_SENHA, USUARIO_PERMISSAO) VALUES (?, ?, ?);";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -75,9 +74,9 @@ public abstract class UsuarioDAO {
 
     public static boolean deleteByName(String nome) {
         boolean flag = false;
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "DELETE FROM usuario WHERE USUARIO_NOME = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -96,9 +95,9 @@ public abstract class UsuarioDAO {
 
     public static List<Usuario> queryUserPassword(String usuario, String senha) {
         List<Usuario> results = new ArrayList<Usuario>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM usuario WHERE USUARIO_NOME = ? AND USUARIO_SENHA = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -119,9 +118,9 @@ public abstract class UsuarioDAO {
 
     public static List<Usuario> queryAllUser() {
         List<Usuario> results = new ArrayList<Usuario>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM usuario ORDER BY USUARIO_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -140,9 +139,9 @@ public abstract class UsuarioDAO {
 
     public static List<Usuario> queryUserByName(String name) {
         List<Usuario> results = new ArrayList<Usuario>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%" + name + "%' ORDER BY USUARIO_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -161,9 +160,9 @@ public abstract class UsuarioDAO {
 
     public static List<Usuario> queryUserByPermission(String permission) {
         List<Usuario> results = new ArrayList<Usuario>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM usuario WHERE USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -183,9 +182,9 @@ public abstract class UsuarioDAO {
 
     public static List<Usuario> queryUserByNameOrPermission(String name, String permission) {
         List<Usuario> results = new ArrayList<Usuario>();
-        if(createTable()) {
+        if (createTable()) {
             if (ConnectionFactory.openConnection()) {
-                if(ConnectionFactory.useDataBase()) {
+                if (ConnectionFactory.useDataBase()) {
                     try {
                         String sql = "SELECT * FROM usuario WHERE USUARIO_NOME LIKE '%" + name + "%' OR USUARIO_PERMISSAO = ? ORDER BY USUARIO_NOME;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
@@ -204,6 +203,11 @@ public abstract class UsuarioDAO {
     }
 
     protected static Usuario getUserByName(String nome) {
-        return queryUserByName(nome).get(0);
+        List<Usuario> usuarios = queryUserByName(nome);
+        Usuario usuario = null;
+        if (usuarios.size() > 0) {
+            usuario = usuarios.get(0);
+        }
+        return usuario;
     }
 }

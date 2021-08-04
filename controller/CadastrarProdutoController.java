@@ -52,28 +52,24 @@ public class CadastrarProdutoController implements Initializable {
         String description = field_description.getText();
         String saleValue = field_sale_value.getText().replace(",", ".");
 
-        if(validateFields(code, description, saleValue)) {
-            if(Helper.validateInteger(code) && Helper.validateDouble(saleValue)) {
-                if(ProdutoDAO.queryProductByCode(Integer.parseInt(code)).size() == 0) {
+        if (validateFields(code, description, saleValue)) {
+            if (Helper.validateInteger(code) && Helper.validateDouble(saleValue)) {
+                if (ProdutoDAO.queryProductByCode(Integer.parseInt(code)).size() == 0) {
                     Produto produto = new Produto(Integer.parseInt(code), description, Double.parseDouble(saleValue));
-                    if(ProdutoDAO.register(produto)) {
+                    if (ProdutoDAO.register(produto)) {
                         AlertBox.registrationCompleted();
                         clearFields();
                         field_code.requestFocus();
-                    }
-                    else {
+                    } else {
                         AlertBox.registrationError();
                     }
-                }
-                else {
+                } else {
                     AlertBox.productAlreadyRegistered();
                 }
-            }
-            else {
+            } else {
                 AlertBox.onlyNumbers();
             }
-        }
-        else {
+        } else {
             AlertBox.fillAllFields();
         }
     }
@@ -90,17 +86,17 @@ public class CadastrarProdutoController implements Initializable {
         });
 
         field_code.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_description.requestFocus();
         });
 
         field_description.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 field_sale_value.requestFocus();
         });
 
         field_sale_value.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER)
+            if (keyEvent.getCode() == KeyCode.ENTER)
                 register();
         });
 
