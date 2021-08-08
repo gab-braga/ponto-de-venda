@@ -32,6 +32,10 @@ Ponto de Venda é um projeto Open-Soure desenvolvido por mim, [Gabriel Braga](ht
 ### Execução
 1. Instalar JDK
 2. Instalar MySQL
-3. Criar Usuario 'usuario' e Senha 'senha' no MySQL
+3. Criar Usuario 'usuario' e Senha 'senha' no MySQL com todos os privilégios
 5. Clonar o projeto Ponto de Venda
 6. Compilar e executar a classe Login
+
+### Usuário Mestre
+* Nome: xxxx
+* Senha: 0000
