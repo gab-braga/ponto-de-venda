@@ -49,6 +49,16 @@ public abstract class UsuarioDAO {
         return flag;
     }
 
+    protected static void insertUserMaster() {
+        try {
+            Statement statement = ConnectionFactory.connection.createStatement();
+            String sql = "INSERT INTO usuario (USUARIO_NOME, USUARIO_SENHA, USUARIO_PERMISSAO) SELECT * FROM (SELECT 'xxxx', '0000', 'Administrador') AS user WHERE NOT EXISTS (SELECT USUARIO_NOME FROM usuario WHERE USUARIO_NOME = 'xxxx') LIMIT 1;";
+            statement.execute(sql);
+        } catch (SQLException e) {
+            System.err.println("ERRO (INSERT USER MASTER): " + e.getMessage());
+        }
+    }
+
     public static boolean register(Usuario usuario) {
         boolean flag = false;
         if (createTable()) {
@@ -98,6 +108,7 @@ public abstract class UsuarioDAO {
         if (createTable()) {
             if (ConnectionFactory.openConnection()) {
                 if (ConnectionFactory.useDataBase()) {
+                    insertUserMaster();
                     try {
                         String sql = "SELECT * FROM usuario WHERE USUARIO_NOME = ? AND USUARIO_SENHA = ?;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
