@@ -12,10 +12,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarSaidasController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarSaidasController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -25,60 +25,49 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="269.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="505.0" minHeight="10.0" prefHeight="505.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="505.0" minHeight="10.0" prefHeight="490.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <GridPane hgap="10.0" styleClass="form" vgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="405.0" minWidth="10.0" prefWidth="200.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="200.0" />
-                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                        <VBox>
                            <children>
-                              <Label text="DIA:">
-                                 <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="field_search_day" maxWidth="190.0" minWidth="100.0" />
+                              <Label text="DIA:" />
+                              <TextField fx:id="field_search_day" maxWidth="200.0" minWidth="100.0" />
                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                        </VBox>
+                        <VBox GridPane.columnIndex="1">
                            <children>
-                              <Label text="MÊS:">
-                                 <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <ComboBox fx:id="field_search_month" maxWidth="190.0" minWidth="100.0" prefWidth="150.0" />
+                              <Label text="MÊS:" />
+                              <ComboBox fx:id="field_search_month" maxWidth="200.0" minWidth="100.0" prefWidth="150.0" />
                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
+                        </VBox>
+                        <VBox GridPane.columnIndex="2">
                            <children>
-                              <Label text="ANO:">
-                                 <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <ComboBox fx:id="field_search_year" maxWidth="190.0" minWidth="100.0" prefWidth="150.0" />
+                              <Label text="ANO:" />
+                              <ComboBox fx:id="field_search_year" maxWidth="200.0" minWidth="100.0" prefWidth="150.0" />
                            </children>
-                        </HBox>
-                        <Button fx:id="btn_close" mnemonicParsing="false" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="4" />
-                        <Button fx:id="btn_search" mnemonicParsing="false" text="PESQUISAR" GridPane.columnIndex="3" />
+                        </VBox>
+                        <Button fx:id="btn_search" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" text="PESQUISAR" GridPane.columnIndex="4" />
+                        <Button fx:id="btn_close" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="5" />
                      </children>
                   </GridPane>
                   <TableView fx:id="table_exits" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                     <columns>
                       <TableColumn fx:id="column_date_hour" prefWidth="75.0" text="DATA/HORA" />
                       <TableColumn fx:id="column_value" prefWidth="75.0" text="VALOR (R$)" />
-                        <TableColumn fx:id="column_reason" prefWidth="75.0" text="MOTIVO" />
+                        <TableColumn fx:id="column_reason" prefWidth="75.0" text="DESCRIÇÃO" />
                         <TableColumn fx:id="column_operator" prefWidth="75.0" text="OPERADOR" />
                     </columns>
                      <columnResizePolicy>

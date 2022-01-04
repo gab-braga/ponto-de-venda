@@ -44,3 +44,8 @@
 .root .pane .background-image {
     -fx-opacity: 0.7;
 }
+
+.root .pane .menu_principal {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}

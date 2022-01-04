@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastrarEstoqueController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastrarEstoqueController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -35,7 +35,7 @@
                     </rowConstraints>
                      <children>
                         <Label text="CÓDIGO DO PRODUTO:" />
-                        <Label text="TIPO DE EMBALADO:" GridPane.rowIndex="2" />
+                        <Label text="UNIDADE:" GridPane.rowIndex="2" />
                         <Label text="QUANTIDADE:" GridPane.rowIndex="4" />
                         <ComboBox fx:id="field_packed" prefHeight="27.0" prefWidth="374.0" GridPane.rowIndex="3" />
                         <TextField fx:id="field_quantity" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
