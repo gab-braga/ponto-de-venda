@@ -1,5 +1,4 @@
 .idea/
 lib/
 out/
-ponto-de-venda.iml
-usuario_senha.png
+*.iml

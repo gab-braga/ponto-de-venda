@@ -12,6 +12,7 @@ import javafx.stage.StageStyle;
 import model.Estoque;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class AdicionarEstoque extends Application {
 
@@ -51,7 +52,7 @@ public class AdicionarEstoque extends Application {
             stage.initOwner(ConsultarEstoque.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);
-            stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
+            stage.getIcons().add(new Icon().getImage());
             stage.show();
         } catch (IOException ex) {
             System.err.println(String.format("ERRO (%s)", title));

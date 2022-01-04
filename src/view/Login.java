@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class Login extends Application {
     private final String title = "Login";
@@ -33,8 +34,8 @@ public class Login extends Application {
             stage.setTitle(title);
             stage.setResizable(false);
             stage.setScene(scene);
-            stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
             stage.show();
+            stage.getIcons().add(new Icon().getImage());
         } catch (IOException e) {
             System.out.println(String.format("ERRO (%s)", title));
             e.printStackTrace();

@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class AdicionarUsuario extends Application {
     private final String title = "Adicionar Usuário";
@@ -37,7 +38,7 @@ public class AdicionarUsuario extends Application {
             stage.initOwner(Usuarios.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);
-            stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
+            stage.getIcons().add(new Icon().getImage());
             stage.show();
         } catch (IOException ex) {
             System.err.println(String.format("ERRO (%s)", title));

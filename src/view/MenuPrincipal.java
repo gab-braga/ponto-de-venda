@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class MenuPrincipal extends Application {
     private final String title = "Menu Principal";
@@ -34,7 +35,7 @@ public class MenuPrincipal extends Application {
             stage.initStyle(StageStyle.DECORATED);
             stage.setTitle(title);
             stage.setResizable(false);
-            stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
+            stage.getIcons().add(new Icon().getImage());
             stage.show();
         } catch (IOException ex) {
             System.err.println(String.format("ERRO (%s)", title));

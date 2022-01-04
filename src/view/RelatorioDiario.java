@@ -37,7 +37,7 @@ public class RelatorioDiario extends Application {
             stage.initOwner(MenuPrincipal.getWindow());
             stage.setTitle(title);
             stage.setResizable(false);
-            stage.getIcons().add(new Image("/view/images/logo-ponto-de-venda.png"));
+            stage.getIcons().add(new Icon().getImage());
             stage.show();
         } catch (IOException ex) {
             System.err.println(String.format("ERRO (%s)", title));

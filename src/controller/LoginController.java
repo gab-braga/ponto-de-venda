@@ -1,11 +1,11 @@
 package controller;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
 import dao.UsuarioDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -22,16 +22,16 @@ public class LoginController implements Initializable {
     private AnchorPane root;
 
     @FXML
-    private JFXTextField login_user;
+    private TextField login_user;
 
     @FXML
-    private JFXPasswordField login_password;
+    private PasswordField login_password;
 
     @FXML
-    private JFXButton btn_submit;
+    private Button btn_submit;
 
     @FXML
-    private JFXButton btn_cancel;
+    private Button btn_cancel;
 
     private void close() {
         ((Stage) root.getScene().getWindow()).close();

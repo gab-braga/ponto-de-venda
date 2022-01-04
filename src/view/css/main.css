@@ -7,28 +7,6 @@
     -fx-effect:  dropshadow(three-pass-box, #363636, 20, 0, 0, 0);
 }
 
-.root .pane JFXTextField, JFXPasswordField {
-    -jfx-unfocus-color: #F6911F;
-    -jfx-focus-color: #F57411;
-    -fx-prompt-text-fill: #000000;
-    -fx-font-size: 15px;
-}
-
-.root .pane JFXButton {
-    -fx-background-color: linear-gradient(to top right, #E93429, #F6911F);
-    -fx-pref-width: 100px;
-    -fx-pref-height: 35px;
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 15px;
-    -fx-cursor: hand;
-    -fx-font-weight: bold;
-}
-
-.root .pane JFXButton:hover {
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-}
-
 .root .pane .form Label,
 .root .pane .form Button .text {
     -fx-font-size: 13px;
@@ -60,13 +38,6 @@
 
 .root .pane ListView {
     -fx-cursor: hand;
-}
-
-/*LOGIN*/
-.root .pane .legend {
-    -fx-fill: #F6911F;
-    -fx-font-size: 35px;
-    -fx-font-weight: bold;
 }
 
 /*MENU PRINCIPAL*/
