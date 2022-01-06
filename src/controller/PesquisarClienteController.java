@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.SearchGuide;
+import controller.util.Helper;
 import dao.ClienteDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,81 +23,81 @@ import java.util.ResourceBundle;
 public class PesquisarClienteController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_name_client;
+    private TextField fieldNameClient;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_select;
+    private Button btnSubmit;
 
     @FXML
-    private ListView<Cliente> list_clients;
+    private ListView<Cliente> listView;
 
-    private DataDriver dataDriver;
+    private SearchGuide searchGuide;
 
-    private void search() {
-        String name = field_name_client.getText();
-        if (name == null || name.isEmpty()) {
-            fillList(ClienteDAO.queryAllClients());
-        } else {
-            fillList(ClienteDAO.queryByNameClients(name));
-        }
-    }
-
-    private void fillList(List<Cliente> clientes) {
-        ObservableList items = FXCollections.observableArrayList(clientes);
-        list_clients.setItems(items);
-    }
-
-    private void close() {
-        PesquisarCliente.getWindow().close();
-    }
-
-    private void selectClient() {
-        Cliente cliente = list_clients.getSelectionModel().getSelectedItem();
-        if (cliente == null) {
-            AlertBox.selectARecord();
-        } else {
-            this.dataDriver.insertAndFillClient(cliente);
-            close();
-        }
-
-    }
-
-    public void setCaixaController(DataDriver dataDriver) {
-        this.dataDriver = dataDriver;
+    public void setSearchGuide(SearchGuide searchGuide) {
+        this.searchGuide = searchGuide;
     }
 
     public void setClientName(String clientName) {
-        field_name_client.setText(clientName);
-        search();
+        fieldNameClient.setText(clientName);
+        searchItem();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        search();
+        searchItem();
 
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
         });
 
-        btn_select.setOnMouseClicked(click -> {
-            selectClient();
+        btnSubmit.setOnMouseClicked(click -> {
+            selectItemListView();
         });
 
-        field_name_client.setOnKeyReleased(keyEvent -> {
-            search();
+        fieldNameClient.setOnKeyReleased(keyEvent -> {
+            searchItem();
         });
 
-        list_clients.setOnKeyPressed(keyEvent -> {
+        listView.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                selectClient();
+                selectItemListView();
         });
 
-        Helper.addTextLimiter(field_name_client, 40);
+        Helper.addTextLimiter(fieldNameClient, 40);
+    }
+
+    private void searchItem() {
+        String name = fieldNameClient.getText();
+        if (name == null || name.isBlank()) {
+            fillListView(ClienteDAO.queryAllClients());
+        } else {
+            fillListView(ClienteDAO.queryByNameClients(name));
+        }
+    }
+
+    private void fillListView(List<Cliente> items) {
+        ObservableList groupByClients = FXCollections.observableArrayList(items);
+        listView.setItems(groupByClients);
+    }
+
+    private void selectItemListView() {
+        Cliente cliente = listView.getSelectionModel().getSelectedItem();
+        if (cliente == null) {
+            AlertBox.selectARecord();
+        } else {
+            this.searchGuide.searchAndFillData(cliente);
+            closeWindow();
+        }
+
+    }
+
+    private void closeWindow() {
+        PesquisarCliente.getWindow().close();
     }
 }

@@ -1,6 +1,6 @@
 package dao;
 
-import controller.Helper;
+import controller.util.Helper;
 import model.Caixa;
 
 import java.sql.*;
@@ -180,8 +180,8 @@ public abstract class CaixaDAO {
                     try {
                         String sql = "SELECT SUM(CAIXA_VALOR_ENTRADA) AS CAIXA_VALOR_ENTRADA_TOTAL, SUM(CAIXA_VALOR_SAIDA) AS CAIXA_VALOR_SAIDA_TOTAL, CAIXA_DATA, MONTH(CAIXA_DATA) AS MONTH, YEAR(CAIXA_DATA) AS YEAR FROM caixa WHERE MONTH(CAIXA_DATA) = ? AND YEAR(CAIXA_DATA) = ? GROUP BY MONTH, YEAR ORDER BY MONTH, YEAR;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                        statement.setString(1, Helper.getStringMonth(date));
-                        statement.setString(2, Helper.getStringYear(date));
+                        statement.setString(1, Helper.extractMonthFromDate(date));
+                        statement.setString(2, Helper.extractYearFromDate(date));
                         caixas = getBoxList(statement.executeQuery());
                     } catch (SQLException e) {
                         System.err.println("ERRO (QUERY BOX BY MONTH AND YEAR): " + e.getMessage());
@@ -201,7 +201,7 @@ public abstract class CaixaDAO {
                     try {
                         String sql = "SELECT SUM(CAIXA_VALOR_ENTRADA) AS CAIXA_VALOR_ENTRADA_TOTAL, SUM(CAIXA_VALOR_SAIDA) AS CAIXA_VALOR_SAIDA_TOTAL, CAIXA_DATA, YEAR(CAIXA_DATA) AS YEAR FROM caixa WHERE YEAR(CAIXA_DATA) = ? GROUP BY YEAR ORDER BY YEAR;";
                         PreparedStatement statement = ConnectionFactory.connection.prepareStatement(sql);
-                        statement.setString(1, Helper.getStringYear(date));
+                        statement.setString(1, Helper.extractYearFromDate(date));
                         caixas = getBoxList(statement.executeQuery());
                     } catch (SQLException e) {
                         System.err.println("ERRO (QUERY BOX BY YEAR): " + e.getMessage());

@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.ClienteDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,141 +19,145 @@ import java.util.ResourceBundle;
 public class EditarClienteController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_name;
+    private TextField fieldName;
 
     @FXML
-    private TextField field_cpf;
+    private TextField fieldCpf;
 
     @FXML
-    private TextField field_phone;
+    private TextField fieldPhoneNumber;
 
     @FXML
-    private TextField field_email;
+    private TextField fieldEmail;
 
     @FXML
     private TextField field_address;
 
     @FXML
-    private TextField field_number;
+    private TextField fieldNumber;
 
     @FXML
-    private TextField field_city;
+    private TextField fieldCity;
 
     @FXML
-    private TextField field_uf;
+    private TextField fieldUf;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_edit;
+    private Button btnSubmit;
 
     private Cliente clientEdit;
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
-
     public void fillFields(Cliente cliente) {
         this.clientEdit = cliente;
-        field_name.setText(cliente.getNome());
-        field_cpf.setText(cliente.getCpf());
-        field_phone.setText(cliente.getTelefone());
-        field_email.setText(cliente.getEmail());
+        fieldName.setText(cliente.getNome());
+        fieldCpf.setText(cliente.getCpf());
+        fieldPhoneNumber.setText(cliente.getTelefone());
+        fieldEmail.setText(cliente.getEmail());
         field_address.setText(cliente.getEndereco());
-        field_number.setText(cliente.getNumero());
-        field_city.setText(cliente.getCidade());
-        field_uf.setText(cliente.getUf());
-    }
-
-    private boolean validateFields(String nome, String cpf, String telefone, String email, String endereco, String numero, String cidade, String uf) {
-        return !(nome.isEmpty() || cpf.isEmpty() || telefone.isEmpty() || email.isEmpty() || endereco.isEmpty() || numero.isEmpty() || cidade.isEmpty() || uf.isEmpty());
-    }
-
-    private void edit() {
-        String nome = field_name.getText();
-        String cpf = field_cpf.getText();
-        String telefone = field_phone.getText();
-        String email = field_email.getText();
-        String endereco = field_address.getText();
-        String numero = field_number.getText();
-        String cidade = field_city.getText();
-        String uf = field_uf.getText();
-
-        if (validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
-            Cliente cliente = cliente = new Cliente(clientEdit.getCodigo(), nome, cpf, telefone, email, endereco, numero, cidade, uf);
-            if (ClienteDAO.update(cliente)) {
-                AlertBox.editionCompleted();
-                close();
-            } else {
-                AlertBox.editionError();
-            }
-        } else {
-            AlertBox.fillAllFields();
-        }
+        fieldNumber.setText(cliente.getNumero());
+        fieldCity.setText(cliente.getCidade());
+        fieldUf.setText(cliente.getUf());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
         });
 
-        btn_edit.setOnMouseClicked(click -> {
+        btnSubmit.setOnMouseClicked(click -> {
             edit();
         });
 
-        field_name.setOnKeyPressed(keyEvent -> {
+        fieldName.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                field_cpf.requestFocus();
+                fieldCpf.requestFocus();
         });
 
-        field_cpf.setOnKeyPressed(keyEvent -> {
+        fieldCpf.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                field_phone.requestFocus();
+                fieldPhoneNumber.requestFocus();
         });
 
-        field_phone.setOnKeyPressed(keyEvent -> {
+        fieldPhoneNumber.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                field_email.requestFocus();
+                fieldEmail.requestFocus();
         });
 
-        field_email.setOnKeyPressed(keyEvent -> {
+        fieldEmail.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
                 field_address.requestFocus();
         });
 
         field_address.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                field_number.requestFocus();
+                fieldNumber.requestFocus();
         });
 
-        field_number.setOnKeyPressed(keyEvent -> {
+        fieldNumber.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                field_city.requestFocus();
+                fieldCity.requestFocus();
         });
 
-        field_city.setOnKeyPressed(keyEvent -> {
+        fieldCity.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                field_uf.requestFocus();
+                fieldUf.requestFocus();
         });
 
-        field_uf.setOnKeyPressed(keyEvent -> {
+        fieldUf.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
                 edit();
         });
 
-        Helper.addTextLimiter(field_name, 40);
-        Helper.addTextLimiter(field_cpf, 11);
-        Helper.addTextLimiter(field_phone, 15);
-        Helper.addTextLimiter(field_email, 50);
+        Helper.addTextLimiter(fieldName, 40);
+        Helper.addTextLimiter(fieldCpf, 11);
+        Helper.addTextLimiter(fieldPhoneNumber, 15);
+        Helper.addTextLimiter(fieldEmail, 50);
         Helper.addTextLimiter(field_address, 80);
-        Helper.addTextLimiter(field_number, 5);
-        Helper.addTextLimiter(field_city, 40);
-        Helper.addTextLimiter(field_uf, 2);
+        Helper.addTextLimiter(fieldNumber, 5);
+        Helper.addTextLimiter(fieldCity, 40);
+        Helper.addTextLimiter(fieldUf, 2);
+    }
+
+    private void edit() {
+        Cliente cliente = getModel();
+        if(cliente != null) {
+            if (ClienteDAO.update(cliente)) {
+                AlertBox.editionCompleted();
+                closeWindow();
+            } else {
+                AlertBox.editionError();
+            }
+        }
+    }
+
+    private Cliente getModel() {
+        Cliente cliente = null;
+        String nome = fieldName.getText();
+        String cpf = fieldCpf.getText();
+        String telefone = fieldPhoneNumber.getText();
+        String email = fieldEmail.getText();
+        String endereco = field_address.getText();
+        String numero = fieldNumber.getText();
+        String cidade = fieldCity.getText();
+        String uf = fieldUf.getText();
+
+        if (Validator.validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
+            cliente = cliente = new Cliente(clientEdit.getCodigo(), nome, cpf, telefone, email, endereco, numero, cidade, uf);
+        } else {
+            AlertBox.fillAllFields();
+        }
+        return cliente;
+    }
+
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

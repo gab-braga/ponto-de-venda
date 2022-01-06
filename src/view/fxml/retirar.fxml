@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RetirarController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RetirarController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -34,13 +34,13 @@
                         <Label text="OPERADOR:" />
                         <Label text="VALOR DE SAÍDA (R$):" GridPane.rowIndex="2" />
                         <Label text="MOTIVO:" GridPane.rowIndex="4" />
-                        <TextField fx:id="field_operator" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
-                        <TextField fx:id="field_value_exit" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="3" />
-                        <TextField fx:id="field_reason" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
+                        <TextField fx:id="fieldOperator" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
+                        <TextField fx:id="fieldValueExit" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="3" />
+                        <TextField fx:id="fieldReason" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
-                  <Button fx:id="btn_cancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="btn_remove" mnemonicParsing="false" text="RETIRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btnCancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="btnSubmit" mnemonicParsing="false" text="RETIRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>

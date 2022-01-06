@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.ProdutoDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,53 +19,77 @@ import java.util.ResourceBundle;
 public class CadastrarProdutoController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_code;
+    private TextField fieldCode;
 
     @FXML
-    private TextField field_description;
+    private TextField fieldDescription;
 
     @FXML
-    private TextField field_sale_value;
+    private TextField fieldSaleValue;
 
     @FXML
-    private Button btn_register;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnSubmit;
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    private void clearFields() {
-        field_code.clear();
-        field_description.clear();
-        field_sale_value.clear();
-    }
+        btnSubmit.setOnMouseClicked(click -> {
+            register();
+        });
 
-    private boolean validateFields(String code, String description, String saleVenda) {
-        return !(code.isEmpty() || description.isEmpty() || saleVenda.isEmpty());
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+
+        fieldCode.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                fieldDescription.requestFocus();
+        });
+
+        fieldDescription.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                fieldSaleValue.requestFocus();
+        });
+
+        fieldSaleValue.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                register();
+        });
+
+        Helper.addTextLimiter(fieldCode, 40);
+        Helper.addTextLimiter(fieldDescription, 100);
+        Helper.addTextLimiter(fieldSaleValue, 8);
     }
 
     private void register() {
-        String code = field_code.getText();
-        String description = field_description.getText();
-        String saleValue = field_sale_value.getText().replace(",", ".");
+        Produto produto = getModel();
+        if(produto != null) {
+            if (ProdutoDAO.register(produto)) {
+                AlertBox.registrationCompleted();
+                clearFields();
+                fieldCode.requestFocus();
+            } else {
+                AlertBox.registrationError();
+            }
+        }
+    }
 
-        if (validateFields(code, description, saleValue)) {
-            if (Helper.validateInteger(code) && Helper.validateDouble(saleValue)) {
+    private Produto getModel() {
+        Produto produto = null;
+        String code = fieldCode.getText();
+        String description = fieldDescription.getText();
+        String saleValue = fieldSaleValue.getText().replace(",", ".");
+
+        if (Validator.validateFields(code, description, saleValue)) {
+            if (Validator.validateInteger(code) && Validator.validateDouble(saleValue)) {
                 if (ProdutoDAO.queryProductByCode(Integer.parseInt(code)).size() == 0) {
-                    Produto produto = new Produto(Integer.parseInt(code), description, Double.parseDouble(saleValue));
-                    if (ProdutoDAO.register(produto)) {
-                        AlertBox.registrationCompleted();
-                        clearFields();
-                        field_code.requestFocus();
-                    } else {
-                        AlertBox.registrationError();
-                    }
+                    produto = new Produto(Integer.parseInt(code), description, Double.parseDouble(saleValue));
                 } else {
                     AlertBox.productAlreadyRegistered();
                 }
@@ -72,36 +99,16 @@ public class CadastrarProdutoController implements Initializable {
         } else {
             AlertBox.fillAllFields();
         }
+        return produto;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private void clearFields() {
+        fieldCode.clear();
+        fieldDescription.clear();
+        fieldSaleValue.clear();
+    }
 
-        btn_register.setOnMouseClicked(click -> {
-            register();
-        });
-
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
-        });
-
-        field_code.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                field_description.requestFocus();
-        });
-
-        field_description.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                field_sale_value.requestFocus();
-        });
-
-        field_sale_value.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                register();
-        });
-
-        Helper.addTextLimiter(field_code, 40);
-        Helper.addTextLimiter(field_description, 100);
-        Helper.addTextLimiter(field_sale_value, 8);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

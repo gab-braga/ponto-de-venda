@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.ProdutoDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,90 +19,94 @@ import java.util.ResourceBundle;
 public class EditarProdutoController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_code;
+    private TextField fieldCode;
 
     @FXML
-    private TextField field_description;
+    private TextField fieldDescription;
 
     @FXML
-    private TextField field_sale_value;
+    private TextField fieldSaleValue;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_edit;
-
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+    private Button btnSubmit;
 
     private Produto productEdit;
 
     public void fillFields(Produto produto) {
         this.productEdit = produto;
-        field_code.setText(Integer.toString(produto.getCodigo()));
-        field_description.setText(produto.getDescricao());
-        field_sale_value.setText(Double.toString(produto.getValorVenda()).replace(".", ","));
-        field_code.setDisable(true);
+        fieldCode.setText(Integer.toString(produto.getCodigo()));
+        fieldDescription.setText(produto.getDescricao());
+        fieldSaleValue.setText(Double.toString(produto.getValorVenda()).replace(".", ","));
+        fieldCode.setDisable(true);
     }
 
-    private boolean validateFields(String description, String saleValue) {
-        return !(description.isEmpty() || saleValue.isEmpty());
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+
+        btnSubmit.setOnMouseClicked(click -> {
+            edit();
+        });
+
+        fieldCode.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                fieldDescription.requestFocus();
+        });
+
+        fieldDescription.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                fieldSaleValue.requestFocus();
+        });
+
+        fieldSaleValue.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                edit();
+        });
+
+        Helper.addTextLimiter(fieldCode, 4);
+        Helper.addTextLimiter(fieldDescription, 100);
+        Helper.addTextLimiter(fieldSaleValue, 8);
     }
 
     private void edit() {
-        String description = field_description.getText();
-        String saleValue = field_sale_value.getText().replace(",", ".");
+        Produto produto = getModel();
+        if(produto != null) {
+            if (ProdutoDAO.update(produto)) {
+                AlertBox.editionCompleted();
+                closeWindow();
+            } else {
+                AlertBox.editionError();
+            }
+        }
+    }
 
-        if (validateFields(description, saleValue)) {
-            if (Helper.validateDouble(saleValue)) {
-                Produto produto = new Produto(productEdit.getCodigo(), description, Double.parseDouble(saleValue));
-                if (ProdutoDAO.update(produto)) {
-                    AlertBox.editionCompleted();
-                    close();
-                } else {
-                    AlertBox.editionError();
-                }
+    private Produto getModel() {
+        Produto produto = null;
+        String description = fieldDescription.getText();
+        String saleValue = fieldSaleValue.getText().replace(",", ".");
+
+        if (Validator.validateFields(description, saleValue)) {
+            if (Validator.validateDouble(saleValue)) {
+                produto = new Produto(productEdit.getCodigo(), description, Double.parseDouble(saleValue));
             } else {
                 AlertBox.onlyNumbers();
             }
         } else {
             AlertBox.fillAllFields();
         }
+        return produto;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_edit.setOnMouseClicked(click -> {
-            edit();
-        });
-
-        field_code.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                field_description.requestFocus();
-        });
-
-        field_description.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                field_sale_value.requestFocus();
-        });
-
-        field_sale_value.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                edit();
-        });
-
-        Helper.addTextLimiter(field_code, 4);
-        Helper.addTextLimiter(field_description, 100);
-        Helper.addTextLimiter(field_sale_value, 8);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

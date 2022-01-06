@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.CaixaDAO;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,84 +24,79 @@ import java.util.ResourceBundle;
 public class RelatorioMensalController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private ComboBox<String> field_month;
+    private ComboBox<String> fieldMonth;
 
     @FXML
-    private ComboBox<String> field_year;
+    private ComboBox<String> fieldYear;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private TableView<Caixa> table_monthly_report;
+    private TableView<Caixa> tableMonthlyReport;
 
     @FXML
-    private TableColumn<Caixa, String> table_column_date;
+    private TableColumn<Caixa, String> tableColumnDate;
 
     @FXML
-    private TableColumn<Caixa, Double> table_column_deposit;
+    private TableColumn<Caixa, Double> tableColumnDeposit;
 
     @FXML
-    private TableColumn<Caixa, Double> table_column_out;
+    private TableColumn<Caixa, Double> tableColumnOut;
 
     @FXML
-    private TableColumn<Caixa, Double> table_column_total;
+    private TableColumn<Caixa, Double> tableColumnTotal;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
-    private void fillFieldMonth() {
-        List<String> months = Helper.getListMonths();
-        ObservableList<String> items = FXCollections.observableArrayList(months);
-        field_month.setItems(items);
-        field_month.setValue("");
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    private void fillFieldYear() {
-        List<String> years = Helper.getListYears();
-        ObservableList<String> items = FXCollections.observableArrayList(years);
-        field_year.setItems(items);
-        field_year.setValue("");
-    }
+        Helper.fillFieldMonth(fieldMonth);
+        Helper.fillFieldYear(fieldYear);
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+        filter();
 
-    private boolean validateFields(String month, String year) {
-        return !(month.isEmpty() || year.isEmpty());
-    }
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
 
-    private boolean isSearchAll(String month, String year) {
-        return (month.isEmpty() && year.isEmpty());
-    }
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
 
-    private void fillTable(List<Caixa> caixas) {
-        table_column_date.setCellValueFactory(data -> new SimpleStringProperty(Helper.getDateStringByMonthYear(data.getValue().getData())));
-        table_column_deposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorEntrada()).asObject());
-        table_column_out.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorSaida()).asObject());
-        table_column_total.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorTotal()).asObject());
+        fieldMonth.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
 
-        ObservableList<Caixa> items = FXCollections.observableArrayList(caixas);
-        table_monthly_report.setItems(items);
+        fieldYear.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
     }
 
     private void filter() {
-        String month = field_month.getValue();
-        String year = field_year.getValue();
+        String month = fieldMonth.getValue();
+        String year = fieldYear.getValue();
 
         if (isSearchAll(month, year)) {
             fillTable(CaixaDAO.queryAllMonthlyBoxs());
         } else {
-            if (validateFields(month, year)) {
-                String dateString = Helper.getDateStringByMonthYear(month, year);
-                Date date = Helper.getDateFormattedMonthYear(dateString);
+            if (Validator.validateFields(month, year)) {
+                String dateString = Helper.formatDateStringByMonthYear(month, year);
+                Date date = Helper.parseDateMonthAndYear(dateString);
                 fillTable(CaixaDAO.queryBoxByMonthYear(date));
             } else {
                 AlertBox.fillAllFields();
@@ -106,35 +104,21 @@ public class RelatorioMensalController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private boolean isSearchAll(String month, String year) {
+        return (month.isBlank() && year.isBlank());
+    }
 
-        fillFieldMonth();
+    private void fillTable(List<Caixa> caixas) {
+        tableColumnDate.setCellValueFactory(data -> new SimpleStringProperty(Helper.extractMonthAndYearFromDate(data.getValue().getData())));
+        tableColumnDeposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorEntrada()).asObject());
+        tableColumnOut.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorSaida()).asObject());
+        tableColumnTotal.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorTotal()).asObject());
 
-        fillFieldYear();
+        ObservableList<Caixa> items = FXCollections.observableArrayList(caixas);
+        tableMonthlyReport.setItems(items);
+    }
 
-        filter();
-
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        field_month.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_year.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

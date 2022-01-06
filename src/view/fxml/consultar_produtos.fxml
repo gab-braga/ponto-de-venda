@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarProdutosController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarProdutosController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -42,24 +42,24 @@
                         <VBox>
                            <children>
                               <Label text="CÓDIGO:" />
-                              <TextField fx:id="field_search_code" maxWidth="200.0" minWidth="190.0" />
+                              <TextField fx:id="fieldSearchCode" maxWidth="200.0" minWidth="190.0" />
                            </children>
                         </VBox>
                         <VBox GridPane.columnIndex="1">
                            <children>
                               <Label text="DESCRIÇÃO:" />
-                              <TextField fx:id="field_search_description" maxWidth="200.0" minWidth="190.0" />
+                              <TextField fx:id="fieldSearchDescription" maxWidth="200.0" minWidth="190.0" />
                            </children>
                         </VBox>
-                        <Button fx:id="btn_search" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" text="PESQUISAR" GridPane.columnIndex="3" />
-                        <Button fx:id="btn_close" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="4" />
+                        <Button fx:id="btnSubmit" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" text="PESQUISAR" GridPane.columnIndex="3" />
+                        <Button fx:id="btnCancel" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="4" />
                      </children>
                   </GridPane>
-                  <TableView fx:id="table_product" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                  <TableView fx:id="tableProduct" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                     <columns>
-                      <TableColumn fx:id="column_code" prefWidth="75.0" text="CÓDIGO" />
-                      <TableColumn fx:id="column_description" prefWidth="75.0" text="DESCRIÇÃO" />
-                        <TableColumn fx:id="column_sale_value" prefWidth="75.0" text="VALOR DE VENDA (R$)" />
+                      <TableColumn fx:id="columnCode" prefWidth="75.0" text="CÓDIGO" />
+                      <TableColumn fx:id="columnDescription" prefWidth="75.0" text="DESCRIÇÃO" />
+                        <TableColumn fx:id="columnSaleValue" prefWidth="75.0" text="VALOR DE VENDA (R$)" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -67,9 +67,9 @@
                      <contextMenu>
                         <ContextMenu>
                           <items>
-                            <MenuItem fx:id="table_item_refresh" mnemonicParsing="false" text="Refresh" />
-                              <MenuItem fx:id="table_item_edit" mnemonicParsing="false" text="Editar" />
-                              <MenuItem fx:id="table_item_delete" mnemonicParsing="false" text="Excluir" />
+                            <MenuItem fx:id="tableItemRefresh" mnemonicParsing="false" text="Refresh" />
+                              <MenuItem fx:id="tableItemEdit" mnemonicParsing="false" text="Editar" />
+                              <MenuItem fx:id="tableItemDelete" mnemonicParsing="false" text="Excluir" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

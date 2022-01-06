@@ -1,12 +1,11 @@
 package view;
 
-import controller.DataDriver;
+import controller.util.SearchGuide;
 import controller.PesquisarClienteController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -15,11 +14,11 @@ import java.io.IOException;
 
 public class PesquisarCliente extends Application {
 
-    private DataDriver dataDriver;
+    private SearchGuide searchGuide;
     private String clientName;
 
-    public PesquisarCliente(DataDriver dataDriver, String clientName) {
-        this.dataDriver = dataDriver;
+    public PesquisarCliente(SearchGuide searchGuide, String clientName) {
+        this.searchGuide = searchGuide;
         this.clientName = clientName;
     }
 
@@ -41,7 +40,7 @@ public class PesquisarCliente extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/fxml/pesquisar_cliente.fxml"));
             Parent root = fxmlLoader.load();
             PesquisarClienteController pesquisarClienteController = fxmlLoader.getController();
-            pesquisarClienteController.setCaixaController(this.dataDriver);
+            pesquisarClienteController.setSearchGuide(this.searchGuide);
             pesquisarClienteController.setClientName(clientName);
             Scene scene = new Scene(root);
 

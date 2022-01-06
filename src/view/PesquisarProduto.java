@@ -1,12 +1,11 @@
 package view;
 
-import controller.DataDriver;
+import controller.util.SearchGuide;
 import controller.PesquisarProdutoController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -15,11 +14,11 @@ import java.io.IOException;
 
 public class PesquisarProduto extends Application {
 
-    private DataDriver dataDriver;
+    private SearchGuide searchGuide;
     private String productDescription;
 
-    public PesquisarProduto(DataDriver dataDriver, String productDescription) {
-        this.dataDriver = dataDriver;
+    public PesquisarProduto(SearchGuide searchGuide, String productDescription) {
+        this.searchGuide = searchGuide;
         this.productDescription = productDescription;
     }
 
@@ -41,7 +40,7 @@ public class PesquisarProduto extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/fxml/pesquisar_produto.fxml"));
             Parent root = fxmlLoader.load();
             PesquisarProdutoController pesquisarProdutoController = fxmlLoader.getController();
-            pesquisarProdutoController.setDataDriver(this.dataDriver);
+            pesquisarProdutoController.setDataDriver(this.searchGuide);
             pesquisarProdutoController.setProductDescription(productDescription);
             Scene scene = new Scene(root);
 

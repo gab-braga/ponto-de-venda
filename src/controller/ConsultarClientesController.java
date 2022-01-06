@@ -1,5 +1,7 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
 import dao.ClienteDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,77 +23,102 @@ import java.util.ResourceBundle;
 public class ConsultarClientesController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_search_name;
+    private TextField fieldSearchName;
 
     @FXML
-    private TextField field_search_cpf;
+    private TextField fieldSearchCpf;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
-    private TableView<Cliente> table_clients;
+    private TableView<Cliente> tableClients;
 
     @FXML
-    private TableColumn<Cliente, String> column_name;
+    private TableColumn<Cliente, String> columnName;
 
     @FXML
-    private TableColumn<Cliente, String> column_cpf;
+    private TableColumn<Cliente, String> columnCpf;
 
     @FXML
-    private TableColumn<Cliente, String> column_phone;
+    private TableColumn<Cliente, String> columnPhoneNumber;
 
     @FXML
-    private TableColumn<Cliente, String> column_email;
+    private TableColumn<Cliente, String> columnEmail;
 
     @FXML
-    private TableColumn<Cliente, String> column_address;
+    private TableColumn<Cliente, String> columnAddress;
 
     @FXML
-    private TableColumn<Cliente, String> column_city;
+    private TableColumn<Cliente, String> columnCity;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
     @FXML
-    private MenuItem table_item_edit;
+    private MenuItem tableItemEdit;
 
     @FXML
-    private MenuItem table_item_delete;
+    private MenuItem tableItemDelete;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        tableItemDelete.setVisible(false); // BUG
+
+        blockFullAccess();
+
+        filter();
+
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
+
+        fieldSearchName.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        fieldSearchCpf.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
+
+        tableItemEdit.setOnAction(action -> {
+            edit();
+        });
+
+        tableItemDelete.setOnAction(action -> {
+            delete();
+        });
+
+        Helper.addTextLimiter(fieldSearchName, 40);
+        Helper.addTextLimiter(fieldSearchCpf, 11);
+    }
 
     private void blockFullAccess() {
-        table_item_delete.setVisible(Access.isFullAccess());
-        table_item_edit.setVisible(Access.isFullAccess());
-    }
-
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
-
-    private void fillTable(List<Cliente> clientes) {
-        column_name.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nome"));
-        column_cpf.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cpf"));
-        column_phone.setCellValueFactory(new PropertyValueFactory<Cliente, String>("telefone"));
-        column_email.setCellValueFactory(new PropertyValueFactory<Cliente, String>("email"));
-        column_address.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s, %s", data.getValue().getEndereco(), data.getValue().getNumero())));
-        column_city.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s - %s", data.getValue().getCidade(), data.getValue().getUf())));
-
-        ObservableList<Cliente> items = FXCollections.observableArrayList(clientes);
-        table_clients.setItems(items);
-        table_clients.refresh();
+        tableItemDelete.setVisible(Access.isFullAccess());
+        tableItemEdit.setVisible(Access.isFullAccess());
     }
 
     private void filter() {
-        String name = field_search_name.getText();
-        String cpf = field_search_cpf.getText();
-        boolean filterByName = !name.isEmpty();
-        boolean filterByCpf = !cpf.isEmpty();
+        String name = fieldSearchName.getText();
+        String cpf = fieldSearchCpf.getText();
+        boolean filterByName = !name.isBlank();
+        boolean filterByCpf = !cpf.isBlank();
         if (filterByName && filterByCpf) {
             fillTable(ClienteDAO.queryByNameOrCpfClients(name, cpf));
         } else if (filterByName && !filterByCpf) {
@@ -104,7 +131,7 @@ public class ConsultarClientesController implements Initializable {
     }
 
     private void edit() {
-        Cliente cliente = table_clients.getSelectionModel().getSelectedItem();
+        Cliente cliente = tableClients.getSelectionModel().getSelectedItem();
         if (cliente == null) {
             AlertBox.selectARecord();
         } else {
@@ -115,7 +142,7 @@ public class ConsultarClientesController implements Initializable {
 
     private void delete() {
         if (AlertBox.confirmationDelete()) {
-            Cliente cliente = table_clients.getSelectionModel().getSelectedItem();
+            Cliente cliente = tableClients.getSelectionModel().getSelectedItem();
             if (cliente == null) {
                 AlertBox.selectARecord();
             } else {
@@ -129,45 +156,20 @@ public class ConsultarClientesController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        table_item_delete.setVisible(false); // BUG
+    private void fillTable(List<Cliente> clientes) {
+        columnName.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nome"));
+        columnCpf.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cpf"));
+        columnPhoneNumber.setCellValueFactory(new PropertyValueFactory<Cliente, String>("telefone"));
+        columnEmail.setCellValueFactory(new PropertyValueFactory<Cliente, String>("email"));
+        columnAddress.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s, %s", data.getValue().getEndereco(), data.getValue().getNumero())));
+        columnCity.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s - %s", data.getValue().getCidade(), data.getValue().getUf())));
 
-        blockFullAccess();
+        ObservableList<Cliente> items = FXCollections.observableArrayList(clientes);
+        tableClients.setItems(items);
+        tableClients.refresh();
+    }
 
-        filter();
-
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        field_search_name.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_cpf.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
-
-        table_item_edit.setOnAction(action -> {
-            edit();
-        });
-
-        table_item_delete.setOnAction(action -> {
-            delete();
-        });
-
-        Helper.addTextLimiter(field_search_name, 40);
-        Helper.addTextLimiter(field_search_cpf, 11);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

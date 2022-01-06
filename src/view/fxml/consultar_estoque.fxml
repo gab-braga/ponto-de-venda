@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarEstoqueController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarEstoqueController">
     <children>
         <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -42,25 +42,25 @@
                         <VBox>
                            <children>
                               <Label text="DESCRIÇÃO:" />
-                              <TextField fx:id="field_search_description_product" maxWidth="200.0" minWidth="190.0" />
+                              <TextField fx:id="fieldSearchDescriptionProduct" maxWidth="200.0" minWidth="190.0" />
                            </children>
                         </VBox>
                         <VBox GridPane.columnIndex="1">
                            <children>
                               <Label text="CÓDIGO:" />
-                              <TextField fx:id="field_search_code_product" maxWidth="200.0" minWidth="190.0" />
+                              <TextField fx:id="fieldSearchCodeProduct" maxWidth="200.0" minWidth="190.0" />
                            </children>
                         </VBox>
-                        <Button fx:id="btn_search" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" text="PESQUISAR" GridPane.columnIndex="3" />
-                        <Button fx:id="btn_close" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="4" />
+                        <Button fx:id="btnSubmit" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" text="PESQUISAR" GridPane.columnIndex="3" />
+                        <Button fx:id="btnCancel" alignment="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" styleClass="btn_cancel" text="FECHAR" GridPane.columnIndex="4" />
                             </children>
                         </GridPane>
-                        <TableView fx:id="table_stock" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                        <TableView fx:id="tableStock" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                             <columns>
-                                <TableColumn fx:id="column_code_product" prefWidth="75.0" text="CÓDIGO DO PRODUTO" />
-                        <TableColumn fx:id="column_description_product" prefWidth="75.0" text="DESCRIÇÃO" />
-                                <TableColumn fx:id="column_type_packed" prefWidth="75.0" text="UNIDADE" />
-                                <TableColumn fx:id="column_quantity" prefWidth="75.0" text="QUANTIDADE" />
+                                <TableColumn fx:id="columnCodeProduct" prefWidth="75.0" text="CÓDIGO DO PRODUTO" />
+                        <TableColumn fx:id="columnDescriptionProduct" prefWidth="75.0" text="DESCRIÇÃO" />
+                                <TableColumn fx:id="columnTypePacked" prefWidth="75.0" text="UNIDADE" />
+                                <TableColumn fx:id="columnQuantity" prefWidth="75.0" text="QUANTIDADE" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -68,8 +68,8 @@
                      <contextMenu>
                         <ContextMenu>
                           <items>
-                            <MenuItem fx:id="table_item_refresh" mnemonicParsing="false" text="Refresh" />
-                              <MenuItem fx:id="table_item_add" mnemonicParsing="false" text="Adicionar" />
+                            <MenuItem fx:id="tableItemRefresh" mnemonicParsing="false" text="Refresh" />
+                              <MenuItem fx:id="tableItemAdd" mnemonicParsing="false" text="Adicionar" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

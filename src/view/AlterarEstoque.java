@@ -1,28 +1,26 @@
 package view;
 
-import controller.AdicionarEstoqueController;
+import controller.AlterarEstoqueController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Estoque;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-public class AdicionarEstoque extends Application {
+public class AlterarEstoque extends Application {
 
     private Estoque stockEdit;
 
-    public AdicionarEstoque(Estoque stockEdit) {
+    public AlterarEstoque(Estoque stockEdit) {
         this.stockEdit = stockEdit;
     }
 
-    private final String title = "Adicionar Estoque";
+    private final String title = "Alterar Estoque";
 
     private static Stage window;
 
@@ -37,11 +35,11 @@ public class AdicionarEstoque extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader file = new FXMLLoader(getClass().getResource("/view/fxml/adicionar_estoque.fxml"));
+            FXMLLoader file = new FXMLLoader(getClass().getResource("/view/fxml/alterar_estoque.fxml"));
             Parent root = file.load();
 
-            AdicionarEstoqueController adicionarEstoqueController = (AdicionarEstoqueController) file.getController();
-            adicionarEstoqueController.fillFields(stockEdit);
+            AlterarEstoqueController alterarEstoqueController = (AlterarEstoqueController) file.getController();
+            alterarEstoqueController.fillFields(stockEdit);
 
             Scene scene = new Scene(root);
 

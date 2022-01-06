@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.EstoqueDAO;
 import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
@@ -21,66 +24,92 @@ import java.util.ResourceBundle;
 public class ConsultarProdutosController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_search_code;
+    private TextField fieldSearchCode;
 
     @FXML
-    private TextField field_search_description;
+    private TextField fieldSearchDescription;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
-    private TableView<Produto> table_product;
+    private TableView<Produto> tableProduct;
 
     @FXML
-    private TableColumn<Produto, Integer> column_code;
+    private TableColumn<Produto, Integer> columnCode;
 
     @FXML
-    private TableColumn<Produto, String> column_description;
+    private TableColumn<Produto, String> columnDescription;
 
     @FXML
-    private TableColumn<Produto, Double> column_sale_value;
+    private TableColumn<Produto, Double> columnSaleValue;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
     @FXML
-    private MenuItem table_item_edit;
+    private MenuItem tableItemEdit;
 
     @FXML
-    private MenuItem table_item_delete;
+    private MenuItem tableItemDelete;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        blockFullAccess();
+
+        filter();
+
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
+
+        fieldSearchCode.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        fieldSearchDescription.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
+
+        tableItemEdit.setOnAction(action -> {
+            openEditionWindow();
+        });
+
+        tableItemDelete.setOnAction(action -> {
+            openDelitionWindow();
+        });
+
+        Helper.addTextLimiter(fieldSearchCode, 40);
+        Helper.addTextLimiter(fieldSearchDescription, 100);
+    }
 
     private void blockFullAccess() {
-        table_item_delete.setVisible(Access.isFullAccess());
-        table_item_edit.setVisible(Access.isFullAccess());
-    }
-
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
-
-    private void fillTable(List<Produto> produtos) {
-        column_code.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("codigo"));
-        column_description.setCellValueFactory(new PropertyValueFactory<Produto, String>("descricao"));
-        column_sale_value.setCellValueFactory(new PropertyValueFactory<Produto, Double>("valorVenda"));
-
-        ObservableList<Produto> items = FXCollections.observableArrayList(produtos);
-        table_product.setItems(items);
-        table_product.refresh();
+        tableItemDelete.setVisible(Access.isFullAccess());
+        tableItemEdit.setVisible(Access.isFullAccess());
     }
 
     private void filter() {
-        String code = field_search_code.getText();
-        String description = field_search_description.getText();
-        boolean filterByCode = !code.isEmpty();
-        boolean filterByDescription = !description.isEmpty();
-        if (Helper.validateInteger(code) || !filterByCode) {
+        String code = fieldSearchCode.getText();
+        String description = fieldSearchDescription.getText();
+        boolean filterByCode = !code.isBlank();
+        boolean filterByDescription = !description.isBlank();
+        if (Validator.validateInteger(code) || !filterByCode) {
             if (!filterByCode && filterByDescription) {
                 fillTable(ProdutoDAO.queryByDescriptionProducts(description));
             } else if (filterByCode && !filterByDescription) {
@@ -93,8 +122,18 @@ public class ConsultarProdutosController implements Initializable {
         }
     }
 
-    private void edit() {
-        Produto produto = table_product.getSelectionModel().getSelectedItem();
+    private void fillTable(List<Produto> produtos) {
+        columnCode.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("codigo"));
+        columnDescription.setCellValueFactory(new PropertyValueFactory<Produto, String>("descricao"));
+        columnSaleValue.setCellValueFactory(new PropertyValueFactory<Produto, Double>("valorVenda"));
+
+        ObservableList<Produto> items = FXCollections.observableArrayList(produtos);
+        tableProduct.setItems(items);
+        tableProduct.refresh();
+    }
+
+    private void openEditionWindow() {
+        Produto produto = tableProduct.getSelectionModel().getSelectedItem();
         if (produto == null) {
             AlertBox.selectARecord();
         } else {
@@ -103,9 +142,9 @@ public class ConsultarProdutosController implements Initializable {
         }
     }
 
-    private void delete() {
+    private void openDelitionWindow() {
         if (AlertBox.confirmationDelete()) {
-            Produto produto = table_product.getSelectionModel().getSelectedItem();
+            Produto produto = tableProduct.getSelectionModel().getSelectedItem();
             if (produto == null) {
                 AlertBox.selectARecord();
             } else {
@@ -123,43 +162,7 @@ public class ConsultarProdutosController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        blockFullAccess();
-
-        filter();
-
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        field_search_code.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_description.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
-
-        table_item_edit.setOnAction(action -> {
-            edit();
-        });
-
-        table_item_delete.setOnAction(action -> {
-            delete();
-        });
-
-        Helper.addTextLimiter(field_search_code, 40);
-        Helper.addTextLimiter(field_search_description, 100);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

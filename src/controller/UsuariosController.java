@@ -1,5 +1,7 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
 import dao.UsuarioDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,66 +23,83 @@ import java.util.ResourceBundle;
 public class UsuariosController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_search_name;
+    private TextField fieldSearchName;
 
     @FXML
-    private ComboBox<String> field_search_permission;
+    private ComboBox<String> fieldSearchPermission;
 
     @FXML
-    private Button btn_add_user;
+    private Button btnAddUser;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
     private TableView<Usuario> tableUser;
 
     @FXML
-    private TableColumn<Usuario, String> column_name;
+    private TableColumn<Usuario, String> columnName;
 
     @FXML
-    private TableColumn<Usuario, String> column_permission;
+    private TableColumn<Usuario, String> columnPermission;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
     @FXML
-    private MenuItem table_item_delete;
+    private MenuItem tableItemDelete;
 
-    private void fillFieldPermission() {
-        List<String> permissions = new ArrayList<String>();
-        permissions.add("");
-        permissions.add(Access.accessUser);
-        permissions.add(Access.accessAdmin);
-        ObservableList<String> items = FXCollections.observableArrayList(permissions);
-        field_search_permission.setItems(items);
-        field_search_permission.setValue("");
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Helper.fillFieldPermission(fieldSearchPermission);
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+        filter();
 
-    private void fillTable(List<Usuario> usuarios) {
-        column_name.setCellValueFactory(new PropertyValueFactory<Usuario, String>("nome"));
-        column_permission.setCellValueFactory(new PropertyValueFactory<Usuario, String>("permissao"));
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
 
-        ObservableList<Usuario> items = FXCollections.observableArrayList(usuarios);
-        tableUser.setItems(items);
-        tableUser.refresh();
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
+
+        btnAddUser.setOnMouseClicked(click -> {
+            AdicionarUsuario adicionarUsuario = new AdicionarUsuario();
+            adicionarUsuario.start(new Stage());
+        });
+
+        fieldSearchName.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        fieldSearchPermission.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
+
+        tableItemDelete.setOnAction(action -> {
+            delete();
+        });
+
+        Helper.addTextLimiter(fieldSearchName, 40);
     }
 
     private void filter() {
-        String name = field_search_name.getText();
-        String permission = field_search_permission.getValue();
-        boolean filterByName = !name.isEmpty();
-        boolean filterByPermission = !permission.isEmpty();
+        String name = fieldSearchName.getText();
+        String permission = fieldSearchPermission.getValue();
+        boolean filterByName = !name.isBlank();
+        boolean filterByPermission = !permission.isBlank();
         if (filterByName && !filterByPermission) {
             fillTable(UsuarioDAO.queryUserByName(name));
         } else if (!filterByName && filterByPermission) {
@@ -108,44 +127,16 @@ public class UsuariosController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private void fillTable(List<Usuario> usuarios) {
+        columnName.setCellValueFactory(new PropertyValueFactory<Usuario, String>("nome"));
+        columnPermission.setCellValueFactory(new PropertyValueFactory<Usuario, String>("permissao"));
 
-        fillFieldPermission();
+        ObservableList<Usuario> items = FXCollections.observableArrayList(usuarios);
+        tableUser.setItems(items);
+        tableUser.refresh();
+    }
 
-        filter();
-
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        btn_add_user.setOnMouseClicked(click -> {
-            AdicionarUsuario adicionarUsuario = new AdicionarUsuario();
-            adicionarUsuario.start(new Stage());
-        });
-
-        field_search_name.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_permission.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
-
-        table_item_delete.setOnAction(action -> {
-            delete();
-        });
-
-        Helper.addTextLimiter(field_search_name, 40);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

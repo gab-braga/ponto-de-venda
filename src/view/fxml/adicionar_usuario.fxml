@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdicionarUsuarioController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdicionarUsuarioController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -33,13 +33,13 @@
                         <Label text="NOME:" />
                         <Label text="SENHA:" GridPane.rowIndex="1" />
                         <Label text="PERMISSÃO:" GridPane.rowIndex="2" />
-                        <TextField fx:id="field_name" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" />
-                        <TextField fx:id="field_password" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="field_permission" prefHeight="27.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="fieldName" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="fieldPassword" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="fieldPermission" prefHeight="27.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
-                  <Button fx:id="btn_cancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="btn_add" mnemonicParsing="false" text="ADICIONAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btnCancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="btnSubmit" mnemonicParsing="false" text="ADICIONAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastrarClienteController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastrarClienteController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -42,18 +42,18 @@
                         <Label text="NÚMERO:" GridPane.rowIndex="5" />
                         <Label text="CIDADE:" GridPane.rowIndex="6" />
                         <Label layoutX="44.0" layoutY="17.0" text="UF:" GridPane.rowIndex="7" />
-                        <TextField fx:id="field_name" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" />
-                        <TextField fx:id="field_cpf" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="field_phone" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="field_email" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField fx:id="field_address" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <TextField fx:id="field_number" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField fx:id="field_city" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <TextField fx:id="field_uf" layoutX="120.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <TextField fx:id="fieldName" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="fieldCpf" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="fieldPhoneNumber" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="fieldEmail" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="fieldAddress" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="fieldNumber" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="fieldCity" prefHeight="27.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <TextField fx:id="fieldUf" layoutX="120.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                      </children>
                   </GridPane>
-                  <Button fx:id="btn_cancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="btn_register" mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btnCancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="btnSubmit" mnemonicParsing="false" text="CADASTRAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>

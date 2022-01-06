@@ -13,137 +13,137 @@ import java.util.ResourceBundle;
 public class MenuPrincipalController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private MenuItem item_seller;
+    private MenuItem itemSeller;
 
     @FXML
-    private MenuItem item_remove;
+    private MenuItem itemRemove;
 
     @FXML
-    private MenuItem item_consult_product;
+    private MenuItem itemConsultProduct;
 
     @FXML
-    private MenuItem item_consult_client;
+    private MenuItem itemConsultClient;
 
     @FXML
-    private MenuItem item_consult_stock;
+    private MenuItem itemConsultStock;
 
     @FXML
-    private MenuItem item_consult_sales;
+    private MenuItem itemConsultSales;
 
     @FXML
-    private MenuItem item_consult_exits;
+    private MenuItem itemConsultExits;
 
     @FXML
-    private MenuItem item_register_product;
+    private MenuItem itemRegisterProduct;
 
     @FXML
-    private MenuItem item_register_client;
+    private MenuItem itemRegisterClient;
 
     @FXML
-    private MenuItem item_register_stock;
+    private MenuItem itemRegisterStock;
 
     @FXML
-    private MenuItem item_daily_report;
+    private MenuItem itemDailyReport;
 
     @FXML
-    private MenuItem item_monthly_report;
+    private MenuItem itemMonthlyReport;
 
     @FXML
-    private MenuItem item_annual_report;
+    private MenuItem itemAnnualReport;
 
     @FXML
-    private MenuItem item_users;
+    private MenuItem itemUsers;
 
     @FXML
-    private MenuItem item_close;
-
-    private void close() {
-        ((Stage) this.root.getScene().getWindow()).close();
-    }
-
-    private void blockFullAccess() {
-        item_users.setVisible(Access.isFullAccess());
-    }
+    private MenuItem itemExit;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         blockFullAccess();
 
-        item_seller.setOnAction(event -> {
+        itemSeller.setOnAction(event -> {
             Caixa caixa = new Caixa();
             caixa.start(new Stage());
         });
 
-        item_remove.setOnAction(event -> {
+        itemRemove.setOnAction(event -> {
             Retirar retirar = new Retirar();
             retirar.start(new Stage());
         });
 
-        item_consult_product.setOnAction(event -> {
+        itemConsultProduct.setOnAction(event -> {
             ConsultarProdutos consultarProdutos = new ConsultarProdutos();
             consultarProdutos.start(new Stage());
         });
 
-        item_consult_client.setOnAction(event -> {
+        itemConsultClient.setOnAction(event -> {
             ConsultarClientes consultarClientes = new ConsultarClientes();
             consultarClientes.start(new Stage());
         });
 
-        item_consult_stock.setOnAction(event -> {
+        itemConsultStock.setOnAction(event -> {
             ConsultarEstoque consultarEstoque = new ConsultarEstoque();
             consultarEstoque.start(new Stage());
         });
 
-        item_consult_sales.setOnAction(event -> {
+        itemConsultSales.setOnAction(event -> {
             ConsultarVendas consultarVendas = new ConsultarVendas();
             consultarVendas.start(new Stage());
         });
 
-        item_consult_exits.setOnAction(event -> {
+        itemConsultExits.setOnAction(event -> {
             ConsultarSaidas consultarSaidas = new ConsultarSaidas();
             consultarSaidas.start(new Stage());
         });
 
-        item_register_product.setOnAction(event -> {
+        itemRegisterProduct.setOnAction(event -> {
             CadastrarProduto cadastrarProduto = new CadastrarProduto();
             cadastrarProduto.start(new Stage());
         });
 
-        item_register_client.setOnAction(event -> {
+        itemRegisterClient.setOnAction(event -> {
             CadastrarCliente cadastrarCliente = new CadastrarCliente();
             cadastrarCliente.start(new Stage());
         });
 
-        item_register_stock.setOnAction(event -> {
+        itemRegisterStock.setOnAction(event -> {
             CadastrarEstoque cadastrarEstoque = new CadastrarEstoque();
             cadastrarEstoque.start(new Stage());
         });
 
-        item_daily_report.setOnAction(event -> {
+        itemDailyReport.setOnAction(event -> {
             RelatorioDiario relatorioDiario = new RelatorioDiario();
             relatorioDiario.start(new Stage());
         });
 
-        item_monthly_report.setOnAction(event -> {
+        itemMonthlyReport.setOnAction(event -> {
             RelatorioMensal relatorioMensal = new RelatorioMensal();
             relatorioMensal.start(new Stage());
         });
 
-        item_annual_report.setOnAction(event -> {
+        itemAnnualReport.setOnAction(event -> {
             RelatorioAnual relatorioAnual = new RelatorioAnual();
             relatorioAnual.start(new Stage());
         });
 
-        item_users.setOnAction(event -> {
+        itemUsers.setOnAction(event -> {
             Usuarios usuarios = new Usuarios();
             usuarios.start(new Stage());
         });
 
-        item_close.setOnAction(event -> {
+        itemExit.setOnAction(event -> {
             close();
         });
+    }
+
+    private void blockFullAccess() {
+        itemUsers.setVisible(Access.isFullAccess());
+    }
+
+    private void close() {
+        ((Stage) this.rootPane.getScene().getWindow()).close();
     }
 }

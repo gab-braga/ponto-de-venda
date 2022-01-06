@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.SaidaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -26,89 +29,91 @@ import java.util.ResourceBundle;
 public class ConsultarSaidasController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_search_day;
+    private TextField fieldSearchDay;
 
     @FXML
-    private ComboBox<String> field_search_month;
+    private ComboBox<String> fieldSearchMonth;
 
     @FXML
-    private ComboBox<String> field_search_year;
+    private ComboBox<String> fieldSearchYear;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
-    private TableView<Saida> table_exits;
+    private TableView<Saida> tableExits;
 
     @FXML
-    private TableColumn<Saida, String> column_date_hour;
+    private TableColumn<Saida, String> columnDateHour;
 
     @FXML
-    private TableColumn<Saida, Double> column_value;
+    private TableColumn<Saida, Double> columnValue;
 
     @FXML
-    private TableColumn<Saida, String> column_reason;
+    private TableColumn<Saida, String> columnReason;
 
     @FXML
-    private TableColumn<Saida, String> column_operator;
+    private TableColumn<Saida, String> columnOperator;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
-    private void fillFieldYear() {
-        List<String> years = Helper.getListYears();
-        ObservableList<String> items = FXCollections.observableArrayList(years);
-        field_search_year.setItems(items);
-        field_search_year.setValue("");
-    }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
-    private void fillFieldMonth() {
-        List<String> months = Helper.getListMonths();
-        ObservableList<String> items = FXCollections.observableArrayList(months);
-        field_search_month.setItems(items);
-        field_search_month.setValue("");
-    }
+        Helper.fillFieldMonth(fieldSearchMonth);
+        Helper.fillFieldYear(fieldSearchYear);
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+        filter();
 
-    private boolean validateFields(String day, String month, String year) {
-        return !(day.isEmpty() || month.isEmpty() || year.isEmpty());
-    }
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
 
-    private boolean isSearchAll(String day, String month, String year) {
-        return (day.isEmpty() && month.isEmpty() && year.isEmpty());
-    }
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
 
-    private void fillTable(List<Saida> saidas) {
-        column_date_hour.setCellValueFactory(data -> new SimpleStringProperty(Helper.getDateTimeStringFormatted(data.getValue().getDataHora())));
-        column_value.setCellValueFactory(new PropertyValueFactory<Saida, Double>("valor"));
-        column_reason.setCellValueFactory(new PropertyValueFactory<Saida, String>("motivo"));
-        column_operator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperador().getNome()));
+        fieldSearchDay.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
 
-        ObservableList<Saida> items = FXCollections.observableArrayList(saidas);
-        table_exits.setItems(items);
+        fieldSearchMonth.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        fieldSearchYear.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
+
+        Helper.addTextLimiter(fieldSearchDay, 2);
     }
 
     private void filter() {
-        String day = field_search_day.getText();
-        String month = field_search_month.getValue();
-        String year = field_search_year.getValue();
+        String day = fieldSearchDay.getText();
+        String month = fieldSearchMonth.getValue();
+        String year = fieldSearchYear.getValue();
 
         if (isSearchAll(day, month, year)) {
             fillTable(SaidaDAO.queryAllExits());
         } else {
             if (validateFields(day, month, year)) {
-                String dateString = Helper.getDateStringByDayMonthYear(day, month, year);
-                if (Helper.validateDate(dateString)) {
-                    Date date = Helper.getDateFormattedDayMonthYear(dateString);
+                String dateString = Helper.formatDateByDayMonthYear(day, month, year);
+                if (Validator.validateDate(dateString)) {
+                    Date date = Helper.parseDate(dateString);
                     fillTable(SaidaDAO.queryExitsByDate(date));
                 } else {
                     AlertBox.dateInvalided();
@@ -119,42 +124,25 @@ public class ConsultarSaidasController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    private boolean isSearchAll(String day, String month, String year) {
+        return (day.isBlank() && month.isBlank() && year.isBlank());
+    }
 
-        fillFieldYear();
+    private void fillTable(List<Saida> saidas) {
+        columnDateHour.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDateAndTime(data.getValue().getDataHora())));
+        columnValue.setCellValueFactory(new PropertyValueFactory<Saida, Double>("valor"));
+        columnReason.setCellValueFactory(new PropertyValueFactory<Saida, String>("motivo"));
+        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperador().getNome()));
 
-        fillFieldMonth();
+        ObservableList<Saida> items = FXCollections.observableArrayList(saidas);
+        tableExits.setItems(items);
+    }
 
-        filter();
+    private boolean validateFields(String day, String month, String year) {
+        return !(day.isBlank() || month.isBlank() || year.isBlank());
+    }
 
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        field_search_day.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_month.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_year.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
-
-        Helper.addTextLimiter(field_search_day, 2);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

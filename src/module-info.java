@@ -8,4 +8,5 @@ module ponto.de.venda {
     opens view;
     opens controller;
     opens model;
+    opens controller.util;
 }

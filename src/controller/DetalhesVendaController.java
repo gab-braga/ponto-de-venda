@@ -19,29 +19,29 @@ import java.util.ResourceBundle;
 public class DetalhesVendaController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnCancel;
 
     @FXML
-    private ListView<Item> list_details;
+    private ListView<Item> listDetails;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+    }
 
     public void fillListView(Venda venda) {
         List<Item> itemsList = ItemDAO.queryItemsByCodeSale(venda.getCodigo());
         ObservableList items = FXCollections.observableArrayList(itemsList);
-        list_details.setItems(items);
-        list_details.refresh();
+        listDetails.setItems(items);
+        listDetails.refresh();
     }
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
-        });
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

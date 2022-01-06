@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuPrincipalController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuPrincipalController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -20,37 +20,37 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="CAIXA">
                            <items>
-                              <MenuItem fx:id="item_seller" mnemonicParsing="false" text="VENDER" />
-                              <MenuItem fx:id="item_remove" mnemonicParsing="false" text="RETIRAR" />
+                              <MenuItem fx:id="itemSeller" mnemonicParsing="false" text="VENDER" />
+                              <MenuItem fx:id="itemRemove" mnemonicParsing="false" text="RETIRAR" />
                            </items>
                         </Menu>
                       <Menu mnemonicParsing="false" text="CONSULTAR">
                         <items>
-                          <MenuItem fx:id="item_consult_product" mnemonicParsing="false" text="PRODUTOS" />
-                              <MenuItem fx:id="item_consult_client" mnemonicParsing="false" text="CLIENTES" />
-                              <MenuItem fx:id="item_consult_stock" mnemonicParsing="false" text="ESTOQUE" />
-                              <MenuItem fx:id="item_consult_sales" mnemonicParsing="false" text="VENDAS" />
-                              <MenuItem fx:id="item_consult_exits" mnemonicParsing="false" text="SAÍDAS" />
+                          <MenuItem fx:id="itemConsultProduct" mnemonicParsing="false" text="PRODUTOS" />
+                              <MenuItem fx:id="itemConsultClient" mnemonicParsing="false" text="CLIENTES" />
+                              <MenuItem fx:id="itemConsultStock" mnemonicParsing="false" text="ESTOQUE" />
+                              <MenuItem fx:id="itemConsultSales" mnemonicParsing="false" text="VENDAS" />
+                              <MenuItem fx:id="itemConsultExits" mnemonicParsing="false" text="SAÍDAS" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="CADASTRAR">
                         <items>
-                          <MenuItem fx:id="item_register_product" mnemonicParsing="false" text="PRODUTO" />
-                              <MenuItem fx:id="item_register_client" mnemonicParsing="false" text="CLIENTE" />
-                              <MenuItem fx:id="item_register_stock" mnemonicParsing="false" text="ESTOQUE" />
+                          <MenuItem fx:id="itemRegisterProduct" mnemonicParsing="false" text="PRODUTO" />
+                              <MenuItem fx:id="itemRegisterClient" mnemonicParsing="false" text="CLIENTE" />
+                              <MenuItem fx:id="itemRegisterStock" mnemonicParsing="false" text="ESTOQUE" />
                         </items>
                       </Menu>
                         <Menu mnemonicParsing="false" text="RELATÓRIO">
                            <items>
-                              <MenuItem fx:id="item_daily_report" mnemonicParsing="false" text="DIÁRIO" />
-                              <MenuItem fx:id="item_monthly_report" mnemonicParsing="false" text="MENSAL" />
-                              <MenuItem fx:id="item_annual_report" mnemonicParsing="false" text="ANUAL" />
+                              <MenuItem fx:id="itemDailyReport" mnemonicParsing="false" text="DIÁRIO" />
+                              <MenuItem fx:id="itemMonthlyReport" mnemonicParsing="false" text="MENSAL" />
+                              <MenuItem fx:id="itemAnnualReport" mnemonicParsing="false" text="ANUAL" />
                            </items>
                         </Menu>
                       <Menu mnemonicParsing="false" text="SISTEMA">
                         <items>
-                              <MenuItem fx:id="item_users" mnemonicParsing="false" text="USUÁRIOS" />
-                          <MenuItem fx:id="item_close" mnemonicParsing="false" text="SAIR" />
+                              <MenuItem fx:id="itemUsers" mnemonicParsing="false" text="USUÁRIOS" />
+                          <MenuItem fx:id="itemExit" mnemonicParsing="false" text="SAIR" />
                         </items>
                       </Menu>
                     </menus>

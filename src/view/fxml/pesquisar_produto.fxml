@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PesquisarProdutoController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="450.0" styleClass="root" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PesquisarProdutoController">
    <children>
       <AnchorPane layoutX="50.0" layoutY="50.0" prefHeight="450.0" prefWidth="350.0" styleClass="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
@@ -29,12 +29,12 @@
                     </rowConstraints>
                      <children>
                         <Label text="DESCRIÇÃO DO PRODUTO:" />
-                        <TextField fx:id="field_description_product" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
+                        <TextField fx:id="fieldDescriptionProduct" prefHeight="27.0" prefWidth="310.0" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
-                  <Button fx:id="btn_cancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="btn_select" mnemonicParsing="false" text="SELECIONAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <ListView fx:id="list_products" layoutX="20.0" layoutY="90.0" prefHeight="345.0" prefWidth="380.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="btnCancel" mnemonicParsing="false" styleClass="btn_cancel" text="CANCELAR" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="btnSubmit" mnemonicParsing="false" text="SELECIONAR" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <ListView fx:id="listView" layoutX="20.0" layoutY="90.0" prefHeight="345.0" prefWidth="380.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
          </children>

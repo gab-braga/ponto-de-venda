@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.VendaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,102 +25,97 @@ import java.util.ResourceBundle;
 public class ConsultarVendasController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_search_day;
+    private TextField fieldSearchDay;
 
     @FXML
-    private ComboBox<String> field_search_month;
+    private ComboBox<String> fieldSearchMonth;
 
     @FXML
-    private ComboBox<String> field_search_year;
+    private ComboBox<String> fieldSearchYear;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
-    private TableView<Venda> table_sales;
+    private TableView<Venda> tableSales;
 
     @FXML
-    private TableColumn<Venda, String> column_date_hour;
+    private TableColumn<Venda, String> columnDateHour;
 
     @FXML
-    private TableColumn<Venda, Double> column_value;
+    private TableColumn<Venda, Double> columnValue;
 
     @FXML
-    private TableColumn<Venda, String> column_client;
+    private TableColumn<Venda, String> columnClient;
 
     @FXML
-    private TableColumn<Venda, String> column_operator;
+    private TableColumn<Venda, String> columnOperator;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
     @FXML
-    private MenuItem table_item_details;
+    private MenuItem tableItemDetails;
 
-    private void fillFieldYear() {
-        List<String> years = Helper.getListYears();
-        ObservableList<String> items = FXCollections.observableArrayList(years);
-        field_search_year.setItems(items);
-        field_search_year.setValue("");
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Helper.fillFieldMonth(fieldSearchMonth);
+        Helper.fillFieldYear(fieldSearchYear);
 
-    private void fillFieldMonth() {
-        List<String> months = Helper.getListMonths();
-        ObservableList<String> items = FXCollections.observableArrayList(months);
-        field_search_month.setItems(items);
-        field_search_month.setValue("");
-    }
+        filter();
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
 
-    private void detailsSale() {
-        Venda venda = table_sales.getSelectionModel().getSelectedItem();
-        if (venda == null) {
-            AlertBox.selectARecord();
-        } else {
-            DetalhesVenda detalhesVenda = new DetalhesVenda(venda);
-            detalhesVenda.start(new Stage());
-        }
-    }
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
 
-    private boolean validateFields(String day, String month, String year) {
-        return !(day.isEmpty() || month.isEmpty() || year.isEmpty());
-    }
+        fieldSearchDay.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
 
-    private boolean isSearchAll(String day, String month, String year) {
-        return (day.isEmpty() && month.isEmpty() && year.isEmpty());
-    }
+        fieldSearchMonth.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
 
-    private void fillTable(List<Venda> vendas) {
-        column_date_hour.setCellValueFactory(data -> new SimpleStringProperty(Helper.getDateTimeStringFormatted(data.getValue().getDataHora())));
-        column_value.setCellValueFactory(new PropertyValueFactory<Venda, Double>("valor"));
-        column_client.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCliente().getNome()));
-        column_operator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVendedor().getNome()));
+        fieldSearchYear.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
 
-        ObservableList<Venda> items = FXCollections.observableArrayList(vendas);
-        table_sales.setItems(items);
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
+
+        tableItemDetails.setOnAction(action -> {
+            opeanWidowDetailsSale();
+        });
+
+        Helper.addTextLimiter(fieldSearchDay, 2);
     }
 
     private void filter() {
-        String day = field_search_day.getText();
-        String month = field_search_month.getValue();
-        String year = field_search_year.getValue();
+        String day = fieldSearchDay.getText();
+        String month = fieldSearchMonth.getValue();
+        String year = fieldSearchYear.getValue();
 
         if (isSearchAll(day, month, year)) {
             fillTable(VendaDAO.queryAllRegisters());
         } else {
             if (validateFields(day, month, year)) {
-                String dateString = Helper.getDateStringByDayMonthYear(day, month, year);
-                if (Helper.validateDate(dateString)) {
-                    Date date = Helper.getDateFormattedDayMonthYear(dateString);
+                String dateString = Helper.formatDateByDayMonthYear(day, month, year);
+                if (Validator.validateDate(dateString)) {
+                    Date date = Helper.parseDate(dateString);
                     fillTable(VendaDAO.querySalesByDate(date));
                 } else {
                     AlertBox.dateInvalided();
@@ -128,46 +126,35 @@ public class ConsultarVendasController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private boolean isSearchAll(String day, String month, String year) {
+        return (day.isBlank() && month.isBlank() && year.isBlank());
+    }
 
-        fillFieldYear();
+    private boolean validateFields(String day, String month, String year) {
+        return !(day.isBlank() || month.isBlank() || year.isBlank());
+    }
 
-        fillFieldMonth();
+    private void fillTable(List<Venda> vendas) {
+        columnDateHour.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDateAndTime(data.getValue().getDataHora())));
+        columnValue.setCellValueFactory(new PropertyValueFactory<Venda, Double>("valor"));
+        columnClient.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCliente().getNome()));
+        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVendedor().getNome()));
 
-        filter();
+        ObservableList<Venda> items = FXCollections.observableArrayList(vendas);
+        tableSales.setItems(items);
+    }
 
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
+    }
 
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        field_search_day.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_month.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_year.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
-
-        table_item_details.setOnAction(action -> {
-            detailsSale();
-        });
-
-        Helper.addTextLimiter(field_search_day, 2);
+    private void opeanWidowDetailsSale() {
+        Venda venda = tableSales.getSelectionModel().getSelectedItem();
+        if (venda == null) {
+            AlertBox.selectARecord();
+        } else {
+            DetalhesVenda detalhesVenda = new DetalhesVenda(venda);
+            detalhesVenda.start(new Stage());
+        }
     }
 }

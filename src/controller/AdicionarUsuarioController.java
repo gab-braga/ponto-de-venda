@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.UsuarioDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,98 +24,101 @@ import java.util.ResourceBundle;
 public class AdicionarUsuarioController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_name;
+    private TextField fieldName;
 
     @FXML
-    private TextField field_password;
+    private TextField fieldPassword;
 
     @FXML
-    private ComboBox<String> field_permission;
+    private ComboBox<String> fieldPermission;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_add;
+    private Button btnSubmit;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        fillFieldPermission();
+
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+
+        btnSubmit.setOnMouseClicked(click -> {
+            register();
+        });
+
+        fieldName.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                fieldPassword.requestFocus();
+        });
+
+        fieldPassword.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                fieldPermission.requestFocus();
+        });
+
+        fieldPermission.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                register();
+        });
+
+        Helper.addTextLimiter(fieldName, 40);
+        Helper.addTextLimiter(fieldPassword, 20);
+    }
 
     private void fillFieldPermission() {
         List<String> permissions = new ArrayList<String>();
         permissions.add("");
-        permissions.add(Access.accessUser);
-        permissions.add(Access.accessAdmin);
+        permissions.add(Access.BASIC_ACCESS);
+        permissions.add(Access.ADMINISTRATIVE_ACCESS);
         ObservableList<String> items = FXCollections.observableArrayList(permissions);
-        field_permission.setItems(items);
-        field_permission.setValue("");
-    }
-
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
-
-    private void clearFields() {
-        field_name.clear();
-        field_password.clear();
-        field_permission.setValue("");
-    }
-
-    private boolean validateFields(String name, String password, String permission) {
-        return !(name.isEmpty() || password.isEmpty() || permission.isEmpty());
+        fieldPermission.setItems(items);
+        fieldPermission.setValue("");
     }
 
     private void register() {
-        String name = field_name.getText();
-        String password = field_password.getText();
-        String permission = field_permission.getValue();
-        if (validateFields(name, password, permission)) {
+        Usuario usuario = getModel();
+        if(usuario != null) {
+            if (UsuarioDAO.register(usuario)) {
+                AlertBox.registrationCompleted();
+                clearFields();
+                fieldName.requestFocus();
+            } else {
+                AlertBox.registrationError();
+            }
+        }
+    }
+
+    private Usuario getModel() {
+        Usuario usuario = null;
+        String name = fieldName.getText();
+        String password = fieldPassword.getText();
+        String permission = fieldPermission.getValue();
+        if (Validator.validateFields(name, password, permission)) {
             if (UsuarioDAO.queryUserByName(name).size() == 0) {
-                Usuario usuario = new Usuario(name, password, permission);
-                if (UsuarioDAO.register(usuario)) {
-                    AlertBox.registrationCompleted();
-                    clearFields();
-                    field_name.requestFocus();
-                } else {
-                    AlertBox.registrationError();
-                }
+                usuario = new Usuario(name, password, permission);
             } else {
                 AlertBox.userAlreadyRegistered();
             }
         } else {
             AlertBox.fillAllFields();
         }
+        return usuario;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    private void clearFields() {
+        fieldName.clear();
+        fieldPassword.clear();
+        fieldPermission.setValue("");
+    }
 
-        fillFieldPermission();
-
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_add.setOnMouseClicked(click -> {
-            register();
-        });
-
-        field_name.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                field_password.requestFocus();
-        });
-
-        field_password.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                field_permission.requestFocus();
-        });
-
-        field_permission.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                register();
-        });
-
-        Helper.addTextLimiter(field_name, 40);
-        Helper.addTextLimiter(field_password, 20);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.SearchGuide;
+import controller.util.Helper;
 import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,81 +23,81 @@ import java.util.ResourceBundle;
 public class PesquisarProdutoController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_description_product;
+    private TextField fieldDescriptionProduct;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_select;
+    private Button btnSubmit;
 
     @FXML
-    private ListView<Produto> list_products;
+    private ListView<Produto> listView;
 
-    private DataDriver dataDriver;
+    private SearchGuide searchGuide;
 
-    public void setDataDriver(DataDriver dataDriver) {
-        this.dataDriver = dataDriver;
+    public void setDataDriver(SearchGuide searchGuide) {
+        this.searchGuide = searchGuide;
     }
 
     public void setProductDescription(String productDescription) {
-        field_description_product.setText(productDescription);
-        search();
-    }
-
-    private void search() {
-        String description = field_description_product.getText();
-        if (description == null || description.isEmpty()) {
-            fillList(ProdutoDAO.queryAllProducts());
-        } else {
-            fillList(ProdutoDAO.queryByDescriptionProducts(description));
-        }
-    }
-
-    private void fillList(List<Produto> produtos) {
-        ObservableList items = FXCollections.observableArrayList(produtos);
-        list_products.setItems(items);
-    }
-
-    private void selectProduct() {
-        Produto product = list_products.getSelectionModel().getSelectedItem();
-        if (product == null) {
-            AlertBox.selectARecord();
-        } else {
-            this.dataDriver.insertAndFillProduct(product);
-            close();
-        }
-
-    }
-
-    private void close() {
-        PesquisarProduto.getWindow().close();
+        fieldDescriptionProduct.setText(productDescription);
+        searchItem();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        search();
+        searchItem();
 
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
         });
 
-        btn_select.setOnMouseClicked(click -> {
-            selectProduct();
+        btnSubmit.setOnMouseClicked(click -> {
+            selectItemListView();
         });
 
-        field_description_product.setOnKeyReleased(keyEvent -> {
-            search();
+        fieldDescriptionProduct.setOnKeyReleased(keyEvent -> {
+            searchItem();
         });
 
-        list_products.setOnKeyPressed(keyEvent -> {
+        listView.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                selectProduct();
+                selectItemListView();
         });
 
-        Helper.addTextLimiter(field_description_product, 100);
+        Helper.addTextLimiter(fieldDescriptionProduct, 100);
+    }
+
+    private void searchItem() {
+        String description = fieldDescriptionProduct.getText();
+        if (description == null || description.isBlank()) {
+            fillListView(ProdutoDAO.queryAllProducts());
+        } else {
+            fillListView(ProdutoDAO.queryByDescriptionProducts(description));
+        }
+    }
+
+    private void fillListView(List<Produto> items) {
+        ObservableList groupByProducts = FXCollections.observableArrayList(items);
+        listView.setItems(groupByProducts);
+    }
+
+    private void selectItemListView() {
+        Produto product = listView.getSelectionModel().getSelectedItem();
+        if (product == null) {
+            AlertBox.selectARecord();
+        } else {
+            this.searchGuide.searchAndFillData(product);
+            closeWindow();
+        }
+
+    }
+
+    private void closeWindow() {
+        PesquisarProduto.getWindow().close();
     }
 }

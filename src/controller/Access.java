@@ -4,17 +4,15 @@ import model.Usuario;
 
 public abstract class Access {
 
-    protected final static String accessAdmin = "Administrador";
-    protected final static String accessUser = "Usuário";
+    public final static String ADMINISTRATIVE_ACCESS = "Administrador";
+    public final static String BASIC_ACCESS = "Usuário";
 
     private static boolean fullAccess = false;
 
-    private static Usuario user;
-
     public static void checkFullAccess(String accessLevel) {
-        if (accessLevel.equals(accessAdmin)) {
+        if (accessLevel.equals(ADMINISTRATIVE_ACCESS)) {
             fullAccess = true;
-        } else if (accessLevel.equals(accessUser)) {
+        } else if (accessLevel.equals(BASIC_ACCESS)) {
             fullAccess = false;
         }
     }
@@ -23,11 +21,13 @@ public abstract class Access {
         return fullAccess;
     }
 
-    public static Usuario getUser() {
-        return user;
+    private static Usuario operator = null;
+
+    public static Usuario getOperator() {
+        return operator;
     }
 
-    public static void setUser(Usuario user) {
-        Access.user = user;
+    public static void setOperator(Usuario operator) {
+        Access.operator = operator;
     }
 }

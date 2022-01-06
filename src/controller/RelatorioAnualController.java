@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.CaixaDAO;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,73 +24,69 @@ import java.util.ResourceBundle;
 public class RelatorioAnualController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private ComboBox<String> field_year;
+    private ComboBox<String> fieldYear;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private TableView<Caixa> table_yearly_report;
+    private TableView<Caixa> tableYearlyReport;
 
     @FXML
-    private TableColumn<Caixa, String> table_column_year;
+    private TableColumn<Caixa, String> tableColumnYear;
 
     @FXML
-    private TableColumn<Caixa, Double> table_column_deposit;
+    private TableColumn<Caixa, Double> tableColumnDeposit;
 
     @FXML
-    private TableColumn<Caixa, Double> table_column_out;
+    private TableColumn<Caixa, Double> tableColumnOut;
 
     @FXML
-    private TableColumn<Caixa, Double> table_column_total;
+    private TableColumn<Caixa, Double> tableColumnTotal;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
-    private void fillFieldYear() {
-        List<String> years = Helper.getListYears();
-        ObservableList<String> items = FXCollections.observableArrayList(years);
-        field_year.setItems(items);
-        field_year.setValue("");
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+        Helper.fillFieldYear(fieldYear);
 
-    private boolean validateFields(String year) {
-        return !(year.isEmpty());
-    }
+        filter();
 
-    private boolean isSearchAll(String year) {
-        return (year.isEmpty());
-    }
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
 
-    private void fillTable(List<Caixa> caixas) {
-        table_column_year.setCellValueFactory(data -> new SimpleStringProperty(Helper.getDateStringByYear(data.getValue().getData())));
-        table_column_deposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorEntrada()).asObject());
-        table_column_out.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorSaida()).asObject());
-        table_column_total.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorTotal()).asObject());
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
 
-        ObservableList<Caixa> items = FXCollections.observableArrayList(caixas);
-        table_yearly_report.setItems(items);
+        fieldYear.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
     }
 
     private void filter() {
-        String year = field_year.getValue();
+        String year = fieldYear.getValue();
 
         if (isSearchAll(year)) {
             fillTable(CaixaDAO.queryAllYearlyBoxs());
         } else {
-            if (validateFields(year)) {
-                String dateString = Helper.getDateStringByYear(year);
-                Date date = Helper.getDateFormattedYear(dateString);
+            if (Validator.validateFields(year)) {
+                String dateString = Helper.formatDateByYear(year);
+                Date date = Helper.parseDateYear(dateString);
                 fillTable(CaixaDAO.queryBoxByYear(date));
             } else {
                 AlertBox.fillAllFields();
@@ -95,28 +94,21 @@ public class RelatorioAnualController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private boolean isSearchAll(String year) {
+        return (year.isBlank());
+    }
 
-        fillFieldYear();
+    private void fillTable(List<Caixa> caixas) {
+        tableColumnYear.setCellValueFactory(data -> new SimpleStringProperty(Helper.extractYearFromDate(data.getValue().getData())));
+        tableColumnDeposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorEntrada()).asObject());
+        tableColumnOut.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorSaida()).asObject());
+        tableColumnTotal.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorTotal()).asObject());
 
-        filter();
+        ObservableList<Caixa> items = FXCollections.observableArrayList(caixas);
+        tableYearlyReport.setItems(items);
+    }
 
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        field_year.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

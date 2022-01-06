@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.UsuarioDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,38 +22,55 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField login_user;
+    private TextField fieldLoginUser;
 
     @FXML
-    private PasswordField login_password;
+    private PasswordField fieldLoginPassword;
 
     @FXML
-    private Button btn_submit;
+    private Button btnSubmit;
 
     @FXML
-    private Button btn_cancel;
+    private Button btnCancel;
 
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    private boolean validateFields(String usuario, String senha) {
-        return !(usuario.isEmpty() || senha.isEmpty());
+        fieldLoginUser.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                fieldLoginPassword.requestFocus();
+        });
+
+        fieldLoginPassword.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                enter();
+        });
+
+        btnSubmit.setOnMouseClicked(click -> {
+            enter();
+        });
+
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+
+        Helper.addTextLimiter(fieldLoginUser, 40);
+        Helper.addTextLimiter(fieldLoginPassword, 20);
     }
 
     private void enter() {
-        String username = login_user.getText();
-        String password = login_password.getText();
-        if (validateFields(username, password)) {
+        String username = fieldLoginUser.getText();
+        String password = fieldLoginPassword.getText();
+        if (Validator.validateFields(username, password)) {
             List<Usuario> usuarios = UsuarioDAO.queryUserPassword(username, password);
             if (!usuarios.isEmpty() || usuarios == null) {
                 Usuario usuario = usuarios.get(0);
                 Access.checkFullAccess(usuario.getPermissao());
-                Access.setUser(usuario);
-                close();
+                Access.setOperator(usuario);
+                closeWindow();
                 (new MenuPrincipal()).start(new Stage());
             } else {
                 AlertBox.incorrectUserOrPassword();
@@ -60,28 +80,7 @@ public class LoginController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        login_user.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                login_password.requestFocus();
-        });
-
-        login_password.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                enter();
-        });
-
-        btn_submit.setOnMouseClicked(click -> {
-            enter();
-        });
-
-        btn_cancel.setOnMouseClicked(click -> {
-            close();
-        });
-
-        Helper.addTextLimiter(login_user, 40);
-        Helper.addTextLimiter(login_password, 20);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }

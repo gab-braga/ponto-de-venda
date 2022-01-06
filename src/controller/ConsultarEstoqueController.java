@@ -1,5 +1,8 @@
 package controller;
 
+import controller.util.AlertBox;
+import controller.util.Helper;
+import controller.util.Validator;
 import dao.EstoqueDAO;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,7 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Estoque;
-import view.AdicionarEstoque;
+import view.AlterarEstoque;
 
 import java.net.URL;
 import java.util.List;
@@ -22,65 +25,87 @@ import java.util.ResourceBundle;
 public class ConsultarEstoqueController implements Initializable {
 
     @FXML
-    private AnchorPane root;
+    private AnchorPane rootPane;
 
     @FXML
-    private TextField field_search_code_product;
+    private TextField fieldSearchCodeProduct;
 
     @FXML
-    private TextField field_search_description_product;
+    private TextField fieldSearchDescriptionProduct;
 
     @FXML
-    private Button btn_close;
+    private Button btnCancel;
 
     @FXML
-    private Button btn_search;
+    private Button btnSubmit;
 
     @FXML
-    private TableView<Estoque> table_stock;
+    private TableView<Estoque> tableStock;
 
     @FXML
-    private TableColumn<Estoque, Integer> column_code_product;
+    private TableColumn<Estoque, Integer> columnCodeProduct;
 
     @FXML
-    private TableColumn<Estoque, String> column_description_product;
+    private TableColumn<Estoque, String> columnDescriptionProduct;
 
     @FXML
-    private TableColumn<Estoque, String> column_type_packed;
+    private TableColumn<Estoque, String> columnTypePacked;
 
     @FXML
-    private TableColumn<Estoque, Integer> column_quantity;
+    private TableColumn<Estoque, Integer> columnQuantity;
 
     @FXML
-    private MenuItem table_item_refresh;
+    private MenuItem tableItemRefresh;
 
     @FXML
-    private MenuItem table_item_add;
+    private MenuItem tableItemAdd;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        blockFullAccess();
+
+        filter();
+
+        btnCancel.setOnMouseClicked(click -> {
+            closeWindow();
+        });
+
+        btnSubmit.setOnMouseClicked(click -> {
+            filter();
+        });
+
+        fieldSearchCodeProduct.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        fieldSearchDescriptionProduct.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)
+                filter();
+        });
+
+        tableItemRefresh.setOnAction(action -> {
+            filter();
+        });
+
+        tableItemAdd.setOnAction(action -> {
+            openAlterationWindow();
+        });
+
+        Helper.addTextLimiter(fieldSearchCodeProduct, 40);
+        Helper.addTextLimiter(fieldSearchDescriptionProduct, 100);
+    }
 
     private void blockFullAccess() {
-        table_item_add.setVisible(Access.isFullAccess());
-    }
-
-    private void close() {
-        ((Stage) root.getScene().getWindow()).close();
-    }
-
-    private void fillTable(List<Estoque> estoque) {
-        column_code_product.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getProduto().getCodigo()).asObject());
-        column_description_product.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao()));
-        column_type_packed.setCellValueFactory(new PropertyValueFactory<Estoque, String>("tipoEmbalado"));
-        column_quantity.setCellValueFactory(new PropertyValueFactory<Estoque, Integer>("quantidade"));
-
-        ObservableList<Estoque> items = FXCollections.observableArrayList(estoque);
-        table_stock.setItems(items);
+        tableItemAdd.setVisible(Access.isFullAccess());
     }
 
     private void filter() {
-        String code = field_search_code_product.getText();
-        String description = field_search_description_product.getText();
-        boolean filterByCode = !code.isEmpty();
-        boolean filterByDescription = !description.isEmpty();
-        if (Helper.validateInteger(code) || !filterByCode) {
+        String code = fieldSearchCodeProduct.getText();
+        String description = fieldSearchDescriptionProduct.getText();
+        boolean filterByCode = !code.isBlank();
+        boolean filterByDescription = !description.isBlank();
+        if (Validator.validateInteger(code) || !filterByCode) {
             if (filterByCode && filterByDescription) {
                 fillTable(EstoqueDAO.queryByCodeOrDescription(Integer.parseInt(code), description));
             } else if (filterByCode && !filterByDescription) {
@@ -95,49 +120,27 @@ public class ConsultarEstoqueController implements Initializable {
         }
     }
 
-    private void add() {
-        Estoque estoque = table_stock.getSelectionModel().getSelectedItem();
+    private void fillTable(List<Estoque> estoque) {
+        columnCodeProduct.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getProduto().getCodigo()).asObject());
+        columnDescriptionProduct.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao()));
+        columnTypePacked.setCellValueFactory(new PropertyValueFactory<Estoque, String>("tipoEmbalado"));
+        columnQuantity.setCellValueFactory(new PropertyValueFactory<Estoque, Integer>("quantidade"));
+
+        ObservableList<Estoque> items = FXCollections.observableArrayList(estoque);
+        tableStock.setItems(items);
+    }
+
+    private void openAlterationWindow() {
+        Estoque estoque = tableStock.getSelectionModel().getSelectedItem();
         if (estoque == null) {
             AlertBox.selectARecord();
         } else {
-            AdicionarEstoque adicionarEstoque = new AdicionarEstoque(estoque);
-            adicionarEstoque.start(new Stage());
+            AlterarEstoque alterarEstoque = new AlterarEstoque(estoque);
+            alterarEstoque.start(new Stage());
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        blockFullAccess();
-
-        filter();
-
-        btn_close.setOnMouseClicked(click -> {
-            close();
-        });
-
-        btn_search.setOnMouseClicked(click -> {
-            filter();
-        });
-
-        field_search_code_product.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        field_search_description_product.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)
-                filter();
-        });
-
-        table_item_refresh.setOnAction(action -> {
-            filter();
-        });
-
-        table_item_add.setOnAction(action -> {
-            add();
-        });
-
-        Helper.addTextLimiter(field_search_code_product, 40);
-        Helper.addTextLimiter(field_search_description_product, 100);
+    private void closeWindow() {
+        ((Stage) rootPane.getScene().getWindow()).close();
     }
 }
