@@ -1,12 +1,14 @@
 package model;
 
+import java.util.Objects;
+
 public class Produto {
 
-    private int codigo;
+    private Integer codigo;
 
     private String descricao;
 
-    private double valorVenda;
+    private Double valorVenda;
 
     public Produto(int codigo, String descricao, double valorVenda) {
         this.codigo = codigo;
@@ -14,11 +16,11 @@ public class Produto {
         this.valorVenda = valorVenda;
     }
 
-    public int getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 
@@ -30,16 +32,34 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public double getValorVenda() {
+    public Double getValorVenda() {
         return valorVenda;
     }
 
-    public void setValorVenda(double valorVenda) {
+    public void setValorVenda(Double valorVenda) {
         this.valorVenda = valorVenda;
     }
 
     @Override
     public String toString() {
         return String.format("%s - %d", descricao, codigo);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) {
+            return false;
+        }
+        else if(((Produto) o).getCodigo() == getCodigo()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCodigo(), getDescricao(), getValorVenda());
     }
 }

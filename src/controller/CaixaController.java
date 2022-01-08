@@ -22,7 +22,6 @@ import view.PesquisarProduto;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,7 +37,7 @@ public class CaixaController implements Initializable, SearchGuide {
     private Button btnSubmit;
 
     @FXML
-    private Button btnSearchClient;
+    private Button btnAddClient;
 
     @FXML
     private Button btnAddItem;
@@ -65,7 +64,7 @@ public class CaixaController implements Initializable, SearchGuide {
     private Text textOperator;
 
     @FXML
-    private Text textChange;
+    private Text textExchange;
 
     @FXML
     private Text textProductDescription;
@@ -94,79 +93,74 @@ public class CaixaController implements Initializable, SearchGuide {
     @FXML
     private MenuItem tableItemRemove;
 
-    private final double INITIAL_VALUE_DOUBLE = 0.0;
-    private final int INITIAL_VALUE_INTEGER = 0;
-    private final int INITIAL_VALUE_QUANTITY = 1;
+    private final Double INITIAL_VALUE_DOUBLE = 0.0;
+    private final String DEFAULT_TEXT = "-";
+    private final Integer FIRST = 0;
 
-    private Date date;
-    private Usuario operator;
+    private Venda venda;
 
-    private double valueReceived = INITIAL_VALUE_DOUBLE;
-    private int quantity = INITIAL_VALUE_QUANTITY;
+    private Item item;
 
-    private double valueBuy = INITIAL_VALUE_DOUBLE;
-
-    private Cliente cliente;
-    private Produto produto;
-
-    private List<Item> itemsBuy = new ArrayList<Item>();
+    public CaixaController() {
+        venda = new Venda(new ArrayList<Item>());
+        venda.setOperator(Access.getOperator());
+        venda.setDataHora(Helper.getCurrentDate());
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        defineOperator();
-        defineDate();
+        fillInfoBar();
 
         btnCancel.setOnMouseClicked(click -> {
             closeWindow();
         });
 
         btnAddItem.setOnMouseClicked(click -> {
-            searchProduct();
+            searchAndSetItem();
         });
 
-        btnSearchClient.setOnMouseClicked(click -> {
-            searchClient();
+        btnAddClient.setOnMouseClicked(click -> {
+            searchAndSetClient();
         });
 
         fieldClient.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                searchClient();
+                addNewClient();
         });
 
         fieldQuantity.setOnKeyReleased(keyEvent -> {
-            modifiedQuantityValue();
+            setItemQuantity();
         });
 
         fieldValueReceived.setOnKeyReleased(keyEvent -> {
-            modifiedReceivedValue();
+            defineReceivedValue();
         });
 
         fieldProductDescription.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                searchProduct();
+                addNewItem();
         });
 
         fieldProductCode.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)
-                defineProduct();
+                addNewItem();
         });
 
         tableItems.setOnMouseClicked(click -> {
-            viewItem();
+            changeItem();
         });
 
         tableItemRemove.setOnAction(action -> {
-            removeAndResetProduct();
+            removeItem();
         });
 
         tableItems.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.DELETE)
-                removeAndResetProduct();
+                removeItem();
         });
 
         btnSubmit.setOnMouseClicked(click -> {
-            defineDate();
-            seller();
+            sell();
         });
 
         Helper.addTextLimiter(fieldQuantity, 3);
@@ -177,359 +171,328 @@ public class CaixaController implements Initializable, SearchGuide {
     }
 
     @Override
-    public void searchAndFillData(Object o) {
+    public void returnData(Object o) {
         if(o instanceof Produto) {
-            addNewProduct(((Produto) o));
+            Produto product = (Produto) o;
+            setItem(new Item(product));
+            venda.addItemToList(getItem());
+            showItem();
         }
         else if(o instanceof Cliente) {
-            addNewClient(((Cliente) o));
+            Cliente client = (Cliente) o;
+            venda.setCliente(client);
+            showClient();
         }
     }
 
-    private void addNewProduct(Produto produto) {
-        if (Validator.validateObject(produto)) {
-            setProduto(produto);
-            insertAndFillQuantityProduto(getProduto());
-            addItemAndUpdateTable(getProduto(), getQuantity());
-            fillInUnitValueField(getProduto());
-            calculateAndFillValueTotal(getQuantity(), getProduto());
-            calculateAndFillValueBuy(getItemsBuy());
-            calculateAndFillChange(getValueReceived(), getValueBuy());
-            textProductDescription.setText(getProduto().getDescricao());
-            fieldProductCode.setText(Integer.toString(getProduto().getCodigo()));
-            fieldProductDescription.setText(getProduto().getDescricao());
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    private void showItem() {
+        if(Validator.validateObject(item)) {
+            textProductDescription.setText(item.getProduto().getDescricao());
+            textValueUnitary.setText(Helper.formatNumber(item.getProduto().getValorVenda()));
+            fieldQuantity.setText(item.getQuantidade().toString());
+            fieldProductCode.setText(item.getProduto().getCodigo().toString());
+            fieldProductDescription.setText(item.getProduto().getDescricao());
+            fillTableItems();
+            calculateValues();
         }
     }
 
-    private void addNewClient(Cliente cliente) {
-        if (Validator.validateObject(cliente)) {
-            setCliente(cliente);
-            fieldClient.setText(getCliente().getNome());
+    private void resetItem() {
+        item = null;
+        textProductDescription.setText(DEFAULT_TEXT);
+        textValueUnitary.setText(DEFAULT_TEXT);
+        fieldQuantity.clear();
+        textValueTotal.setText(DEFAULT_TEXT);
+        fieldProductCode.clear();
+        fieldProductDescription.clear();
+        fillTableItems();
+        calculateValues();
+    }
+
+    private void fillTableItems() {
+        tableColumnDescription.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao()));
+        tableColumnQuantity.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getQuantidade()).asObject());
+        ObservableList<Item> items = FXCollections.observableArrayList(venda.getItems());
+        tableItems.setItems(items);
+        tableItems.refresh();
+        textNumberItems.setText(Integer.toString(venda.getItems().size()));
+    }
+
+    private void calculateValues() {
+        calculateTotalItemValue();
+        calculateTotalSale();
+        calculateExchangeValue();
+    }
+
+    private void calculateTotalItemValue() {
+        if(Validator.validateObject(item)) {
+            Double totalValue = item.getTotalValue();
+            textValueTotal.setText(Helper.formatNumber(totalValue));
         }
     }
 
-    private void defineOperator() {
-        Usuario usuario = Access.getOperator();
-        if(usuario != null) {
-            setOperator(usuario);
-            textOperator.setText(getOperator().getNome());
+    private void calculateTotalSale() {
+        if(Validator.validateObject(venda)) {
+            Double totalSale = INITIAL_VALUE_DOUBLE;
+            for(Item item : venda.getItems()) {
+                totalSale += item.getTotalValue();
+            }
+            venda.setValor(Helper.roundNumberTwoDecimalPlaces(totalSale));
+            textValueBuy.setText(Helper.formatNumber(venda.getValor()));
         }
     }
 
-    private void defineDate() {
-        Date date = Helper.getCurrentDate();
-        if(date != null) {
-            setDate(date);
-            textDate.setText(Helper.formatDate(getDate()));
-        }
-    }
-
-    private void defineProduct() {
-        String codeProduct = fieldProductCode.getText();
-        if (codeProduct.isBlank()) {
-            searchProduct();
-        } else {
-            if (Validator.validateInteger(codeProduct)) {
-                List<Produto> produtos = ProdutoDAO.queryProductByCode(Integer.parseInt(codeProduct));
-                if (produtos.size() > 0) {
-                    searchAndFillData(produtos.get(0));
-                } else {
-                    AlertBox.unregisteredProduct();
-                }
-            } else {
-                AlertBox.onlyNumbers();
+    private void calculateExchangeValue() {
+        Double receivedValue = retrieveReceivedValue();
+        if(Validator.validateObject(receivedValue)) {
+            Double totalValue = venda.getValor();
+            Double exchange = receivedValue - totalValue;
+            if(exchange > INITIAL_VALUE_DOUBLE) {
+                textExchange.setText(Helper.formatNumber(exchange));
+            }
+            else {
+                textExchange.setText(Helper.formatNumber(INITIAL_VALUE_DOUBLE));
             }
         }
+    }
+
+    private void showClient() {
+        fieldClient.setText(venda.getCliente().getNome());
+    }
+
+    private void fillInfoBar() {
+        if(venda.getOperator() != null)
+            textOperator.setText(venda.getOperator().getNome());
+        if(venda.getDataHora() != null)
+            textDate.setText(Helper.formatDate(venda.getDataHora()));
     }
 
     private void closeWindow() {
         ((Stage) rootPane.getScene().getWindow()).close();
     }
 
-    private void insertAndFillQuantityProduto(Produto produto) {
-        boolean isExist = false;
-        List<Item> items = getItemsBuy();
-        for (Item item : items) {
-            if (item.getProduto().getCodigo() == produto.getCodigo()) {
-                int quantityValue = item.getQuantidade() + INITIAL_VALUE_QUANTITY;
-                setQuantity(quantityValue);
-                item.setQuantidade(quantityValue);
-                isExist = true;
-                break;
-            }
+    private void addNewItem() {
+        if(isSearchedItem()) {
+            searchAndSetItem();
         }
-        if (!isExist) {
-            setQuantity(INITIAL_VALUE_QUANTITY);
-        }
-        fieldQuantity.setText(Integer.toString(getQuantity()));
-    }
-
-    private void insertAndFillQuantityProduto(Produto produto, int quantity) {
-        setQuantity(quantity);
-        List<Item> items = getItemsBuy();
-        for (Item item : items) {
-            if (item.getProduto().getCodigo() == produto.getCodigo()) {
-                item.setQuantidade(quantity);
-                break;
-            }
+        else {
+            fecthAndSeItem();
         }
     }
 
-    private void fillInUnitValueField(Produto produto) {
-        double valueUnitary = produto.getValorVenda();
-        if (Validator.validateObject(getProduto())) {
-            textValueUnitary.setText(Helper.parseNumberToText(valueUnitary));
-        } else {
-            this.attentionInsertAProduct();
-        }
+    private boolean isSearchedItem() {
+        return fieldProductCode.getText().isBlank();
     }
 
-    private void searchClient() {
-        String clientName = fieldClient.getText();
-        PesquisarCliente pesquisarCliente = new PesquisarCliente(this, clientName);
-        pesquisarCliente.start(new Stage());
-    }
-
-    private void searchProduct() {
+    private void searchAndSetItem() {
         String productDescription = fieldProductDescription.getText();
         PesquisarProduto pesquisarProduto = new PesquisarProduto(this, productDescription);
         pesquisarProduto.start(new Stage());
     }
 
-    private void attentionInsertAProduct() {
-        AlertBox.insertAProduct();
-        clearFields();
-        fieldProductCode.requestFocus();
-    }
-
-    private void attentionInsertAClient() {
-        AlertBox.insertAClient();
-        fieldClient.requestFocus();
-    }
-
-    private void returnQuantityValueInField() {
-        fieldQuantity.setText(Integer.toString(getQuantity()));
-        modifiedQuantityValue();
-    }
-
-    private void returnReceivedValueInField() {
-        fieldValueReceived.setText(Helper.parseNumberToText(getValueReceived()));
-        modifiedReceivedValue();
-    }
-
-    private void clearFields() {
-        textProductDescription.setText("-");
-        textValueUnitary.setText("-");
-        fieldQuantity.clear();
-        textValueTotal.setText("-");
-        fieldProductCode.clear();
-        fieldProductDescription.clear();
-    }
-
-    private int getValueOfTheQuantityEnteredInTheField() {
-        int quantityValue = getQuantity();
-        String quantityString = fieldQuantity.getText();
-        if (Validator.validateInteger(quantityString)) {
-            int quantityInteger = Integer.parseInt(quantityString);
-            if (Validator.validateQuantity(quantityInteger)) {
-                quantityValue = quantityInteger;
-            } else {
-                AlertBox.invalidQuantityValue();
-                returnQuantityValueInField();
+    private void fecthAndSeItem() {
+        Integer productCode = retrieveProductCode();
+        if(Validator.validateObject(productCode)) {
+            List<Produto> produtos = ProdutoDAO.queryProductByCode(productCode);
+            if(produtos.isEmpty()) {
+                AlertBox.unregisteredProduct();
             }
-        } else if (quantityString.isBlank()) {
-            quantityValue = INITIAL_VALUE_INTEGER;
-        } else {
+            else {
+                Produto product = produtos.get(FIRST);
+                item = new Item(product);
+                venda.addItemToList(item);
+                showItem();
+                fieldQuantity.requestFocus();
+            }
+        }
+    }
+
+    private Integer retrieveProductCode() {
+        String productCode = fieldProductCode.getText();
+        if(Validator.validateInteger(productCode)) {
+            return Integer.parseInt(productCode);
+        }
+        else {
             AlertBox.onlyNumbers();
-            returnQuantityValueInField();
+            return null;
         }
-        return quantityValue;
     }
 
-    private double getReceivedValueEnteredInTheField() {
-        double receivedValue = getValueReceived();
-        String receivedString = fieldValueReceived.getText().replace(",", ".");
-        if (Validator.validateDouble(receivedString)) {
-            double receivedDouble = Double.parseDouble(receivedString);
-            if (Validator.validateQuantity(receivedDouble)) {
-                receivedValue = receivedDouble;
-            } else {
+    private void addNewClient() {
+        if(isSearchedClient()) {
+            searchAndSetClient();
+        }
+        else {
+            fecthAndSeClient();
+        }
+        fillTableItems();
+    }
+
+    private boolean isSearchedClient() {
+        return fieldClient.getText().isBlank();
+    }
+
+    private void searchAndSetClient() {
+        String clientName = fieldClient.getText();
+        PesquisarCliente pesquisarCliente = new PesquisarCliente(this, clientName);
+        pesquisarCliente.start(new Stage());
+    }
+
+    private void fecthAndSeClient() {
+        String clientName = fieldClient.getText();
+        if(Validator.validateObject(clientName)) {
+            List<Cliente> clientes = ClienteDAO.queryByNameClients(clientName);
+            if(clientes.isEmpty()) {
+                AlertBox.unregisteredClient();
+            }
+            else {
+                Cliente client = clientes.get(FIRST);
+                venda.setCliente(client);
+                fieldClient.setText(client.getNome());
+                fieldProductCode.requestFocus();
+            }
+        }
+    }
+
+    private void setItemQuantity() {
+        Integer quantityItem = retrieveItemQuantity();
+        if (Validator.validateObject(quantityItem)) {
+            if(Validator.validateQuantity(quantityItem)) {
+                item.setQuantidade(quantityItem);
+                venda.modifyItemQuantity(item);
+                fillTableItems();
+                calculateValues();
+            }
+            else {
                 AlertBox.invalidQuantityValue();
-                returnQuantityValueInField();
+                retrieveItemQuantity();
             }
-        } else if (receivedString.isBlank()) {
-            receivedValue = INITIAL_VALUE_DOUBLE;
-        } else {
-            AlertBox.invalidQuantityValue();
-            returnReceivedValueInField();
         }
-        return receivedValue;
     }
 
-    public void removeAndResetProduct() {
-        Item item = tableItems.getSelectionModel().getSelectedItem();
-        if (!(item == null)) {
-            Produto produto = item.getProduto();
-            removeItem(produto);
-            if (produto.getCodigo() == getProduto().getCodigo()) {
-                setProduto(null);
-                setQuantity(INITIAL_VALUE_QUANTITY);
-                clearFields();
-                calculateAndFillValueTotal(getQuantity(), getProduto());
-
+    private Integer retrieveItemQuantity() {
+        String quantityItem = fieldQuantity.getText();
+        if(!quantityItem.isBlank()) {
+            if (Validator.validateInteger(quantityItem)) {
+                return Integer.parseInt(quantityItem);
+            } else {
+                AlertBox.onlyNumbers();
+                resetItemQuantity();
             }
-            calculateAndFillValueBuy(getItemsBuy());
-            calculateAndFillChange(getValueReceived(), getValueBuy());
-            fillTableItems(getItemsBuy());
+        }
+        return null;
+    }
+
+    private void resetItemQuantity() {
+        fieldQuantity.setText(item.getQuantidade().toString());
+    }
+
+    private void defineReceivedValue() {
+        Double receivedValue = retrieveReceivedValue();
+        if(Validator.validateObject(receivedValue)) {
+            if(Validator.validateQuantity(receivedValue)) {
+                calculateExchangeValue();
+            }
+            else {
+                AlertBox.invalidValue();
+                resetReceivedValue();
+            }
         }
     }
 
-    private void viewItem() {
+    private Double retrieveReceivedValue() {
+        String receivedValue = Helper.ignoreComma(fieldValueReceived.getText());
+        if(receivedValue.isBlank()) {
+            return null;
+        }
+        else if(Validator.validateDouble(receivedValue)) {
+            return Double.parseDouble(receivedValue);
+        }
+        else {
+            AlertBox.onlyNumbers();
+            resetReceivedValue();
+            return null;
+        }
+    }
+
+    private void resetReceivedValue() {
+        fieldValueReceived.setText(Helper.formatNumber(INITIAL_VALUE_DOUBLE));
+        calculateExchangeValue();
+    }
+
+    private void changeItem() {
         Item item = tableItems.getSelectionModel().getSelectedItem();
-        if (!(item == null)) {
-            Produto produto = item.getProduto();
-            setProduto(produto);
-            setQuantity(item.getQuantidade());
-            fillInUnitValueField(getProduto());
-            calculateAndFillValueTotal(getQuantity(), getProduto());
-            calculateAndFillValueBuy(getItemsBuy());
-            calculateAndFillChange(getValueReceived(), getValueBuy());
-            fieldQuantity.setText(Integer.toString(getQuantity()));
-            textProductDescription.setText(getProduto().getDescricao());
-            fieldProductCode.setText(Integer.toString(getProduto().getCodigo()));
-            fieldProductDescription.setText(getProduto().getDescricao());
+        if(Validator.validateObject(item)) {
+            this.item = item;
+            showItem();
         }
     }
 
-    private void removeItem(Produto produto) {
-        if (Validator.validateObject(getProduto())) {
-            List<Item> items = getItemsBuy();
-            for (int i = 0; i < items.size(); i++) {
-                if (items.get(i).getProduto().getCodigo() == produto.getCodigo()) {
-                    items.remove(i);
-                    break;
+    private void removeItem() {
+        Item item = tableItems.getSelectionModel().getSelectedItem();
+        if(Validator.validateObject(item)) {
+            venda.removeItemToList(item);
+            resetItem();
+        }
+    }
+
+    private void sell() {
+        if(!venda.getItems().isEmpty()) {
+            if(Validator.validateObject(venda.getCliente())) {
+                if(validatePaymentAmount()) {
+                    if(checkStock()) {
+                        venda.setDataHora(Helper.getCurrentDate());
+                        Caixa caixa = new Caixa(venda.getValor(), 0.0, venda.getDataHora());
+                        if (CaixaDAO.register(caixa)) {
+                            venda.setCaixa(caixa);
+                            if (VendaDAO.register(venda)) {
+                                registerItemsSold();
+                                AlertBox.sallerCompleted();
+                                finalizeSale();
+                            } else {
+                                AlertBox.operationError();
+                            }
+                        } else {
+                            AlertBox.operationError();
+                        }
+                    }
+                    else {
+                        AlertBox.insufficientStock();
+                    }
+                }
+                else {
+                    AlertBox.insufficientValueReceived();
                 }
             }
-        }
-    }
-
-    private void addItemAndUpdateTable(Produto produto, int quantity) {
-        boolean isExist = false;
-        List<Item> items = getItemsBuy();
-        for (Item item : items) {
-            if (item.getProduto().getCodigo() == produto.getCodigo()) {
-                isExist = true;
-                break;
+            else {
+                AlertBox.insertAClient();
             }
         }
-        if (!isExist) {
-            items.add(new Item(produto, quantity));
-        }
-        fillTableItems(getItemsBuy());
-    }
-
-    private void fillTableItems(List<Item> itemsList) {
-        tableColumnDescription.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao()));
-        tableColumnQuantity.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getQuantidade()).asObject());
-        ObservableList<Item> items = FXCollections.observableArrayList(itemsList);
-        tableItems.setItems(items);
-        tableItems.refresh();
-
-        alterNumberItems(itemsList);
-    }
-
-    private void alterNumberItems(List<Item> items) {
-        int numberItems = items.size();
-        if (numberItems == 0) {
-            textNumberItems.setText("-");
-        } else {
-            textNumberItems.setText(Integer.toString(numberItems));
+        else {
+            AlertBox.insertAProduct();
         }
     }
 
-    private void calculateAndFillValueTotal(int quantity, Produto produto) {
-        if (Validator.validateObject(getProduto())) {
-            double valueTotal = Helper.roundNumberTwoDecimalPlaces(produto.getValorVenda() * quantity);
-            textValueTotal.setText(Helper.parseNumberToText(valueTotal));
-        } else {
-            textValueTotal.setText("-");
+    private boolean validatePaymentAmount() {
+        Double receivedValue = retrieveReceivedValue();
+        if(Validator.validateObject(receivedValue)) {
+            Double total = venda.getValor();
+            return receivedValue >= total;
         }
+        return false;
     }
 
-    private void calculateAndFillValueBuy(List<Item> items) {
-        if (items.isEmpty()) {
-            textValueBuy.setText("-");
-            setValueBuy(INITIAL_VALUE_DOUBLE);
-        } else {
-            double valueBuy = INITIAL_VALUE_DOUBLE;
-            for (Item item : items) {
-                valueBuy += (item.getProduto().getValorVenda() * item.getQuantidade());
-            }
-            setValueBuy(Helper.roundNumberTwoDecimalPlaces(valueBuy));
-            textValueBuy.setText(Helper.parseNumberToText(getValueBuy()));
-        }
-    }
-
-    private void calculateAndFillChange(double valueReceived, double valueBuy) {
-        if ((valueReceived == INITIAL_VALUE_DOUBLE) || (valueBuy == INITIAL_VALUE_DOUBLE)) {
-            textChange.setText("-");
-        } else {
-            if (valueBuy <= valueReceived) {
-                double valueChange = Helper.roundNumberTwoDecimalPlaces(valueReceived - valueBuy);
-                textChange.setText(Helper.parseNumberToText(valueChange));
-            } else {
-                textChange.setText(Helper.parseNumberToText(INITIAL_VALUE_DOUBLE));
-            }
-        }
-    }
-
-    private void modifiedQuantityValue() {
-        if (Validator.validateObject(getProduto())) {
-            int quantityValue = getValueOfTheQuantityEnteredInTheField();
-            insertAndFillQuantityProduto(getProduto(), quantityValue);
-            calculateAndFillValueTotal(getQuantity(), getProduto());
-            calculateAndFillValueBuy(getItemsBuy());
-            calculateAndFillChange(getValueReceived(), getValueBuy());
-            fillTableItems(getItemsBuy());
-        } else {
-            attentionInsertAProduct();
-        }
-    }
-
-    private void modifiedReceivedValue() {
-        double receivedValue = getReceivedValueEnteredInTheField();
-        setValueReceived(Helper.roundNumberTwoDecimalPlaces(receivedValue));
-        calculateAndFillChange(getValueReceived(), getValueBuy());
-    }
-
-    private void finalizeSale() {
-        setCliente(null);
-        setProduto(null);
-        setQuantity(INITIAL_VALUE_QUANTITY);
-        setItemsBuy(new ArrayList<Item>());
-        clearFields();
-        fieldValueReceived.clear();
-        fieldClient.clear();
-        calculateAndFillValueTotal(getQuantity(), getProduto());
-        calculateAndFillValueBuy(getItemsBuy());
-        calculateAndFillChange(getValueReceived(), getValueBuy());
-        fillTableItems(getItemsBuy());
-    }
-
-    private void registerItemsSold(List<Item> items, Venda venda) {
-        for (Item item : items) {
-            Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
-            estoque.setQuantidade(item.getQuantidade());
-            if (EstoqueDAO.decrease(estoque)) {
-                item.setVenda(venda);
-                ItemDAO.register(item);
-            }
-        }
-    }
-
-    private boolean checkStock(List<Item> items) {
+    private boolean checkStock() {
         boolean flag = true;
-        for (Item item : items) {
+        for (Item item : venda.getItems()) {
             Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
             if (estoque == null) {
                 flag = false;
@@ -544,108 +507,34 @@ public class CaixaController implements Initializable, SearchGuide {
         return flag;
     }
 
-    private boolean validatePayment() {
-        boolean flag = false;
-        if (getValueReceived() >= getValueBuy()) {
-            flag = true;
-        }
-        return flag;
-    }
-
-    private void seller() {
-        if (getItemsBuy().size() > 0) {
-            if (Validator.validateObject(getCliente())) {
-                if (validatePayment()) {
-                    List<Item> items = getItemsBuy();
-                    if (checkStock(items)) {
-                        Caixa caixa = new Caixa(getValueBuy(), 0.0, getDate());
-                        if (CaixaDAO.register(caixa)) {
-                            Venda venda = new Venda(getValueBuy(), getDate(), getCliente(), caixa, getOperator());
-                            if (VendaDAO.register(venda)) {
-                                registerItemsSold(items, venda);
-                                AlertBox.sallerCompleted();
-                                finalizeSale();
-                            } else {
-                                AlertBox.operationError();
-                            }
-                        } else {
-                            AlertBox.operationError();
-                        }
-                    } else {
-                        AlertBox.insufficientStock();
-                    }
-                } else {
-                    AlertBox.insufficientValueReceived();
-                }
-            } else {
-                attentionInsertAClient();
+    private void registerItemsSold() {
+        for (Item item : venda.getItems()) {
+            Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
+            estoque.setQuantidade(item.getQuantidade());
+            if (EstoqueDAO.decrease(estoque)) {
+                ItemDAO.register(item);
             }
-        } else {
-            attentionInsertAProduct();
         }
     }
 
-    public Date getDate() {
-        return date;
+    private void finalizeSale() {
+        venda = new Venda(new ArrayList<>());
+        item = null;
+        resetSale();
+        fillTableItems();
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Usuario getOperator() {
-        return operator;
-    }
-
-    public void setOperator(Usuario operator) {
-        this.operator = operator;
-    }
-
-    public double getValueReceived() {
-        return valueReceived;
-    }
-
-    public void setValueReceived(double valueReceived) {
-        this.valueReceived = valueReceived;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public double getValueBuy() {
-        return valueBuy;
-    }
-
-    public void setValueBuy(double valueBuy) {
-        this.valueBuy = valueBuy;
-    }
-
-    public List<Item> getItemsBuy() {
-        return itemsBuy;
-    }
-
-    public void setItemsBuy(List<Item> itemsBuy) {
-        this.itemsBuy = itemsBuy;
+    private void resetSale() {
+        textProductDescription.setText(DEFAULT_TEXT);
+        textValueUnitary.setText(DEFAULT_TEXT);
+        textValueTotal.setText(DEFAULT_TEXT);
+        textValueBuy.setText(DEFAULT_TEXT);
+        textNumberItems.setText(DEFAULT_TEXT);
+        textExchange.setText(DEFAULT_TEXT);
+        fieldQuantity.clear();
+        fieldValueReceived.clear();
+        fieldProductCode.clear();
+        fieldProductDescription.clear();
+        fieldClient.clear();
     }
 }

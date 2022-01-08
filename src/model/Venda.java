@@ -1,12 +1,13 @@
 package model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Venda {
 
-    private int codigo;
+    private Integer codigo;
 
-    private double valor;
+    private Double valor;
 
     private Date dataHora;
 
@@ -14,34 +15,43 @@ public class Venda {
 
     private Caixa caixa;
 
-    private Usuario vendedor;
+    private Usuario operator;
 
-    public Venda(double valor, Date dataHora, Cliente cliente, Caixa caixa, Usuario vendedor) {
+    private List<Item> items;
+
+    public Venda() {
+    }
+
+    public Venda(List<Item> items) {
+        this.items = items;
+    }
+
+    public Venda(double valor, Date dataHora, Cliente cliente, Caixa caixa, Usuario operator) {
         this.valor = valor;
         this.dataHora = dataHora;
         this.cliente = cliente;
         this.caixa = caixa;
-        this.vendedor = vendedor;
+        this.operator = operator;
     }
 
-    public Venda(int codigo, double valor, Date dataHora, Cliente cliente, Caixa caixa, Usuario vendedor) {
-        this(valor, dataHora, cliente, caixa, vendedor);
+    public Venda(int codigo, double valor, Date dataHora, Cliente cliente, Caixa caixa, Usuario operator) {
+        this(valor, dataHora, cliente, caixa, operator);
         this.codigo = codigo;
     }
 
-    public int getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 
-    public double getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(double valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 
@@ -69,11 +79,44 @@ public class Venda {
         this.caixa = caixa;
     }
 
-    public Usuario getVendedor() {
-        return vendedor;
+    public Usuario getOperator() {
+        return operator;
     }
 
-    public void setVendedor(Usuario vendedor) {
-        this.vendedor = vendedor;
+    public void setOperator(Usuario operator) {
+        this.operator = operator;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public void addItemToList(Item newItem) {
+        for (Item item : items) {
+            if (item.equals(newItem)) {
+                item.increaseQuantity();
+                newItem.setQuantidade(item.getQuantidade());
+                return;
+            }
+        }
+        newItem.setVenda(this);
+        getItems().add(newItem);
+    }
+
+    public void modifyItemQuantity(Item modifiedItem) {
+        for (Item item : items) {
+            if (item.equals(modifiedItem)) {
+                item.setQuantidade(modifiedItem.getQuantidade());
+                return;
+            }
+        }
+    }
+
+    public void removeItemToList(Item removedItem) {
+        getItems().remove(removedItem);
     }
 }

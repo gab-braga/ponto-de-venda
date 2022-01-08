@@ -81,8 +81,16 @@ public abstract class AlertBox {
         configureAlertBox(AlertType.WARNING, ATTENTION_TITLE, "Valor quantitativo inválido!").showAndWait();
     }
 
+    public static void invalidValue() {
+        configureAlertBox(AlertType.WARNING, ATTENTION_TITLE, "Valor inválido!").showAndWait();
+    }
+
     public static void unregisteredProduct() {
         configureAlertBox(AlertType.WARNING, ATTENTION_TITLE, "Produto não cadastrado!").showAndWait();
+    }
+
+    public static void unregisteredClient() {
+        configureAlertBox(AlertType.WARNING, ATTENTION_TITLE, "Cliente não cadastrado!").showAndWait();
     }
 
     public static void productAlreadyStocked() {

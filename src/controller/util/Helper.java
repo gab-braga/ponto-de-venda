@@ -51,8 +51,9 @@ public abstract class Helper {
         return number.replace(",", ".");
     }
 
-    public static String formatNumber(String number) {
-        return number.replace(".", ",");
+    public static String formatNumber(Double number) {
+        number = roundNumberTwoDecimalPlaces(number);
+        return number.toString().replace(".", ",");
     }
 
     public static String formatDate(Date date) {
@@ -90,10 +91,6 @@ public abstract class Helper {
     public static String extractMonthAndYearFromDate(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("MM/yyyy");
         return format.format(date);
-    }
-
-    public static String parseNumberToText(double value) {
-        return formatNumber(Double.toString(value));
     }
 
     public static Date parseDate(String date) {

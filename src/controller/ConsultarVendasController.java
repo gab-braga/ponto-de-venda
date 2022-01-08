@@ -138,7 +138,7 @@ public class ConsultarVendasController implements Initializable {
         columnDateHour.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDateAndTime(data.getValue().getDataHora())));
         columnValue.setCellValueFactory(new PropertyValueFactory<Venda, Double>("valor"));
         columnClient.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCliente().getNome()));
-        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVendedor().getNome()));
+        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperator().getNome()));
 
         ObservableList<Venda> items = FXCollections.observableArrayList(vendas);
         tableSales.setItems(items);

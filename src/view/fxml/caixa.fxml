@@ -183,7 +183,7 @@
                                        <children>
                                           <Label text="Troco" />
                                           <Label text="R$" GridPane.columnIndex="1" />
-                                          <Text fx:id="textChange" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-default" text="-" GridPane.columnIndex="2" />
+                                          <Text fx:id="textExchange" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-default" text="-" GridPane.columnIndex="2" />
                                        </children>
                                     </GridPane>
                                  </children>
@@ -255,7 +255,7 @@
                                        <children>
                                           <Label text="CLIENTE:" />
                                           <TextField fx:id="fieldClient" GridPane.columnIndex="1" />
-                                          <Button fx:id="btnSearchClient" maxHeight="45.0" maxWidth="50.0" minHeight="45.0" minWidth="50.0" mnemonicParsing="false" prefHeight="45.0" GridPane.columnIndex="2">
+                                          <Button fx:id="btnAddClient" maxHeight="45.0" maxWidth="50.0" minHeight="45.0" minWidth="50.0" mnemonicParsing="false" prefHeight="45.0" GridPane.columnIndex="2">
                                              <graphic>
                                                 <ImageView fitHeight="35.0" fitWidth="35.0">
                                                    <image>

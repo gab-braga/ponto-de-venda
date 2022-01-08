@@ -5,8 +5,12 @@ import java.text.SimpleDateFormat;
 
 public abstract class Validator {
 
-    public static boolean validateObject(Object o) {
-        return o != null;
+    public static boolean validateObject(Object ... objects) {
+        for(Object o : objects) {
+            if (o != null)
+                return true;
+        }
+        return false;
     }
 
     public static boolean validateInteger(String text) {

@@ -46,7 +46,7 @@ public class CadastrarEstoqueController implements Initializable, SearchGuide {
     private Button btnSubmit;
 
     @Override
-    public void searchAndFillData(Object o) {
+    public void returnData(Object o) {
         if (Validator.validateObject(o)) {
             fieldCodeProduct.setText(Integer.toString(((Produto) o).getCodigo()));
         }

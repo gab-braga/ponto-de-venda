@@ -91,7 +91,7 @@ public class PesquisarClienteController implements Initializable {
         if (cliente == null) {
             AlertBox.selectARecord();
         } else {
-            this.searchGuide.searchAndFillData(cliente);
+            this.searchGuide.returnData(cliente);
             closeWindow();
         }
 

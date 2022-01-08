@@ -91,7 +91,7 @@ public class PesquisarProdutoController implements Initializable {
         if (product == null) {
             AlertBox.selectARecord();
         } else {
-            this.searchGuide.searchAndFillData(product);
+            this.searchGuide.returnData(product);
             closeWindow();
         }
 

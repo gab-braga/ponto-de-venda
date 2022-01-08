@@ -72,7 +72,7 @@ public abstract class VendaDAO {
                         statement.setTime(3, new Time(venda.getDataHora().getTime()));
                         statement.setInt(4, venda.getCliente().getCodigo());
                         statement.setInt(5, venda.getCaixa().getCodigo());
-                        statement.setString(6, venda.getVendedor().getNome());
+                        statement.setString(6, venda.getOperator().getNome());
                         statement.executeUpdate();
                         ResultSet results = statement.getGeneratedKeys();
                         results.first();
