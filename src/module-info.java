@@ -7,8 +7,8 @@ module ponto.de.venda {
     requires java.persistence;
     requires org.hibernate.orm.core;
 
-    opens view;
-    opens controller;
-    opens model;
-    opens controller.util;
+    opens com.github.fgabrielbraga.view;
+    opens com.github.fgabrielbraga.controller;
+    opens com.github.fgabrielbraga.model;
+    opens com.github.fgabrielbraga.controller.util;
 }

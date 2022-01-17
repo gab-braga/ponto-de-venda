@@ -10,15 +10,14 @@
 
         <mapping-file>META-INF/queries.xml</mapping-file>
 
-        <class>model.User</class>
-        <class>model.Client</class>
-        <class>model.Box</class>
-        <class>model.Product</class>
-        <class>model.Stock</class>
-        <class>model.Operation</class>
-        <class>model.Sale</class>
-        <class>model.Acquisition</class>
-        <class>model.Item</class>
+        <class>com.github.fgabrielbraga.model.User</class>
+        <class>com.github.fgabrielbraga.model.Client</class>
+        <class>com.github.fgabrielbraga.model.Product</class>
+        <class>com.github.fgabrielbraga.model.Stock</class>
+        <class>com.github.fgabrielbraga.model.Operation</class>
+        <class>com.github.fgabrielbraga.model.Sale</class>
+        <class>com.github.fgabrielbraga.model.Acquisition</class>
+        <class>com.github.fgabrielbraga.model.Item</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver"

@@ -236,7 +236,7 @@
     </named-native-query>
 
     <sql-result-set-mapping name="reportDays">
-        <constructor-result target-class="model.Report">
+        <constructor-result target-class="com.github.fgabrielbraga.model.Report">
             <column name="timestamp" class="java.util.Date"/>
             <column name="valueSale" class="java.lang.Double"/>
             <column name="valueAcquisition" class="java.lang.Double"/>
