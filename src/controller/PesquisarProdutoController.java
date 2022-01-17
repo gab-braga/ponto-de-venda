@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.SearchGuide;
 import controller.util.Helper;
-import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +12,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import model.Produto;
+import model.Product;
+import model.dao.ProductDAO;
 import view.PesquisarProduto;
 
 import java.net.URL;
@@ -35,7 +35,7 @@ public class PesquisarProdutoController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private ListView<Produto> listView;
+    private ListView<Product> listView;
 
     private SearchGuide searchGuide;
 
@@ -74,20 +74,21 @@ public class PesquisarProdutoController implements Initializable {
 
     private void searchItem() {
         String description = fieldDescriptionProduct.getText();
+        ProductDAO dao = new ProductDAO();
         if (description == null || description.isBlank()) {
-            fillListView(ProdutoDAO.queryAllProducts());
+            fillListView(dao.selectAllProducts());
         } else {
-            fillListView(ProdutoDAO.queryByDescriptionProducts(description));
+            fillListView(dao.selectProductByDescription(description));
         }
     }
 
-    private void fillListView(List<Produto> items) {
+    private void fillListView(List<Product> items) {
         ObservableList groupByProducts = FXCollections.observableArrayList(items);
         listView.setItems(groupByProducts);
     }
 
     private void selectItemListView() {
-        Produto product = listView.getSelectionModel().getSelectedItem();
+        Product product = listView.getSelectionModel().getSelectedItem();
         if (product == null) {
             AlertBox.selectARecord();
         } else {

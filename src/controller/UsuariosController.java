@@ -2,7 +2,6 @@ package controller;
 
 import controller.util.AlertBox;
 import controller.util.Helper;
-import dao.UsuarioDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,11 +11,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Usuario;
+import model.User;
+import model.dao.UserDAO;
 import view.AdicionarUsuario;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -41,13 +40,13 @@ public class UsuariosController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private TableView<Usuario> tableUser;
+    private TableView<User> tableUser;
 
     @FXML
-    private TableColumn<Usuario, String> columnName;
+    private TableColumn<User, String> columnName;
 
     @FXML
-    private TableColumn<Usuario, String> columnPermission;
+    private TableColumn<User, String> columnPermission;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -100,24 +99,26 @@ public class UsuariosController implements Initializable {
         String permission = fieldSearchPermission.getValue();
         boolean filterByName = !name.isBlank();
         boolean filterByPermission = !permission.isBlank();
+        UserDAO dao = new UserDAO();
         if (filterByName && !filterByPermission) {
-            fillTable(UsuarioDAO.queryUserByName(name));
+            fillTable(dao.selectUserByName(name));
         } else if (!filterByName && filterByPermission) {
-            fillTable(UsuarioDAO.queryUserByPermission(permission));
+            fillTable(dao.selectUserByPermission(permission));
         } else if (filterByName && filterByPermission) {
-            fillTable(UsuarioDAO.queryUserByNameOrPermission(name, permission));
+            fillTable(dao.selectUserByNameOrPermission(name, permission));
         } else {
-            fillTable(UsuarioDAO.queryAllUser());
+            fillTable(dao.selectAllUsers());
         }
     }
 
     private void delete() {
         if (AlertBox.confirmationDelete()) {
-            Usuario usuario = tableUser.getSelectionModel().getSelectedItem();
-            if (usuario == null) {
+            User user = tableUser.getSelectionModel().getSelectedItem();
+            if (user == null) {
                 AlertBox.selectARecord();
             } else {
-                if (UsuarioDAO.deleteByName(usuario.getNome())) {
+                UserDAO dao = new UserDAO();
+                if (dao.deleteByName(user.getName())) {
                     AlertBox.deleteCompleted();
                     filter();
                 } else {
@@ -127,11 +128,11 @@ public class UsuariosController implements Initializable {
         }
     }
 
-    private void fillTable(List<Usuario> usuarios) {
-        columnName.setCellValueFactory(new PropertyValueFactory<Usuario, String>("nome"));
-        columnPermission.setCellValueFactory(new PropertyValueFactory<Usuario, String>("permissao"));
+    private void fillTable(List<User> users) {
+        columnName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
+        columnPermission.setCellValueFactory(new PropertyValueFactory<User, String>("permission"));
 
-        ObservableList<Usuario> items = FXCollections.observableArrayList(usuarios);
+        ObservableList<User> items = FXCollections.observableArrayList(users);
         tableUser.setItems(items);
         tableUser.refresh();
     }

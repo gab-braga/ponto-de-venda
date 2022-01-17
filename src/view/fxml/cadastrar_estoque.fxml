@@ -53,7 +53,7 @@
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0">
                                        <image>
-                                          <Image url="@../images/lupa.png" />
+                                          <Image url="@../images/zoom.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>

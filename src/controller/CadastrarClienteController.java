@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.ClienteDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,7 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Cliente;
+import model.Client;
+import model.dao.ClientDAO;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -113,9 +113,10 @@ public class CadastrarClienteController implements Initializable {
     }
 
     private void register() {
-        Cliente client = getModel();
+        Client client = getModel();
         if(client != null) {
-            if (ClienteDAO.register(client)) {
+            ClientDAO dao = new ClientDAO();
+            if (dao.insert(client)) {
                 AlertBox.registrationCompleted();
                 clearFields();
                 fieldName.requestFocus();
@@ -125,8 +126,8 @@ public class CadastrarClienteController implements Initializable {
         }
     }
 
-    private Cliente getModel() {
-        Cliente client = null;
+    private Client getModel() {
+        Client client = null;
         String nome = fieldName.getText();
         String cpf = fieldCpf.getText();
         String telefone = fieldPhoneNumber.getText();
@@ -137,7 +138,7 @@ public class CadastrarClienteController implements Initializable {
         String uf = fieldUf.getText();
 
         if (Validator.validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
-            client = new Cliente(nome, cpf, telefone, email, endereco, numero, cidade, uf);
+            client = new Client(nome, cpf, telefone, email, endereco, numero, cidade, uf);
         } else {
             AlertBox.fillAllFields();
         }

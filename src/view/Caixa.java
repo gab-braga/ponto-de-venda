@@ -12,7 +12,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class Caixa extends Application {
-    private final String title = "Caixa";
+    private final String title = "Box";
 
     private static Stage window;
 

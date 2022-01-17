@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.ProdutoDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,7 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Produto;
+import model.Product;
+import model.dao.ProductDAO;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -68,9 +68,10 @@ public class CadastrarProdutoController implements Initializable {
     }
 
     private void register() {
-        Produto produto = getModel();
-        if(produto != null) {
-            if (ProdutoDAO.register(produto)) {
+        Product product = getModel();
+        if(product != null) {
+            ProductDAO dao = new ProductDAO();
+            if (dao.insert(product)) {
                 AlertBox.registrationCompleted();
                 clearFields();
                 fieldCode.requestFocus();
@@ -80,16 +81,17 @@ public class CadastrarProdutoController implements Initializable {
         }
     }
 
-    private Produto getModel() {
-        Produto produto = null;
+    private Product getModel() {
+        Product product = null;
         String code = fieldCode.getText();
         String description = fieldDescription.getText();
         String saleValue = fieldSaleValue.getText().replace(",", ".");
 
         if (Validator.validateFields(code, description, saleValue)) {
             if (Validator.validateInteger(code) && Validator.validateDouble(saleValue)) {
-                if (ProdutoDAO.queryProductByCode(Integer.parseInt(code)).size() == 0) {
-                    produto = new Produto(Integer.parseInt(code), description, Double.parseDouble(saleValue));
+                ProductDAO dao = new ProductDAO();
+                if (dao.selectProductByCode(Long.parseLong(code)).size() == 0) {
+                    product = new Product(Long.parseLong(code), description, Double.parseDouble(saleValue));
                 } else {
                     AlertBox.productAlreadyRegistered();
                 }
@@ -99,7 +101,7 @@ public class CadastrarProdutoController implements Initializable {
         } else {
             AlertBox.fillAllFields();
         }
-        return produto;
+        return product;
     }
 
     private void clearFields() {

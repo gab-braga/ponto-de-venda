@@ -3,8 +3,8 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.EstoqueDAO;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +15,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Estoque;
+import model.Stock;
+import model.dao.StockDAO;
 import view.AlterarEstoque;
 
 import java.net.URL;
@@ -40,19 +41,19 @@ public class ConsultarEstoqueController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private TableView<Estoque> tableStock;
+    private TableView<Stock> tableStock;
 
     @FXML
-    private TableColumn<Estoque, Integer> columnCodeProduct;
+    private TableColumn<Stock, Long> columnCodeProduct;
 
     @FXML
-    private TableColumn<Estoque, String> columnDescriptionProduct;
+    private TableColumn<Stock, String> columnDescriptionProduct;
 
     @FXML
-    private TableColumn<Estoque, String> columnTypePacked;
+    private TableColumn<Stock, String> columnTypePacked;
 
     @FXML
-    private TableColumn<Estoque, Integer> columnQuantity;
+    private TableColumn<Stock, Integer> columnQuantity;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -106,36 +107,37 @@ public class ConsultarEstoqueController implements Initializable {
         boolean filterByCode = !code.isBlank();
         boolean filterByDescription = !description.isBlank();
         if (Validator.validateInteger(code) || !filterByCode) {
+            StockDAO dao = new StockDAO();
             if (filterByCode && filterByDescription) {
-                fillTable(EstoqueDAO.queryByCodeOrDescription(Integer.parseInt(code), description));
+                fillTable(dao.selectStockByCodeOrDescription(Long.parseLong(code), description));
             } else if (filterByCode && !filterByDescription) {
-                fillTable(EstoqueDAO.queryStockByCode(Integer.parseInt(code)));
+                fillTable(dao.selectStockByCode((Long.parseLong(code))));
             } else if (!filterByCode && filterByDescription) {
-                fillTable(EstoqueDAO.queryByDescription(description));
+                fillTable(dao.selectStockByDescription(description));
             } else {
-                fillTable(EstoqueDAO.queryAllStock());
+                fillTable(dao.selectAllStock());
             }
         } else {
             AlertBox.onlyNumbers();
         }
     }
 
-    private void fillTable(List<Estoque> estoque) {
-        columnCodeProduct.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getProduto().getCodigo()).asObject());
-        columnDescriptionProduct.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao()));
-        columnTypePacked.setCellValueFactory(new PropertyValueFactory<Estoque, String>("tipoEmbalado"));
-        columnQuantity.setCellValueFactory(new PropertyValueFactory<Estoque, Integer>("quantidade"));
+    private void fillTable(List<Stock> stock) {
+        columnCodeProduct.setCellValueFactory(data -> new SimpleLongProperty(data.getValue().getProduto().getCode()).asObject());
+        columnDescriptionProduct.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescription()));
+        columnTypePacked.setCellValueFactory(new PropertyValueFactory<Stock, String>("unity"));
+        columnQuantity.setCellValueFactory(new PropertyValueFactory<Stock, Integer>("quantity"));
 
-        ObservableList<Estoque> items = FXCollections.observableArrayList(estoque);
+        ObservableList<Stock> items = FXCollections.observableArrayList(stock);
         tableStock.setItems(items);
     }
 
     private void openAlterationWindow() {
-        Estoque estoque = tableStock.getSelectionModel().getSelectedItem();
-        if (estoque == null) {
+        Stock stock = tableStock.getSelectionModel().getSelectedItem();
+        if (stock == null) {
             AlertBox.selectARecord();
         } else {
-            AlterarEstoque alterarEstoque = new AlterarEstoque(estoque);
+            AlterarEstoque alterarEstoque = new AlterarEstoque(stock);
             alterarEstoque.start(new Stage());
         }
     }

@@ -3,8 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.EstoqueDAO;
-import dao.ProdutoDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,8 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Estoque;
-import model.Produto;
+import model.Product;
+import model.Stock;
+import model.dao.ProductDAO;
+import model.dao.StockDAO;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,12 +38,13 @@ public class AlterarEstoqueController implements Initializable {
     @FXML
     private Button btnSubmit;
 
-    private Estoque stockEdit;
+    private Stock stockEdit;
 
-    public void fillFields(Estoque estoque) {
-        stockEdit = estoque;
-        fieldCodeProduct.setText(Integer.toString(estoque.getProduto().getCodigo()));
-        fieldDescription.setText(estoque.getProduto().getDescricao());
+    public void fillFields(Stock stock) {
+        stockEdit = stock;
+        fieldCodeProduct.setText(Long.toString(stock.getProduto().getCode()));
+        fieldDescription.setText(stock.getProduto().getDescription());
+        fieldQuantity.setText(stock.getQuantity().toString());
         fieldCodeProduct.setDisable(true);
         fieldDescription.setDisable(true);
     }
@@ -68,9 +69,10 @@ public class AlterarEstoqueController implements Initializable {
     }
 
     private void alter() {
-        Estoque estoque = getModel();
-        if(estoque != null) {
-            if (EstoqueDAO.add(estoque)) {
+        Stock stock = getModel();
+        if(stock != null) {
+            StockDAO dao = new StockDAO();
+            if (dao.adjustStock(stock)) {
                 AlertBox.stockUp();
                 closeWindow();
             } else {
@@ -79,14 +81,16 @@ public class AlterarEstoqueController implements Initializable {
         }
     }
 
-    private Estoque getModel() {
-        Estoque estoque = null;
+    private Stock getModel() {
+        Stock stock = null;
         String quantity = fieldQuantity.getText();
         if (Validator.validateInteger(quantity)) {
             if (Validator.validateFields(quantity)) {
                 if (Validator.validateQuantity(Integer.parseInt(quantity))) {
-                    Produto produto = ProdutoDAO.queryProductByCode(stockEdit.getProduto().getCodigo()).get(0);
-                    estoque = new Estoque(produto, Integer.parseInt(quantity));
+                    ProductDAO dao = new ProductDAO();
+                    Product product = dao.selectProductByCode(stockEdit.getProduto().getCode()).get(0);
+                    stock = new Stock(product, Integer.parseInt(quantity));
+                    stock.setCode(stockEdit.getCode());
                 } else {
                     AlertBox.invalidQuantityValue();
                 }
@@ -96,7 +100,7 @@ public class AlterarEstoqueController implements Initializable {
         } else {
             AlertBox.onlyNumbers();
         }
-        return estoque;
+        return stock;
     }
 
     private void closeWindow() {

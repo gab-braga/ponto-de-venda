@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.UsuarioDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,7 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Usuario;
+import model.User;
+import model.dao.UserDAO;
 import view.MenuPrincipal;
 
 import java.net.URL;
@@ -65,11 +65,12 @@ public class LoginController implements Initializable {
         String username = fieldLoginUser.getText();
         String password = fieldLoginPassword.getText();
         if (Validator.validateFields(username, password)) {
-            List<Usuario> usuarios = UsuarioDAO.queryUserPassword(username, password);
-            if (!usuarios.isEmpty() || usuarios == null) {
-                Usuario usuario = usuarios.get(0);
-                Access.checkFullAccess(usuario.getPermissao());
-                Access.setOperator(usuario);
+            UserDAO dao = new UserDAO();
+            List<User> users = dao.selectUserByNameAndPassword(username, password);
+            if (!users.isEmpty() || users == null) {
+                User user = users.get(0);
+                Access.checkFullAccess(user.getPermission());
+                Access.setOperator(user);
                 closeWindow();
                 (new MenuPrincipal()).start(new Stage());
             } else {

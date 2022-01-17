@@ -133,7 +133,7 @@ public abstract class AlertBox {
         boolean isConfirme = false;
         Alert deletionAlertBox = configureAlertBox(AlertType.WARNING, CONFIRMATION_TITLE, "Deseja excluir?");
         Optional<ButtonType> response = deletionAlertBox.showAndWait();
-        if (response.get() == ButtonType.OK) {
+        if (response.isPresent() && response.get() == ButtonType.OK) {
             isConfirme = true;
         }
         return isConfirme;

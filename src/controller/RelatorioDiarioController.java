@@ -3,8 +3,8 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.CaixaDAO;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +14,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Caixa;
+import model.Operation;
+import model.Report;
+import model.dao.OperationDAO;
 
 import java.net.URL;
 import java.util.Date;
@@ -42,19 +44,19 @@ public class RelatorioDiarioController implements Initializable {
     private Button btnCancel;
 
     @FXML
-    private TableView<Caixa> tableDailyReport;
+    private TableView<Operation> tableDailyReport;
 
     @FXML
-    private TableColumn<Caixa, String> tableColumnDate;
+    private TableColumn<Report, String> tableColumnDate;
 
     @FXML
-    private TableColumn<Caixa, Double> tableColumnDeposit;
+    private TableColumn<Report, Double> tableColumnDeposit;
 
     @FXML
-    private TableColumn<Caixa, Double> tableColumnOut;
+    private TableColumn<Report, Double> tableColumnOut;
 
     @FXML
-    private TableColumn<Caixa, Double> tableColumnTotal;
+    private TableColumn<Report, Double> tableColumnTotal;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -101,15 +103,15 @@ public class RelatorioDiarioController implements Initializable {
         String day = fieldDay.getText();
         String month = fieldMonth.getValue();
         String year = fieldYear.getValue();
-
+        OperationDAO dao = new OperationDAO();
         if (isSearchAll(day, month, year)) {
-            fillTable(CaixaDAO.queryAllDailyBoxs());
+            fillTable(dao.selectOperationsPerDay());
         } else {
             if (Validator.validateFields(day, month, year)) {
                 String dateString = Helper.formatDateByDayMonthYear(day, month, year);
                 if (Validator.validateDate(dateString)) {
                     Date date = Helper.parseDate(dateString);
-                    fillTable(CaixaDAO.queryBoxByDate(date));
+                    fillTable(dao.selectOperationsPerDayByDate(date));
                 } else {
                     AlertBox.dateInvalided();
                 }
@@ -123,15 +125,19 @@ public class RelatorioDiarioController implements Initializable {
         return (day.isBlank() && month.isBlank() && year.isBlank());
     }
 
-    private void fillTable(List<Caixa> caixas) {
-        tableColumnDate.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDate(data.getValue().getData())));
-        tableColumnDeposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorEntrada()).asObject());
-        tableColumnOut.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorSaida()).asObject());
-        tableColumnTotal.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorTotal()).asObject());
-
-        ObservableList<Caixa> items = FXCollections.observableArrayList(caixas);
+    private void fillTable(List<Operation> operations) {
+        if(!operations.isEmpty()) {
+            tableColumnDate.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDate(data.getValue().getTimestamp())));
+            tableColumnDeposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValueSale()).asObject());
+            tableColumnOut.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValueAcquisition()).asObject());
+            tableColumnTotal.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValueTotal()).asObject());
+        }
+        ObservableList<Operation> items = FXCollections.observableArrayList(operations);
         tableDailyReport.setItems(items);
+        tableDailyReport.refresh();
     }
+
+
 
     private void closeWindow() {
         ((Stage) rootPane.getScene().getWindow()).close();

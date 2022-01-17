@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.SearchGuide;
 import controller.util.Helper;
-import dao.ClienteDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +12,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import model.Cliente;
+import model.Client;
+import model.dao.ClientDAO;
 import view.PesquisarCliente;
 
 import java.net.URL;
@@ -35,7 +35,7 @@ public class PesquisarClienteController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private ListView<Cliente> listView;
+    private ListView<Client> listView;
 
     private SearchGuide searchGuide;
 
@@ -74,24 +74,25 @@ public class PesquisarClienteController implements Initializable {
 
     private void searchItem() {
         String name = fieldNameClient.getText();
+        ClientDAO dao = new ClientDAO();
         if (name == null || name.isBlank()) {
-            fillListView(ClienteDAO.queryAllClients());
+            fillListView(dao.selectAllClients());
         } else {
-            fillListView(ClienteDAO.queryByNameClients(name));
+            fillListView(dao.selectClientByName(name));
         }
     }
 
-    private void fillListView(List<Cliente> items) {
+    private void fillListView(List<Client> items) {
         ObservableList groupByClients = FXCollections.observableArrayList(items);
         listView.setItems(groupByClients);
     }
 
     private void selectItemListView() {
-        Cliente cliente = listView.getSelectionModel().getSelectedItem();
-        if (cliente == null) {
+        Client client = listView.getSelectionModel().getSelectedItem();
+        if (client == null) {
             AlertBox.selectARecord();
         } else {
-            this.searchGuide.returnData(cliente);
+            this.searchGuide.returnData(client);
             closeWindow();
         }
 

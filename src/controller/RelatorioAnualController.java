@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.CaixaDAO;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,7 +13,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Caixa;
+import model.Operation;
+import model.Report;
+import model.dao.OperationDAO;
 
 import java.net.URL;
 import java.util.Date;
@@ -36,19 +37,19 @@ public class RelatorioAnualController implements Initializable {
     private Button btnCancel;
 
     @FXML
-    private TableView<Caixa> tableYearlyReport;
+    private TableView<Operation> tableYearlyReport;
 
     @FXML
-    private TableColumn<Caixa, String> tableColumnYear;
+    private TableColumn<Report, String> tableColumnYear;
 
     @FXML
-    private TableColumn<Caixa, Double> tableColumnDeposit;
+    private TableColumn<Report, Double> tableColumnDeposit;
 
     @FXML
-    private TableColumn<Caixa, Double> tableColumnOut;
+    private TableColumn<Report, Double> tableColumnOut;
 
     @FXML
-    private TableColumn<Caixa, Double> tableColumnTotal;
+    private TableColumn<Report, Double> tableColumnTotal;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -80,14 +81,14 @@ public class RelatorioAnualController implements Initializable {
 
     private void filter() {
         String year = fieldYear.getValue();
-
+        OperationDAO dao = new OperationDAO();
         if (isSearchAll(year)) {
-            fillTable(CaixaDAO.queryAllYearlyBoxs());
+            fillTable(dao.selectOperationsPerYear());
         } else {
             if (Validator.validateFields(year)) {
                 String dateString = Helper.formatDateByYear(year);
                 Date date = Helper.parseDateYear(dateString);
-                fillTable(CaixaDAO.queryBoxByYear(date));
+                fillTable(dao.selectOperationsPerYearByYear(date));
             } else {
                 AlertBox.fillAllFields();
             }
@@ -98,14 +99,16 @@ public class RelatorioAnualController implements Initializable {
         return (year.isBlank());
     }
 
-    private void fillTable(List<Caixa> caixas) {
-        tableColumnYear.setCellValueFactory(data -> new SimpleStringProperty(Helper.extractYearFromDate(data.getValue().getData())));
-        tableColumnDeposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorEntrada()).asObject());
-        tableColumnOut.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorSaida()).asObject());
-        tableColumnTotal.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValorTotal()).asObject());
-
-        ObservableList<Caixa> items = FXCollections.observableArrayList(caixas);
+    private void fillTable(List<Operation> operations) {
+        if(!operations.isEmpty()) {
+            tableColumnYear.setCellValueFactory(data -> new SimpleStringProperty(Helper.extractYearFromDate(data.getValue().getTimestamp())));
+            tableColumnDeposit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValueSale()).asObject());
+            tableColumnOut.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValueAcquisition()).asObject());
+            tableColumnTotal.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValueTotal()).asObject());
+        }
+        ObservableList<Operation> items = FXCollections.observableArrayList(operations);
         tableYearlyReport.setItems(items);
+        tableYearlyReport.refresh();
     }
 
     private void closeWindow() {

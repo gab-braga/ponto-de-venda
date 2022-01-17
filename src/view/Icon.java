@@ -18,7 +18,7 @@ public class Icon {
     private void startURI() {
         URI uri = null;
         try {
-            uri = Login.class.getResource("/view/images/logo-ponto-de-venda.png").toURI();
+            uri = Login.class.getResource("/view/images/logo-pdv.png").toURI();
         } catch (URISyntaxException e) {
             uri = null;
         } finally {

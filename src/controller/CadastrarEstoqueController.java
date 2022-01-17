@@ -4,8 +4,6 @@ import controller.util.AlertBox;
 import controller.util.SearchGuide;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.EstoqueDAO;
-import dao.ProdutoDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,8 +12,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Estoque;
-import model.Produto;
+import model.Stock;
+import model.Product;
+import model.dao.ProductDAO;
+import model.dao.StockDAO;
 import view.PesquisarProduto;
 
 import java.net.URL;
@@ -48,7 +48,7 @@ public class CadastrarEstoqueController implements Initializable, SearchGuide {
     @Override
     public void returnData(Object o) {
         if (Validator.validateObject(o)) {
-            fieldCodeProduct.setText(Integer.toString(((Produto) o).getCodigo()));
+            fieldCodeProduct.setText(Long.toString(((Product) o).getCode()));
         }
     }
 
@@ -88,9 +88,10 @@ public class CadastrarEstoqueController implements Initializable, SearchGuide {
     }
 
     private void register() {
-        Estoque estoque = getModel();
-        if(estoque != null) {
-            if (EstoqueDAO.register(estoque)) {
+        Stock stock = getModel();
+        if(stock != null) {
+            StockDAO dao = new StockDAO();
+            if (dao.insert(stock)) {
                 AlertBox.registrationCompleted();
                 clearFields();
                 fieldCodeProduct.requestFocus();
@@ -100,8 +101,8 @@ public class CadastrarEstoqueController implements Initializable, SearchGuide {
         }
     }
 
-    private Estoque getModel() {
-        Estoque estoque = null;
+    private Stock getModel() {
+        Stock stockModel = null;
         String codeProduct = fieldCodeProduct.getText();
         String packed = fieldUnity.getValue();
         String quantity = fieldQuantity.getText();
@@ -109,10 +110,14 @@ public class CadastrarEstoqueController implements Initializable, SearchGuide {
         if (Validator.validateFields(codeProduct, packed, quantity)) {
             if (Validator.validateInteger(quantity) && Validator.validateInteger(codeProduct)) {
                 if (Validator.validateQuantity(Integer.parseInt(quantity))) {
-                    List<Produto> produtos = ProdutoDAO.queryProductByCode(Integer.parseInt(codeProduct));
-                    if (produtos.size() > 0) {
-                        if (EstoqueDAO.queryStockByCode(Integer.parseInt(codeProduct)).size() == 0) {
-                            estoque = new Estoque(produtos.get(0), packed, Integer.parseInt(quantity));
+                    ProductDAO productDAO = new ProductDAO();
+                    List<Product> products = productDAO.selectProductByCode(Long.parseLong(codeProduct));
+                    if (products.size() > 0) {
+                        Product product = products.get(0);
+                        StockDAO dao = new StockDAO();
+                        List<Stock> stock = dao.selectStockByProductCode(product);
+                        if (stock.size() == 0) {
+                            stockModel = new Stock(product, packed, Integer.parseInt(quantity));
                         } else {
                             AlertBox.productAlreadyStocked();
                         }
@@ -128,7 +133,7 @@ public class CadastrarEstoqueController implements Initializable, SearchGuide {
         } else {
             AlertBox.fillAllFields();
         }
-        return estoque;
+        return stockModel;
     }
 
     private void clearFields() {

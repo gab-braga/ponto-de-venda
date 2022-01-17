@@ -12,7 +12,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class CadastrarProduto extends Application {
-    private final String title = "Cadastrar Produto";
+    private final String title = "Cadastrar Product";
 
     private static Stage window;
 

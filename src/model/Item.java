@@ -1,91 +1,106 @@
 package model;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "items")
 public class Item {
-    private Integer codigo;
-    private Integer quantidade;
-    private Venda venda;
-    private Produto produto;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ITEM_CODE", nullable = false)
+    private Long code;
+
+    @Column(name = "QUANTITY", nullable = false)
+    private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "SALE", nullable = false)
+    private Sale sale;
+
+    @OneToOne
+    @JoinColumn(name = "PRODUCT", nullable = false)
+    private Product product;
 
     public Item() {
     }
 
-    public Item(Produto produto) {
-        this.produto = produto;
-        this.quantidade = 1;
+    public Item(Product product) {
+        this.product = product;
+        this.quantity = 1;
     }
 
-    public Item(Produto produto, Integer quantidade) {
-        this.produto = produto;
-        this.quantidade = quantidade;
+    public Item(Product product, Integer quantity) {
+        this.product = product;
+        this.quantity = quantity;
     }
 
-    public Item(Produto produto, Venda venda, Integer quantidade) {
-        this(produto, quantidade);
-        this.venda = venda;
+    public Item(Product product, Sale sale, Integer quantity) {
+        this(product, quantity);
+        this.sale = sale;
     }
 
-    public Item(int codigo, Produto produto, Venda venda, Integer quantidade) {
-        this(produto, venda, quantidade);
-        this.codigo = codigo;
+    public Item(Long code, Product product, Sale sale, Integer quantity) {
+        this(product, sale, quantity);
+        this.code = code;
     }
 
-    public Integer getCodigo() {
-        return codigo;
+    public Long getCode() {
+        return code;
     }
 
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
+    public void setCode(Long code) {
+        this.code = code;
     }
 
-    public Venda getVenda() {
-        return venda;
+    public Sale getVenda() {
+        return sale;
     }
 
-    public void setVenda(Venda venda) {
-        this.venda = venda;
+    public void setVenda(Sale sale) {
+        this.sale = sale;
     }
 
-    public Produto getProduto() {
-        return produto;
+    public Product getProduto() {
+        return product;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public void setProduto(Product product) {
+        this.product = product;
     }
 
-    public Integer getQuantidade() {
-        return quantidade;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public void increaseQuantity() {
-        this.quantidade += 1;
+        this.quantity += 1;
     }
 
     public Double getTotalValue() {
-        return getQuantidade() * getProduto().getValorVenda();
+        return getQuantity() * getProduto().getPrice();
     }
 
     @Override
     public String toString() {
-        return String.format("Descrição: %s | Quantidade: %d", getProduto().getDescricao(), getQuantidade());
+        return String.format("%d | %s", getQuantity(), getProduto().getDescription());
     }
 
     @Override
     public boolean equals(Object o) {
         if(o != null) {
-            return ((Item) o).getProduto().getCodigo().equals(getProduto().getCodigo());
+            return ((Item) o).getProduto().getCode().equals(getProduto().getCode());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCodigo(), getQuantidade(), getVenda(), getProduto());
+        return Objects.hash(getCode(), getQuantity(), getVenda(), getProduto());
     }
 }

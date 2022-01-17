@@ -5,23 +5,22 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Produto;
+import model.Product;
 
 import java.io.IOException;
 
 public class EditarProduto extends Application {
 
-    private Produto produtoEdit;
+    private Product productEdit;
 
-    public EditarProduto(Produto produtoEdit) {
-        this.produtoEdit = produtoEdit;
+    public EditarProduto(Product productEdit) {
+        this.productEdit = productEdit;
     }
 
-    private final String title = "Editar Produto";
+    private final String title = "Editar Product";
 
     private static Stage window;
 
@@ -40,7 +39,7 @@ public class EditarProduto extends Application {
             Parent root = fxmlLoader.load();
 
             EditarProdutoController editarProdutoController = (EditarProdutoController) fxmlLoader.getController();
-            editarProdutoController.fillFields(produtoEdit);
+            editarProdutoController.fillFields(productEdit);
 
             Scene scene = new Scene(root);
 

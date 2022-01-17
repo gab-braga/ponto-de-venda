@@ -3,8 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.EstoqueDAO;
-import dao.ProdutoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,7 +12,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Produto;
+import model.Product;
+import model.dao.ProductDAO;
+import model.dao.StockDAO;
 import view.EditarProduto;
 
 import java.net.URL;
@@ -39,16 +39,16 @@ public class ConsultarProdutosController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private TableView<Produto> tableProduct;
+    private TableView<Product> tableProduct;
 
     @FXML
-    private TableColumn<Produto, Integer> columnCode;
+    private TableColumn<Product, Integer> columnCode;
 
     @FXML
-    private TableColumn<Produto, String> columnDescription;
+    private TableColumn<Product, String> columnDescription;
 
     @FXML
-    private TableColumn<Produto, Double> columnSaleValue;
+    private TableColumn<Product, Double> columnSaleValue;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -110,46 +110,49 @@ public class ConsultarProdutosController implements Initializable {
         boolean filterByCode = !code.isBlank();
         boolean filterByDescription = !description.isBlank();
         if (Validator.validateInteger(code) || !filterByCode) {
+            ProductDAO dao = new ProductDAO();
             if (!filterByCode && filterByDescription) {
-                fillTable(ProdutoDAO.queryByDescriptionProducts(description));
+                fillTable(dao.selectProductByDescription(description));
             } else if (filterByCode && !filterByDescription) {
-                fillTable(ProdutoDAO.queryProductByCode(Integer.parseInt(code)));
+                fillTable(dao.selectProductByCode(Long.parseLong(code)));
             } else if (filterByCode && filterByDescription) {
-                fillTable(ProdutoDAO.queryByCodeOrDescriptionProducts(Integer.parseInt(code), description));
+                fillTable(dao.selectProductByCodeOrDescription(Long.parseLong(code), description));
             } else {
-                fillTable(ProdutoDAO.queryAllProducts());
+                fillTable(dao.selectAllProducts());
             }
         }
     }
 
-    private void fillTable(List<Produto> produtos) {
-        columnCode.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("codigo"));
-        columnDescription.setCellValueFactory(new PropertyValueFactory<Produto, String>("descricao"));
-        columnSaleValue.setCellValueFactory(new PropertyValueFactory<Produto, Double>("valorVenda"));
+    private void fillTable(List<Product> products) {
+        columnCode.setCellValueFactory(new PropertyValueFactory<Product, Integer>("code"));
+        columnDescription.setCellValueFactory(new PropertyValueFactory<Product, String>("description"));
+        columnSaleValue.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
 
-        ObservableList<Produto> items = FXCollections.observableArrayList(produtos);
+        ObservableList<Product> items = FXCollections.observableArrayList(products);
         tableProduct.setItems(items);
         tableProduct.refresh();
     }
 
     private void openEditionWindow() {
-        Produto produto = tableProduct.getSelectionModel().getSelectedItem();
-        if (produto == null) {
+        Product product = tableProduct.getSelectionModel().getSelectedItem();
+        if (product == null) {
             AlertBox.selectARecord();
         } else {
-            EditarProduto editarProduto = new EditarProduto(produto);
+            EditarProduto editarProduto = new EditarProduto(product);
             editarProduto.start(new Stage());
         }
     }
 
     private void openDelitionWindow() {
         if (AlertBox.confirmationDelete()) {
-            Produto produto = tableProduct.getSelectionModel().getSelectedItem();
-            if (produto == null) {
+            Product product = tableProduct.getSelectionModel().getSelectedItem();
+            if (product == null) {
                 AlertBox.selectARecord();
             } else {
-                if (EstoqueDAO.queryStockByCode(produto.getCodigo()).size() == 0) {
-                    if (ProdutoDAO.deleteByCode(produto.getCodigo())) {
+                StockDAO stockDAO = new StockDAO();
+                if (stockDAO.selectStockByCode(product.getCode()).size() == 0) {
+                    ProductDAO dao = new ProductDAO();
+                    if (dao.deleteByCode(product.getCode())) {
                         AlertBox.deleteCompleted();
                         filter();
                     } else {

@@ -4,7 +4,6 @@ import controller.util.AlertBox;
 import controller.util.SearchGuide;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.*;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.*;
+import model.dao.*;
 import view.PesquisarCliente;
 import view.PesquisarProduto;
 
@@ -97,14 +97,14 @@ public class CaixaController implements Initializable, SearchGuide {
     private final String DEFAULT_TEXT = "-";
     private final Integer FIRST = 0;
 
-    private Venda venda;
+    private Sale sale;
 
     private Item item;
 
     public CaixaController() {
-        venda = new Venda(new ArrayList<Item>());
-        venda.setOperator(Access.getOperator());
-        venda.setDataHora(Helper.getCurrentDate());
+        sale = new Sale(new ArrayList<Item>());
+        sale.setOperator(Access.getOperator());
+        sale.setDate(Helper.getCurrentDate());
     }
 
     @Override
@@ -172,15 +172,15 @@ public class CaixaController implements Initializable, SearchGuide {
 
     @Override
     public void returnData(Object o) {
-        if(o instanceof Produto) {
-            Produto product = (Produto) o;
+        if(o instanceof Product) {
+            Product product = (Product) o;
             setItem(new Item(product));
-            venda.addItemToList(getItem());
+            sale.addItemToList(getItem());
             showItem();
         }
-        else if(o instanceof Cliente) {
-            Cliente client = (Cliente) o;
-            venda.setCliente(client);
+        else if(o instanceof Client) {
+            Client client = (Client) o;
+            sale.setCliente(client);
             showClient();
         }
     }
@@ -195,11 +195,11 @@ public class CaixaController implements Initializable, SearchGuide {
 
     private void showItem() {
         if(Validator.validateObject(item)) {
-            textProductDescription.setText(item.getProduto().getDescricao());
-            textValueUnitary.setText(Helper.formatNumber(item.getProduto().getValorVenda()));
-            fieldQuantity.setText(item.getQuantidade().toString());
-            fieldProductCode.setText(item.getProduto().getCodigo().toString());
-            fieldProductDescription.setText(item.getProduto().getDescricao());
+            textProductDescription.setText(item.getProduto().getDescription());
+            textValueUnitary.setText(Helper.formatNumber(item.getProduto().getPrice()));
+            fieldQuantity.setText(item.getQuantity().toString());
+            fieldProductCode.setText(item.getProduto().getCode().toString());
+            fieldProductDescription.setText(item.getProduto().getDescription());
             fillTableItems();
             calculateValues();
         }
@@ -218,12 +218,12 @@ public class CaixaController implements Initializable, SearchGuide {
     }
 
     private void fillTableItems() {
-        tableColumnDescription.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao()));
-        tableColumnQuantity.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getQuantidade()).asObject());
-        ObservableList<Item> items = FXCollections.observableArrayList(venda.getItems());
+        tableColumnDescription.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescription()));
+        tableColumnQuantity.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getQuantity()).asObject());
+        ObservableList<Item> items = FXCollections.observableArrayList(sale.getItems());
         tableItems.setItems(items);
         tableItems.refresh();
-        textNumberItems.setText(Integer.toString(venda.getItems().size()));
+        textNumberItems.setText(Integer.toString(sale.getItems().size()));
     }
 
     private void calculateValues() {
@@ -240,20 +240,20 @@ public class CaixaController implements Initializable, SearchGuide {
     }
 
     private void calculateTotalSale() {
-        if(Validator.validateObject(venda)) {
+        if(Validator.validateObject(sale)) {
             Double totalSale = INITIAL_VALUE_DOUBLE;
-            for(Item item : venda.getItems()) {
+            for(Item item : sale.getItems()) {
                 totalSale += item.getTotalValue();
             }
-            venda.setValor(Helper.roundNumberTwoDecimalPlaces(totalSale));
-            textValueBuy.setText(Helper.formatNumber(venda.getValor()));
+            sale.setValue(Helper.roundNumberTwoDecimalPlaces(totalSale));
+            textValueBuy.setText(Helper.formatNumber(sale.getValue()));
         }
     }
 
     private void calculateExchangeValue() {
         Double receivedValue = retrieveReceivedValue();
         if(Validator.validateObject(receivedValue)) {
-            Double totalValue = venda.getValor();
+            Double totalValue = sale.getValue();
             Double exchange = receivedValue - totalValue;
             if(exchange > INITIAL_VALUE_DOUBLE) {
                 textExchange.setText(Helper.formatNumber(exchange));
@@ -265,14 +265,14 @@ public class CaixaController implements Initializable, SearchGuide {
     }
 
     private void showClient() {
-        fieldClient.setText(venda.getCliente().getNome());
+        fieldClient.setText(sale.getCliente().getName());
     }
 
     private void fillInfoBar() {
-        if(venda.getOperator() != null)
-            textOperator.setText(venda.getOperator().getNome());
-        if(venda.getDataHora() != null)
-            textDate.setText(Helper.formatDate(venda.getDataHora()));
+        if(sale.getOperator() != null)
+            textOperator.setText(sale.getOperator().getName());
+        if(sale.getDate() != null)
+            textDate.setText(Helper.formatDate(sale.getDate()));
     }
 
     private void closeWindow() {
@@ -299,26 +299,27 @@ public class CaixaController implements Initializable, SearchGuide {
     }
 
     private void fecthAndSeItem() {
-        Integer productCode = retrieveProductCode();
+        Long productCode = retrieveProductCode();
         if(Validator.validateObject(productCode)) {
-            List<Produto> produtos = ProdutoDAO.queryProductByCode(productCode);
-            if(produtos.isEmpty()) {
+            ProductDAO dao = new ProductDAO();
+            List<Product> products = dao.selectProductByCode(productCode);
+            if(products.isEmpty()) {
                 AlertBox.unregisteredProduct();
             }
             else {
-                Produto product = produtos.get(FIRST);
+                Product product = products.get(FIRST);
                 item = new Item(product);
-                venda.addItemToList(item);
+                sale.addItemToList(item);
                 showItem();
                 fieldQuantity.requestFocus();
             }
         }
     }
 
-    private Integer retrieveProductCode() {
+    private Long retrieveProductCode() {
         String productCode = fieldProductCode.getText();
         if(Validator.validateInteger(productCode)) {
-            return Integer.parseInt(productCode);
+            return Long.parseLong(productCode);
         }
         else {
             AlertBox.onlyNumbers();
@@ -349,14 +350,15 @@ public class CaixaController implements Initializable, SearchGuide {
     private void fecthAndSeClient() {
         String clientName = fieldClient.getText();
         if(Validator.validateObject(clientName)) {
-            List<Cliente> clientes = ClienteDAO.queryByNameClients(clientName);
-            if(clientes.isEmpty()) {
+            ClientDAO dao = new ClientDAO();
+            List<Client> clients = dao.selectClientByName(clientName);
+            if(clients.isEmpty()) {
                 AlertBox.unregisteredClient();
             }
             else {
-                Cliente client = clientes.get(FIRST);
-                venda.setCliente(client);
-                fieldClient.setText(client.getNome());
+                Client client = clients.get(FIRST);
+                sale.setCliente(client);
+                fieldClient.setText(client.getName());
                 fieldProductCode.requestFocus();
             }
         }
@@ -366,8 +368,8 @@ public class CaixaController implements Initializable, SearchGuide {
         Integer quantityItem = retrieveItemQuantity();
         if (Validator.validateObject(quantityItem)) {
             if(Validator.validateQuantity(quantityItem)) {
-                item.setQuantidade(quantityItem);
-                venda.modifyItemQuantity(item);
+                item.setQuantity(quantityItem);
+                sale.modifyItemQuantity(item);
                 fillTableItems();
                 calculateValues();
             }
@@ -392,7 +394,7 @@ public class CaixaController implements Initializable, SearchGuide {
     }
 
     private void resetItemQuantity() {
-        fieldQuantity.setText(item.getQuantidade().toString());
+        fieldQuantity.setText(item.getQuantity().toString());
     }
 
     private void defineReceivedValue() {
@@ -439,27 +441,22 @@ public class CaixaController implements Initializable, SearchGuide {
     private void removeItem() {
         Item item = tableItems.getSelectionModel().getSelectedItem();
         if(Validator.validateObject(item)) {
-            venda.removeItemToList(item);
+            sale.removeItemToList(item);
             resetItem();
         }
     }
 
     private void sell() {
-        if(!venda.getItems().isEmpty()) {
-            if(Validator.validateObject(venda.getCliente())) {
+        if(!sale.getItems().isEmpty()) {
+            if(Validator.validateObject(sale.getCliente())) {
                 if(validatePaymentAmount()) {
                     if(checkStock()) {
-                        venda.setDataHora(Helper.getCurrentDate());
-                        Caixa caixa = new Caixa(venda.getValor(), 0.0, venda.getDataHora());
-                        if (CaixaDAO.register(caixa)) {
-                            venda.setCaixa(caixa);
-                            if (VendaDAO.register(venda)) {
-                                registerItemsSold();
-                                AlertBox.sallerCompleted();
-                                finalizeSale();
-                            } else {
-                                AlertBox.operationError();
-                            }
+                        sale.setDate(Helper.getCurrentDate());
+                        SaleDAO dao = new SaleDAO();
+                        if (dao.insert(sale)) {
+                            registerItemsSold();
+                            finalizeSale();
+                            AlertBox.sallerCompleted();
                         } else {
                             AlertBox.operationError();
                         }
@@ -484,7 +481,7 @@ public class CaixaController implements Initializable, SearchGuide {
     private boolean validatePaymentAmount() {
         Double receivedValue = retrieveReceivedValue();
         if(Validator.validateObject(receivedValue)) {
-            Double total = venda.getValor();
+            Double total = sale.getValue();
             return receivedValue >= total;
         }
         return false;
@@ -492,13 +489,15 @@ public class CaixaController implements Initializable, SearchGuide {
 
     private boolean checkStock() {
         boolean flag = true;
-        for (Item item : venda.getItems()) {
-            Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
-            if (estoque == null) {
+        for (Item item : sale.getItems()) {
+            StockDAO dao = new StockDAO();
+            List<Stock> stockList = dao.selectStockByCode(item.getProduto().getCode());
+            Stock stock = stockList.isEmpty() ? null : stockList.get(0);
+            if (stock == null) {
                 flag = false;
                 break;
             } else {
-                if (estoque.getQuantidade() < item.getQuantidade()) {
+                if (stock.getQuantity() < item.getQuantity()) {
                     flag = false;
                     break;
                 }
@@ -508,17 +507,21 @@ public class CaixaController implements Initializable, SearchGuide {
     }
 
     private void registerItemsSold() {
-        for (Item item : venda.getItems()) {
-            Estoque estoque = EstoqueDAO.getStockByCode(item.getProduto().getCodigo());
-            estoque.setQuantidade(item.getQuantidade());
-            if (EstoqueDAO.decrease(estoque)) {
-                ItemDAO.register(item);
+        for (Item item : sale.getItems()) {
+            ItemDAO dao = new ItemDAO();
+            if (dao.insert(item)) {
+                StockDAO stockDAO = new StockDAO();
+                Long productCode = item.getProduto().getCode();
+                Stock stock = stockDAO.selectStockByCode(productCode).get(0);
+                stockDAO.withdrawStock(stock, item.getQuantity());
             }
         }
     }
 
     private void finalizeSale() {
-        venda = new Venda(new ArrayList<>());
+        sale = new Sale(new ArrayList<Item>());
+        sale.setOperator(Access.getOperator());
+        sale.setDate(Helper.getCurrentDate());
         item = null;
         resetSale();
         fillTableItems();

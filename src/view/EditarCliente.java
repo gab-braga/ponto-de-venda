@@ -5,23 +5,22 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Cliente;
+import model.Client;
 
 import java.io.IOException;
 
 public class EditarCliente extends Application {
 
-    private Cliente clientEdit;
+    private Client clientEdit;
 
-    public EditarCliente(Cliente clientEdit) {
+    public EditarCliente(Client clientEdit) {
         this.clientEdit = clientEdit;
     }
 
-    private final String title = "Editar Cliente";
+    private final String title = "Editar Client";
 
     private static Stage window;
 

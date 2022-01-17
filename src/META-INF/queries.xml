@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm" version="2.1">
+
+    <named-query name="selectAllUsers">
+        <query>
+            select u from User u order by u.name
+        </query>
+    </named-query>
+
+    <named-query name="selectUserByNameAndPassword">
+        <query>
+            select u from User u where u.name = :name and u.password = :password
+        </query>
+    </named-query>
+
+    <named-query name="selectUserByName">
+        <query>
+            select u from User u where u.name = :name order by u.name
+        </query>
+    </named-query>
+
+    <named-query name="selectUserByPermission">
+        <query>
+            select u from User u where u.permission = :permission order by u.name
+        </query>
+    </named-query>
+
+    <named-query name="selectUserByNameOrPermission">
+        <query>
+            select u from User u where u.name = :name or u.permission = :permission order by u.name
+        </query>
+    </named-query>
+
+    <named-query name="deleteUser">
+        <query>
+            delete User u where u.name = :name
+        </query>
+    </named-query>
+
+    <named-query name="selectAllProducts">
+        <query>
+            select p from Product p order by p.description
+        </query>
+    </named-query>
+
+    <named-query name="selectProductByCode">
+        <query>
+            select p from Product p where p.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="selectProductByDescription">
+        <query>
+            select p from Product p where p.description like :description order by p.description
+        </query>
+    </named-query>
+
+    <named-query name="selectProductByCodeOrDescription">
+        <query>
+            select p from Product p where p.code = :code or p.description like :description order by p.description
+        </query>
+    </named-query>
+
+    <named-query name="updateProduct">
+        <query>
+            update Product p set p.description = :description, p.price = :price where p.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="deleteProduct">
+        <query>
+            delete from Product p where p.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="selectAllClients">
+        <query>
+            select c from Client c order by c.name
+        </query>
+    </named-query>
+
+    <named-query name="selectClientByName">
+        <query>
+            select c from Client c where c.name like :name order by c.name
+        </query>
+    </named-query>
+
+    <named-query name="selectClientByCPF">
+        <query>
+            select c from Client c where c.cpf = :cpf order by c.name
+        </query>
+    </named-query>
+
+    <named-query name="selectClientByNameOrCPF">
+        <query>
+            select c from Client c where c.name like :name or c.cpf = :cpf order by c.name
+        </query>
+    </named-query>
+
+    <named-query name="selectClientByCode">
+        <query>
+            select c from Client c where c.code = :code order by c.name
+        </query>
+    </named-query>
+
+    <named-query name="updateClient">
+        <query>
+            update Client c set c.name = :name, c.cpf = :cpf, c.phone = :phone, c.email = :email, c.address = :address, c.number = :number, c.city = :city, c.uf = :uf where c.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="deleteClient">
+        <query>
+            delete from Client c where c.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="selectAllStock">
+        <query>
+            select s from Stock s order by s.product
+        </query>
+    </named-query>
+
+    <named-query name="selectStockByCode">
+        <query>
+            select s from Stock s join s.product p where p.code = :code order by p.description
+        </query>
+    </named-query>
+
+    <named-query name="selectStockByDescription">
+        <query>
+            select s from Stock s join s.product p where p.description like :description order by p.description
+        </query>
+    </named-query>
+
+    <named-query name="selectStockByCodeOrDescription">
+        <query>
+            select s from Stock s join s.product p where p.code = :code or p.description like :description order by p.description
+        </query>
+    </named-query>
+
+    <named-query name="selectStockByProductCode">
+        <query>
+            select s from Stock s where s.product = :product
+        </query>
+    </named-query>
+
+    <named-query name="addToStock">
+        <query>
+            update Stock s set s.quantity = (s.quantity + :quantity) where s.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="withdrawStock">
+        <query>
+            update Stock s set s.quantity = (s.quantity - :quantity) where s.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="adjustStock">
+        <query>
+            update Stock s set s.quantity = :quantity where s.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="deleteStock">
+        <query>
+            delete from Stock s where s.code = :code
+        </query>
+    </named-query>
+
+    <named-query name="selectAllSales">
+        <query>
+            select s from Sale s order by s.date
+        </query>
+    </named-query>
+
+    <named-query name="selectSalesByDate">
+        <query>
+            select s from Sale s where date(date) = :date order by s.date
+        </query>
+    </named-query>
+
+    <named-query name="selectAllAcquisitions">
+        <query>
+            select a from Acquisition a order by a.date
+        </query>
+    </named-query>
+
+    <named-query name="selectAcquisitionByDate">
+        <query>
+            select a from Acquisition a where date(a.date) = :date order by a.date
+        </query>
+    </named-query>
+
+    <named-query name="selectItemBySaleCode">
+        <query>
+            select i from Item i join i.sale s where s.code = :saleCode
+        </query>
+    </named-query>
+
+    <named-native-query name="selectOperationsPerDay" result-set-mapping="reportDays">
+        <query>
+            select date(o.date) timestamp, sum((select o1.value from Operation o1 where o1.code = o.code and o1.type = 'S')) valueSale, sum((select o2.value from Operation o2 where o2.code = o.code and o2.type = 'A')) valueAcquisition from Operation o group by date(o.date)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="selectOperationsPerDayByDate" result-set-mapping="reportDays">
+        <query>
+            select date(o.date) timestamp, sum((select o1.value from Operation o1 where o1.code = o.code and o1.type = 'S')) valueSale, sum((select o2.value from Operation o2 where o2.code = o.code and o2.type = 'A')) valueAcquisition from Operation o where date(o.date) = :date group by date(o.date)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="selectOperationsPerMonth" result-set-mapping="reportDays">
+        <query>
+            select date(o.date) timestamp, sum((select o1.value from Operation o1 where o1.code = o.code and o1.type = 'S')) valueSale, sum((select o2.value from Operation o2 where o2.code = o.code and o2.type = 'A')) valueAcquisition from Operation o group by month(o.date)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="selectOperationsPerMonthByMonth" result-set-mapping="reportDays">
+        <query>
+            select date(o.date) timestamp, sum((select o1.value from Operation o1 where o1.code = o.code and o1.type = 'S')) valueSale, sum((select o2.value from Operation o2 where o2.code = o.code and o2.type = 'A')) valueAcquisition from Operation o where month(o.date) = month(:date) and year(o.date) = year(:date) group by month(o.date)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="selectOperationsPerYear" result-set-mapping="reportDays">
+        <query>
+            select date(o.date) timestamp, sum((select o1.value from Operation o1 where o1.code = o.code and o1.type = 'S')) valueSale, sum((select o2.value from Operation o2 where o2.code = o.code and o2.type = 'A')) valueAcquisition from Operation o group by year(o.date)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="selectOperationsPerYearByYear" result-set-mapping="reportDays">
+        <query>
+            select date(o.date) timestamp, sum((select o1.value from Operation o1 where o1.code = o.code and o1.type = 'S')) valueSale, sum((select o2.value from Operation o2 where o2.code = o.code and o2.type = 'A')) valueAcquisition from Operation o where year(o.date) = year(:date) group by year(o.date)
+        </query>
+    </named-native-query>
+
+    <sql-result-set-mapping name="reportDays">
+        <constructor-result target-class="model.Report">
+            <column name="timestamp" class="java.util.Date"/>
+            <column name="valueSale" class="java.lang.Double"/>
+            <column name="valueAcquisition" class="java.lang.Double"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+</entity-mappings>

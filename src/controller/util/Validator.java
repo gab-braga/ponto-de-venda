@@ -15,7 +15,7 @@ public abstract class Validator {
 
     public static boolean validateInteger(String text) {
         try {
-            Integer.parseInt(text);
+            Long.parseLong(text);
             return true;
         } catch (Exception e) {
             return false;

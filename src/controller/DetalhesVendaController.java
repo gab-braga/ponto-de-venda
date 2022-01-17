@@ -1,6 +1,5 @@
 package controller;
 
-import dao.ItemDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,7 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Item;
-import model.Venda;
+import model.Sale;
 
 import java.net.URL;
 import java.util.List;
@@ -34,9 +33,8 @@ public class DetalhesVendaController implements Initializable {
         });
     }
 
-    public void fillListView(Venda venda) {
-        List<Item> itemsList = ItemDAO.queryItemsByCodeSale(venda.getCodigo());
-        ObservableList items = FXCollections.observableArrayList(itemsList);
+    public void fillListView(Sale sale) {
+        ObservableList items = FXCollections.observableArrayList(sale.getItems());
         listDetails.setItems(items);
         listDetails.refresh();
     }

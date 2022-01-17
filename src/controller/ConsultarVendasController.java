@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.VendaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +13,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Venda;
+import model.Sale;
+import model.dao.SaleDAO;
 import view.DetalhesVenda;
 
 import java.net.URL;
@@ -43,19 +43,19 @@ public class ConsultarVendasController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private TableView<Venda> tableSales;
+    private TableView<Sale> tableSales;
 
     @FXML
-    private TableColumn<Venda, String> columnDateHour;
+    private TableColumn<Sale, String> columnDateHour;
 
     @FXML
-    private TableColumn<Venda, Double> columnValue;
+    private TableColumn<Sale, Double> columnValue;
 
     @FXML
-    private TableColumn<Venda, String> columnClient;
+    private TableColumn<Sale, String> columnClient;
 
     @FXML
-    private TableColumn<Venda, String> columnOperator;
+    private TableColumn<Sale, String> columnOperator;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -109,14 +109,15 @@ public class ConsultarVendasController implements Initializable {
         String month = fieldSearchMonth.getValue();
         String year = fieldSearchYear.getValue();
 
+        SaleDAO dao = new SaleDAO();
         if (isSearchAll(day, month, year)) {
-            fillTable(VendaDAO.queryAllRegisters());
+            fillTable(dao.selectAllSales());
         } else {
             if (validateFields(day, month, year)) {
                 String dateString = Helper.formatDateByDayMonthYear(day, month, year);
                 if (Validator.validateDate(dateString)) {
                     Date date = Helper.parseDate(dateString);
-                    fillTable(VendaDAO.querySalesByDate(date));
+                    fillTable(dao.selectSalesByDate(date));
                 } else {
                     AlertBox.dateInvalided();
                 }
@@ -134,13 +135,13 @@ public class ConsultarVendasController implements Initializable {
         return !(day.isBlank() || month.isBlank() || year.isBlank());
     }
 
-    private void fillTable(List<Venda> vendas) {
-        columnDateHour.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDateAndTime(data.getValue().getDataHora())));
-        columnValue.setCellValueFactory(new PropertyValueFactory<Venda, Double>("valor"));
-        columnClient.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCliente().getNome()));
-        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperator().getNome()));
+    private void fillTable(List<Sale> sales) {
+        columnDateHour.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDateAndTime(data.getValue().getDate())));
+        columnValue.setCellValueFactory(new PropertyValueFactory<Sale, Double>("value"));
+        columnClient.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCliente().getName()));
+        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperator().getName()));
 
-        ObservableList<Venda> items = FXCollections.observableArrayList(vendas);
+        ObservableList<Sale> items = FXCollections.observableArrayList(sales);
         tableSales.setItems(items);
     }
 
@@ -149,11 +150,11 @@ public class ConsultarVendasController implements Initializable {
     }
 
     private void opeanWidowDetailsSale() {
-        Venda venda = tableSales.getSelectionModel().getSelectedItem();
-        if (venda == null) {
+        Sale sale = tableSales.getSelectionModel().getSelectedItem();
+        if (sale == null) {
             AlertBox.selectARecord();
         } else {
-            DetalhesVenda detalhesVenda = new DetalhesVenda(venda);
+            DetalhesVenda detalhesVenda = new DetalhesVenda(sale);
             detalhesVenda.start(new Stage());
         }
     }

@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.ClienteDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,7 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Cliente;
+import model.Client;
+import model.dao.ClientDAO;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,18 +51,18 @@ public class EditarClienteController implements Initializable {
     @FXML
     private Button btnSubmit;
 
-    private Cliente clientEdit;
+    private Client clientEdit;
 
-    public void fillFields(Cliente cliente) {
-        this.clientEdit = cliente;
-        fieldName.setText(cliente.getNome());
-        fieldCpf.setText(cliente.getCpf());
-        fieldPhoneNumber.setText(cliente.getTelefone());
-        fieldEmail.setText(cliente.getEmail());
-        field_address.setText(cliente.getEndereco());
-        fieldNumber.setText(cliente.getNumero());
-        fieldCity.setText(cliente.getCidade());
-        fieldUf.setText(cliente.getUf());
+    public void fillFields(Client client) {
+        this.clientEdit = client;
+        fieldName.setText(client.getName());
+        fieldCpf.setText(client.getCpf());
+        fieldPhoneNumber.setText(client.getPhone());
+        fieldEmail.setText(client.getEmail());
+        field_address.setText(client.getAddress());
+        fieldNumber.setText(client.getNumber());
+        fieldCity.setText(client.getCity());
+        fieldUf.setText(client.getUf());
     }
 
     @Override
@@ -127,9 +127,10 @@ public class EditarClienteController implements Initializable {
     }
 
     private void edit() {
-        Cliente cliente = getModel();
-        if(cliente != null) {
-            if (ClienteDAO.update(cliente)) {
+        Client client = getModel();
+        if(client != null) {
+            ClientDAO dao = new ClientDAO();
+            if (dao.update(client)) {
                 AlertBox.editionCompleted();
                 closeWindow();
             } else {
@@ -138,8 +139,8 @@ public class EditarClienteController implements Initializable {
         }
     }
 
-    private Cliente getModel() {
-        Cliente cliente = null;
+    private Client getModel() {
+        Client client = null;
         String nome = fieldName.getText();
         String cpf = fieldCpf.getText();
         String telefone = fieldPhoneNumber.getText();
@@ -150,11 +151,11 @@ public class EditarClienteController implements Initializable {
         String uf = fieldUf.getText();
 
         if (Validator.validateFields(nome, cpf, telefone, email, endereco, numero, cidade, uf)) {
-            cliente = cliente = new Cliente(clientEdit.getCodigo(), nome, cpf, telefone, email, endereco, numero, cidade, uf);
+            client = client = new Client(clientEdit.getCode(), nome, cpf, telefone, email, endereco, numero, cidade, uf);
         } else {
             AlertBox.fillAllFields();
         }
-        return cliente;
+        return client;
     }
 
     private void closeWindow() {

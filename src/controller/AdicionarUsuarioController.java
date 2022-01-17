@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.UsuarioDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,7 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Usuario;
+import model.User;
+import model.dao.UserDAO;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -83,9 +83,10 @@ public class AdicionarUsuarioController implements Initializable {
     }
 
     private void register() {
-        Usuario usuario = getModel();
-        if(usuario != null) {
-            if (UsuarioDAO.register(usuario)) {
+        User user = getModel();
+        if(user != null) {
+            UserDAO dao = new UserDAO();
+            if (dao.insert(user)) {
                 AlertBox.registrationCompleted();
                 clearFields();
                 fieldName.requestFocus();
@@ -95,21 +96,22 @@ public class AdicionarUsuarioController implements Initializable {
         }
     }
 
-    private Usuario getModel() {
-        Usuario usuario = null;
+    private User getModel() {
+        User user = null;
         String name = fieldName.getText();
         String password = fieldPassword.getText();
         String permission = fieldPermission.getValue();
         if (Validator.validateFields(name, password, permission)) {
-            if (UsuarioDAO.queryUserByName(name).size() == 0) {
-                usuario = new Usuario(name, password, permission);
+            UserDAO dao = new UserDAO();
+            if (dao.selectUserByName(name).size() == 0) {
+                user = new User(name, password, permission);
             } else {
                 AlertBox.userAlreadyRegistered();
             }
         } else {
             AlertBox.fillAllFields();
         }
-        return usuario;
+        return user;
     }
 
     private void clearFields() {

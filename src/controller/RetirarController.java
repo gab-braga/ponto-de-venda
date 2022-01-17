@@ -3,8 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.CaixaDAO;
-import dao.SaidaDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,8 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Caixa;
-import model.Saida;
+import model.Acquisition;
+import model.dao.AcquisitionDAO;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -72,7 +70,7 @@ public class RetirarController implements Initializable {
     }
 
     private void insertOperator() {
-        fieldOperator.setText(Access.getOperator().getNome());
+        fieldOperator.setText(Access.getOperator().getName());
         fieldOperator.setDisable(true);
     }
 
@@ -83,14 +81,12 @@ public class RetirarController implements Initializable {
 
         if (Validator.validateFields(operator, value, reason)) {
             if (Validator.validateDouble(value)) {
-                Caixa caixa = new Caixa(0.0, Double.parseDouble(value), Helper.getCurrentDate());
-                if (CaixaDAO.register(caixa)) {
-                    Saida saida = new Saida(Double.parseDouble(value), Helper.getCurrentDate(), reason, caixa, Access.getOperator());
-                    if (SaidaDAO.register(saida)) {
-                        AlertBox.operationCompleted();
-                        clerFields();
-                        fieldValueExit.requestFocus();
-                    }
+                Acquisition acquisition = new Acquisition(Double.parseDouble(value), Access.getOperator(), Helper.getCurrentDate(), reason);
+                AcquisitionDAO dao = new AcquisitionDAO();
+                if (dao.insert(acquisition)) {
+                    AlertBox.operationCompleted();
+                    clerFields();
+                    fieldValueExit.requestFocus();
                 } else {
                     AlertBox.operationError();
                 }

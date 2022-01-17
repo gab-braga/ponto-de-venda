@@ -22,7 +22,7 @@ public class PesquisarCliente extends Application {
         this.clientName = clientName;
     }
 
-    private final String title = "Pesquisar Cliente";
+    private final String title = "Pesquisar Client";
 
     private static Stage window;
 

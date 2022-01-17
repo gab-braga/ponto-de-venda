@@ -2,7 +2,6 @@ package controller;
 
 import controller.util.AlertBox;
 import controller.util.Helper;
-import dao.ClienteDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +12,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Cliente;
+import model.Client;
+import model.dao.ClientDAO;
 import view.EditarCliente;
 
 import java.net.URL;
@@ -38,25 +38,25 @@ public class ConsultarClientesController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private TableView<Cliente> tableClients;
+    private TableView<Client> tableClients;
 
     @FXML
-    private TableColumn<Cliente, String> columnName;
+    private TableColumn<Client, String> columnName;
 
     @FXML
-    private TableColumn<Cliente, String> columnCpf;
+    private TableColumn<Client, String> columnCpf;
 
     @FXML
-    private TableColumn<Cliente, String> columnPhoneNumber;
+    private TableColumn<Client, String> columnPhoneNumber;
 
     @FXML
-    private TableColumn<Cliente, String> columnEmail;
+    private TableColumn<Client, String> columnEmail;
 
     @FXML
-    private TableColumn<Cliente, String> columnAddress;
+    private TableColumn<Client, String> columnAddress;
 
     @FXML
-    private TableColumn<Cliente, String> columnCity;
+    private TableColumn<Client, String> columnCity;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -119,34 +119,36 @@ public class ConsultarClientesController implements Initializable {
         String cpf = fieldSearchCpf.getText();
         boolean filterByName = !name.isBlank();
         boolean filterByCpf = !cpf.isBlank();
+        ClientDAO dao = new ClientDAO();
         if (filterByName && filterByCpf) {
-            fillTable(ClienteDAO.queryByNameOrCpfClients(name, cpf));
+            fillTable(dao.selectClientByNameOrCPF(name, cpf));
         } else if (filterByName && !filterByCpf) {
-            fillTable(ClienteDAO.queryByNameClients(name));
+            fillTable(dao.selectClientByName(name));
         } else if (!filterByName && filterByCpf) {
-            fillTable(ClienteDAO.queryByCpfClients(cpf));
+            fillTable(dao.selectClientByCPF(cpf));
         } else {
-            fillTable(ClienteDAO.queryAllClients());
+            fillTable(dao.selectAllClients());
         }
     }
 
     private void edit() {
-        Cliente cliente = tableClients.getSelectionModel().getSelectedItem();
-        if (cliente == null) {
+        Client client = tableClients.getSelectionModel().getSelectedItem();
+        if (client == null) {
             AlertBox.selectARecord();
         } else {
-            EditarCliente editarCliente = new EditarCliente(cliente);
+            EditarCliente editarCliente = new EditarCliente(client);
             editarCliente.start(new Stage());
         }
     }
 
     private void delete() {
         if (AlertBox.confirmationDelete()) {
-            Cliente cliente = tableClients.getSelectionModel().getSelectedItem();
-            if (cliente == null) {
+            Client client = tableClients.getSelectionModel().getSelectedItem();
+            if (client == null) {
                 AlertBox.selectARecord();
             } else {
-                if (ClienteDAO.deleteByCode(cliente.getCodigo())) {
+                ClientDAO dao = new ClientDAO();
+                if (dao.deleteByCode(client.getCode())) {
                     AlertBox.deleteCompleted();
                     filter();
                 } else {
@@ -156,15 +158,15 @@ public class ConsultarClientesController implements Initializable {
         }
     }
 
-    private void fillTable(List<Cliente> clientes) {
-        columnName.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nome"));
-        columnCpf.setCellValueFactory(new PropertyValueFactory<Cliente, String>("cpf"));
-        columnPhoneNumber.setCellValueFactory(new PropertyValueFactory<Cliente, String>("telefone"));
-        columnEmail.setCellValueFactory(new PropertyValueFactory<Cliente, String>("email"));
-        columnAddress.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s, %s", data.getValue().getEndereco(), data.getValue().getNumero())));
-        columnCity.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s - %s", data.getValue().getCidade(), data.getValue().getUf())));
+    private void fillTable(List<Client> clients) {
+        columnName.setCellValueFactory(new PropertyValueFactory<Client, String>("name"));
+        columnCpf.setCellValueFactory(new PropertyValueFactory<Client, String>("cpf"));
+        columnPhoneNumber.setCellValueFactory(new PropertyValueFactory<Client, String>("phone"));
+        columnEmail.setCellValueFactory(new PropertyValueFactory<Client, String>("email"));
+        columnAddress.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s, %s", data.getValue().getAddress(), data.getValue().getNumber())));
+        columnCity.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s - %s", data.getValue().getCity(), data.getValue().getUf())));
 
-        ObservableList<Cliente> items = FXCollections.observableArrayList(clientes);
+        ObservableList<Client> items = FXCollections.observableArrayList(clients);
         tableClients.setItems(items);
         tableClients.refresh();
     }

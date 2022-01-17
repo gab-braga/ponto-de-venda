@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.SaidaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,7 +18,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Saida;
+import model.Acquisition;
+import model.dao.AcquisitionDAO;
 
 import java.net.URL;
 import java.util.Date;
@@ -47,19 +47,19 @@ public class ConsultarSaidasController implements Initializable {
     private Button btnSubmit;
 
     @FXML
-    private TableView<Saida> tableExits;
+    private TableView<Acquisition> tableExits;
 
     @FXML
-    private TableColumn<Saida, String> columnDateHour;
+    private TableColumn<Acquisition, String> columnDateHour;
 
     @FXML
-    private TableColumn<Saida, Double> columnValue;
+    private TableColumn<Acquisition, Double> columnValue;
 
     @FXML
-    private TableColumn<Saida, String> columnReason;
+    private TableColumn<Acquisition, String> columnReason;
 
     @FXML
-    private TableColumn<Saida, String> columnOperator;
+    private TableColumn<Acquisition, String> columnOperator;
 
     @FXML
     private MenuItem tableItemRefresh;
@@ -107,14 +107,15 @@ public class ConsultarSaidasController implements Initializable {
         String month = fieldSearchMonth.getValue();
         String year = fieldSearchYear.getValue();
 
+        AcquisitionDAO dao = new AcquisitionDAO();
         if (isSearchAll(day, month, year)) {
-            fillTable(SaidaDAO.queryAllExits());
+            fillTable(dao.selectAllAcquisitions());
         } else {
             if (validateFields(day, month, year)) {
                 String dateString = Helper.formatDateByDayMonthYear(day, month, year);
                 if (Validator.validateDate(dateString)) {
                     Date date = Helper.parseDate(dateString);
-                    fillTable(SaidaDAO.queryExitsByDate(date));
+                    fillTable(dao.selectAcquisitionByDate(date));
                 } else {
                     AlertBox.dateInvalided();
                 }
@@ -128,13 +129,13 @@ public class ConsultarSaidasController implements Initializable {
         return (day.isBlank() && month.isBlank() && year.isBlank());
     }
 
-    private void fillTable(List<Saida> saidas) {
-        columnDateHour.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDateAndTime(data.getValue().getDataHora())));
-        columnValue.setCellValueFactory(new PropertyValueFactory<Saida, Double>("valor"));
-        columnReason.setCellValueFactory(new PropertyValueFactory<Saida, String>("motivo"));
-        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperador().getNome()));
+    private void fillTable(List<Acquisition> acquisitions) {
+        columnDateHour.setCellValueFactory(data -> new SimpleStringProperty(Helper.formatDateAndTime(data.getValue().getDate())));
+        columnValue.setCellValueFactory(new PropertyValueFactory<Acquisition, Double>("value"));
+        columnReason.setCellValueFactory(new PropertyValueFactory<Acquisition, String>("reason"));
+        columnOperator.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOperator().getName()));
 
-        ObservableList<Saida> items = FXCollections.observableArrayList(saidas);
+        ObservableList<Acquisition> items = FXCollections.observableArrayList(acquisitions);
         tableExits.setItems(items);
     }
 

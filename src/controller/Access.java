@@ -1,6 +1,6 @@
 package controller;
 
-import model.Usuario;
+import model.User;
 
 public abstract class Access {
 
@@ -21,13 +21,13 @@ public abstract class Access {
         return fullAccess;
     }
 
-    private static Usuario operator = null;
+    private static User operator = null;
 
-    public static Usuario getOperator() {
+    public static User getOperator() {
         return operator;
     }
 
-    public static void setOperator(Usuario operator) {
+    public static void setOperator(User operator) {
         Access.operator = operator;
     }
 }

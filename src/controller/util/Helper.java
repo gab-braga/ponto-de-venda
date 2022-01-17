@@ -7,8 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import model.Cliente;
-import model.Produto;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -20,7 +18,7 @@ public abstract class Helper {
     
     public static final List<String> LIST_MONTHS = Arrays.asList("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
     public static final List<String> LIST_YEARS = Arrays.asList("", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017","2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", "2035", "2036", "2037", "2038", "2039", "2040", "2041", "2042", "2043", "2044", "2045", "2046", "2047", "2048", "2049", "2050");
-    public static final List<String> LIST_UNITS = Arrays.asList("UN (Unidade)", "CX (Caixa)", "FD (Fardo)", "PCT (Pacote)", "KG (Quilograma)");
+    public static final List<String> LIST_UNITS = Arrays.asList("UN (Unidade)", "CX (Box)", "FD (Fardo)", "PCT (Pacote)", "KG (Quilograma)");
 
     public static void addTextLimiter(final TextField textField, final int maxLength) {
         textField.textProperty().addListener(new ChangeListener<String>() {

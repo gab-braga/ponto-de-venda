@@ -8,19 +8,19 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Estoque;
+import model.Stock;
 
 import java.io.IOException;
 
 public class AlterarEstoque extends Application {
 
-    private Estoque stockEdit;
+    private Stock stockEdit;
 
-    public AlterarEstoque(Estoque stockEdit) {
+    public AlterarEstoque(Stock stockEdit) {
         this.stockEdit = stockEdit;
     }
 
-    private final String title = "Alterar Estoque";
+    private final String title = "Alterar Stock";
 
     private static Stage window;
 

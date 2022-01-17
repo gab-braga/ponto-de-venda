@@ -5,23 +5,22 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Venda;
+import model.Sale;
 
 import java.io.IOException;
 
 public class DetalhesVenda extends Application {
 
-    private Venda venda;
+    private Sale sale;
 
-    public DetalhesVenda(Venda venda) {
-        this.venda = venda;
+    public DetalhesVenda(Sale sale) {
+        this.sale = sale;
     }
 
-    private final String title = "Detalhes da Venda";
+    private final String title = "Detalhes da Sale";
 
     private static Stage window;
 
@@ -40,7 +39,7 @@ public class DetalhesVenda extends Application {
             Parent root = file.load();
 
             DetalhesVendaController detalhesVendaController = (DetalhesVendaController) file.getController();
-            detalhesVendaController.fillListView(venda);
+            detalhesVendaController.fillListView(sale);
 
             Scene scene = new Scene(root);
 

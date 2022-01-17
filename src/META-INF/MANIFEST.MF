@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: view.Login
-Class-Path:  jfoenix-8.0.10.jar mysql-connector-java-8.0.25.jar
-

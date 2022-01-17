@@ -3,7 +3,6 @@ package controller;
 import controller.util.AlertBox;
 import controller.util.Helper;
 import controller.util.Validator;
-import dao.ProdutoDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,7 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Produto;
+import model.Product;
+import model.dao.ProductDAO;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -36,13 +36,13 @@ public class EditarProdutoController implements Initializable {
     @FXML
     private Button btnSubmit;
 
-    private Produto productEdit;
+    private Product productEdit;
 
-    public void fillFields(Produto produto) {
-        this.productEdit = produto;
-        fieldCode.setText(Integer.toString(produto.getCodigo()));
-        fieldDescription.setText(produto.getDescricao());
-        fieldSaleValue.setText(Double.toString(produto.getValorVenda()).replace(".", ","));
+    public void fillFields(Product product) {
+        this.productEdit = product;
+        fieldCode.setText(Long.toString(product.getCode()));
+        fieldDescription.setText(product.getDescription());
+        fieldSaleValue.setText(Double.toString(product.getPrice()).replace(".", ","));
         fieldCode.setDisable(true);
     }
 
@@ -78,9 +78,10 @@ public class EditarProdutoController implements Initializable {
     }
 
     private void edit() {
-        Produto produto = getModel();
-        if(produto != null) {
-            if (ProdutoDAO.update(produto)) {
+        Product product = getModel();
+        if(product != null) {
+            ProductDAO dao = new ProductDAO();
+            if (dao.update(product)) {
                 AlertBox.editionCompleted();
                 closeWindow();
             } else {
@@ -89,21 +90,21 @@ public class EditarProdutoController implements Initializable {
         }
     }
 
-    private Produto getModel() {
-        Produto produto = null;
+    private Product getModel() {
+        Product product = null;
         String description = fieldDescription.getText();
         String saleValue = fieldSaleValue.getText().replace(",", ".");
 
         if (Validator.validateFields(description, saleValue)) {
             if (Validator.validateDouble(saleValue)) {
-                produto = new Produto(productEdit.getCodigo(), description, Double.parseDouble(saleValue));
+                product = new Product(productEdit.getCode(), description, Double.parseDouble(saleValue));
             } else {
                 AlertBox.onlyNumbers();
             }
         } else {
             AlertBox.fillAllFields();
         }
-        return produto;
+        return product;
     }
 
     private void closeWindow() {

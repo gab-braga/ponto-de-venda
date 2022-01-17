@@ -22,7 +22,7 @@ public class PesquisarProduto extends Application {
         this.productDescription = productDescription;
     }
 
-    private final String title = "Pesquisar Produto";
+    private final String title = "Pesquisar Product";
 
     private static Stage window;
 

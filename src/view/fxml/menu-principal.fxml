@@ -64,7 +64,7 @@
                      <children>
                         <ImageView fitHeight="353.0" fitWidth="582.0" layoutX="117.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true" styleClass="background-image">
                            <image>
-                              <Image url="@../images/imagem-de-fundo-pdv.png" />
+                              <Image url="@../images/background-image.png" />
                            </image>
                         </ImageView>
                      </children>
