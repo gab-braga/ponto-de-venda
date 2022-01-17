@@ -8,10 +8,9 @@ Ponto de Venda é um projeto Open-Soure desenvolvido por mim, [Gabriel Braga](ht
 ## Tecnologias
 * Java
 * JavaFX
-* JavaFX CSS
 * MySQL
 * JDBC
-* JFoenix
+* Hibernate
 
 ## Visualização
 ### Login
@@ -21,21 +20,17 @@ Ponto de Venda é um projeto Open-Soure desenvolvido por mim, [Gabriel Braga](ht
 ### Caixa
 ![CAIXA](https://github.com/F-Gabriel-Braga/ponto-de-sale/blob/master/images/PONTO-DE-VENDA-CAIXA.png)
 
-## Diagramação do Banco de Dados
-![LOGIN](https://github.com/F-Gabriel-Braga/ponto-de-sale/blob/master/images/DATABASE-MODEL.png)
-
 ## Informações
 ### Dependências
+* JavaFX
 * JDBC
-* JFoenix
+* Hibernate
 
 ### Execução
-1. Instalar JDK
-2. Instalar MySQL
-3. Criar Usuario 'user' e Senha 'senha' no MySQL com todos os privilégios
-5. Clonar o projeto Ponto de Venda
-6. Compilar e executar a classe Login
-
-### Usuário Mestre
-* Nome: xxxx
-* Senha: 0000
+1. Instalar JDK;
+2. Instalar MySQL;
+3. Criar Usuario 'root' e Senha 'root3306' no MySQL com todos os privilégios;
+4. Criar um Usuário Administrador, manualmente;
+5. Clonar o projeto Ponto de Venda;
+6. Inserir todas as dependências necessárias;
+7. Compilar e executar a classe com.github.fgabrielbraga.view.Login.
