@@ -14,11 +14,11 @@ Ponto de Venda é um projeto Open-Soure desenvolvido por mim, [Gabriel Braga](ht
 
 ## Visualização
 ### Login
-![LOGIN](https://github.com/F-Gabriel-Braga/ponto-de-sale/blob/master/images/PONTO-DE-VENDA-LOGIN.png)
+![LOGIN](https://github.com/F-Gabriel-Braga/ponto-de-venda/blob/master/images/PONTO-DE-VENDA-LOGIN.png)
 ### Menu Principal
-![MENU PRINCIPAL](https://github.com/F-Gabriel-Braga/ponto-de-sale/blob/master/images/PONTO-DE-VENDA-MENU-PRINCIPAL.png)
+![MENU PRINCIPAL](https://github.com/F-Gabriel-Braga/ponto-de-venda/blob/master/images/PONTO-DE-VENDA-MENU-PRINCIPAL.png)
 ### Caixa
-![CAIXA](https://github.com/F-Gabriel-Braga/ponto-de-sale/blob/master/images/PONTO-DE-VENDA-CAIXA.png)
+![CAIXA](https://github.com/F-Gabriel-Braga/ponto-de-venda/blob/master/images/PONTO-DE-VENDA-CAIXA.png)
 
 ## Informações
 ### Dependências
